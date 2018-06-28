@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+
+{% block site_title %}SLT Login{% endblock site_title %}
+{% block page_css %}
+    <link rel='stylesheet' type='text/css' href="{% static 'css/slt_login.css' %}"/>
+{% endblock page_css %}
+
+{% block site_body %}
+<div class="main">
+    <div class="login-form">
+        <div class="head">
+            <img src="{% static 'images/ampere_logo.png' %}" alt=""/>
+        </div>
+        <h1>Member Login</h1>
+        <form id="login-form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" class="text" name="username" value="Username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Username';}" >
+            <input type="password" name="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
+            <input type="submit" id="id_UserLogIn" value="LOGIN" >
+            <div style="text-align: center;">
+                <a href="{% url 'password_reset' %}">Reset your password</a>
+            </div>
+        </form>
+    </div>
+    <div class="copy-right">
+        <!-- <p>Copyrights &copy; <a href="http://www.amperecomputing.com">VDC SLT</a></p> -->
+    </div>
+</div>
+{% endblock site_body %}
+
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'js/slt_login.js' %}"></script>
+{% endblock page_js %}
