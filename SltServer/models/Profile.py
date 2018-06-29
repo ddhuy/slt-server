@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django.contrib import admin
+
 class Profile ( models.Model ) :
     USER_ROLE_ADM = 'A'
     USER_ROLE_DEV = 'D'
@@ -23,7 +25,7 @@ class Profile ( models.Model ) :
         verbose_name_plural = 'Profiles'
 
     def __str__ ( self ) :
-        return "%s" % self.user.username
+        return "%s-%s" % (self.user.username, self.Rfid)
 
     def is_admin ( self ) :
         return self.Role == Profile.USER_ROLE_ADM
@@ -42,6 +44,10 @@ class Profile ( models.Model ) :
 
     def need_operator ( self ) :
         return (self.Role <= Profile.USER_ROLE_OPR)
+
+
+class ProfileAdmin ( admin.ModelAdmin ) :
+    list_display = ['DisplayName', 'Rfid', 'Role']
 
 
 @receiver(post_save, sender = User)

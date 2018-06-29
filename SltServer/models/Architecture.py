@@ -1,6 +1,11 @@
 from django.db import models
 
 class Architecture ( models.Model ) :
+
+    ARCH_STORM = 'storm'
+    ARCH_SKYLARK = 'skylark'
+    ARCH_AST2500 = 'ast2500'
+
     Name = models.CharField(max_length = 255)
     Description = models.CharField(max_length = 255)
 
@@ -9,4 +14,4 @@ class Architecture ( models.Model ) :
         verbose_name_plural = 'Architectures'
 
     def __str__ ( self ) :
-        return "%s" % self._Name
+        return "%s" % self.Name

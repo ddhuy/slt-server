@@ -9,4 +9,4 @@ class LotNumber ( models.Model ) :
         verbose_name_plural = 'LotNumbers'
 
     def __str__ ( self ) :
-        return "%s:%s" % (self._ID, self._Number)
+        return "%s:%s" % (self.ID, self.Number)

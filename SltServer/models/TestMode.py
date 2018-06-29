@@ -9,4 +9,4 @@ class TestMode ( models.Model ) :
         verbose_name_plural = 'TestModes'
 
     def __str__ ( self ) :
-        return "%s" % self._Mode
+        return "%s" % self.Mode

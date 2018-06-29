@@ -21,4 +21,4 @@ class TestCommand ( models.Model ) :
         verbose_name_plural = 'TestCommands'
 
     def __str__ ( self ) :
-        return "%s-%s" % (self._Test, self._Arch._Name)
+        return "%s-%s" % (self.Test, self.Arch.Name)

@@ -9,4 +9,4 @@ class SltMode ( models.Model ) :
         verbose_name_plural = 'SltModes'
 
     def __str__ ( self ) :
-        return "%s" % self._Mode
+        return "%s" % self.Mode
