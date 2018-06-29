@@ -46,10 +46,6 @@ class Profile ( models.Model ) :
         return (self.Role <= Profile.USER_ROLE_OPR)
 
 
-class ProfileAdmin ( admin.ModelAdmin ) :
-    list_display = ['DisplayName', 'Rfid', 'Role']
-
-
 @receiver(post_save, sender = User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
