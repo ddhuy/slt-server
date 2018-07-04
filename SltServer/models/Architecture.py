@@ -1,6 +1,9 @@
 from django.db import models
 
 class Architecture ( models.Model ) :
+    ARCH_SKYLARK = 'skylark'
+    ARCH_STORM   = 'storm'
+
     Name = models.CharField(max_length = 255)
     Description = models.CharField(max_length = 255)
 

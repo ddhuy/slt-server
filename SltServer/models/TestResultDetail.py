@@ -6,7 +6,7 @@ from .TestResult import TestResult
 class TestResultDetail ( models.Model ) :
     TestResult = models.ForeignKey(TestResult, on_delete = models.CASCADE)
     Test = models.CharField(max_length = 255)
-    Mode = models.ForeignKey(TestMode, null = True, blank = True)
+    Mode = models.CharField(max_length = 255, null = True, blank = True)
     Result = models.CharField(max_length = 255, null = True, blank = True)
     Pass = models.IntegerField(default = 0, null = True)
     Fail = models.IntegerField(default = 0, null = True)
