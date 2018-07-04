@@ -41,4 +41,21 @@ $(document).ready(function() {
 
     enable_qtip($("#id_PartId"), 'ECID & CPUID');
 
+
+    $("#id_Search").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/search/skylark/production/",
+            data: { Action: 'GetTestResult'
+                  },
+            dataType: "json",
+            cache: true,
+            success: function (response) {
+            },
+            error: function (response) {
+            }
+        });
+        return false;
+    });
+
 });

@@ -1,20 +1,20 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
 
 from SltServer.models import Architecture
 from SltServer.models import SltMode
 
-class SearchPage ( LoginRequiredMixin, TemplateView ) :
+from SltServer.views import BasePage
+
+class SearchPage ( BasePage ) :
     template_name = "search.html"
 
     ArchName = None
     SummMode = None
 
     # init POST controller functions
-    def __ini__ ( self ) :
-        _funcdict = {
+    def __init__ ( self ) :
+        self._funcdict = {
             'GetTestResult' : self.__GetTestResult,
             'GetTestHistory' : self.__GetTestHistory,
             'GetTestResultDetail' : self.__GetTestResultDetail,
@@ -25,9 +25,6 @@ class SearchPage ( LoginRequiredMixin, TemplateView ) :
         self.ArchName = self._get_arch_name(arch)
         self.SummMode = self._get_summary_mode_name(mode)
         return render(request, self.template_name, {'ArchName': self.ArchName, 'SummMode': self.SummMode})
-
-    def post ( self, request, *args, **kwargs ) :
-        pass
 
     def _get_arch_name ( self, arch ) :
         arch_name = Architecture.get_name(arch)
@@ -42,7 +39,7 @@ class SearchPage ( LoginRequiredMixin, TemplateView ) :
         return summ_mode
 
     def __GetTestResult ( self, request ) :
-        pass
+        return JsonResponse(status = 200, data = {'error': 0, 'data': 'OK'})
 
     def __GetTestHistory ( self, request ) :
         pass
