@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_search.css' %}">
+{% endblock page_css %}
+
+{% block site_title %}SLT HOME{% endblock site_title%}
+
+{% block page_title %}{{ SummMode|title }} Screening > {{ ArchName|title }}{% endblock page_title %}
+
+{% block page_content %}
+<table class="search_table">
+    <tbody>
+        <tr>
+            <td class="label_thead">Part ID:</td>
+            <td class="label_thead">Lot Number:</td>
+            <td class="label_thead">Bench Number:</td>
+            <td class="label_thead">Board Serial:</td>
+        </tr>
+        <tr>
+            <td class="field_thead" data-tooltip="ECID & CPUID">
+                <select id="id_PartId" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Lot Number">
+                <select id="id_LotNum" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Bench Number">
+                <select id="id_BenchNum" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Board Serial">
+                <select id="id_BoardSerial" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="label_thead">Test Name:</td>
+            <td class="label_thead">Operator:</td>
+            <td class="label_thead">Failure Signature:</td>
+            <td class="label_thead">Execution Date:</td>
+        </tr>
+        <tr>
+            <td class="field_thead" data-tooltip="Test Name">
+                <select id="id_TestName" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Operator Name">
+                <select id="id_Operator" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Failure Signature">
+                <select id="id_FailSign" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead" data-tooltip="Execution Date">
+                <select id="id_ExecDate" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="label_thead">Conditions:</td>
+            <td class="label_thead">&nbsp;</td>
+            <td class="label_thead">&nbsp;</td>
+            <td class="label_thead">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="field_thead" data-tooltip="Test environments">
+                <select id="id_TestEnv" multiple="multiple" data-placeholder="Please choose one or more"></select>
+            </td>
+            <td class="field_thead">&nbsp;</td>
+            <td class="field_thead">&nbsp;</td>
+            <td class="field_thead">&nbsp;</td>
+        </tr>
+    </tbody>
+</table> 
+
+<div>
+    <input class="button" id="id_Search" data-tooltip="Click to search." type="image" src="{% static 'images/search.png' %}" />
+    <input class="button" id="id_Statistics" data-tooltip="Click to view data statistic." type="image" src="{% static 'images/statistic.png' %}" />
+    <input class="button" id="id_Report" data-tooltip="Click to get report" type="image" src="{% static 'images/analytics.png' %}" />
+</div>
+
+<br />
+
+<label>
+    Found: <b id="PartCount">0</b> parts (Pass:<b id="PartPass">0</b> - Fail:<b id="PartFail">0</b>)
+</label>
+
+<div id="SearchingSummary" title="Searching Summary">
+</div>
+
+{% endblock page_content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.qtip.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slt_search.js' %}"></script>
+{% endblock page_js %}

@@ -1,0 +1,164 @@
+* {
+    padding:0;
+    margin:0;
+}
+
+body { 
+    font-family: Verdana, sans-serif; 
+    line-height: 1.4;
+    font-size: 14px;
+    background: #fff url(../images/bg.png) repeat-x;
+    margin: 0;
+    padding: 0;
+}
+
+a { color: #4E6D2D; text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3, h4, h5 { font-family: 'Buda', arial, serif; margin: 3px 0 15px 0; font-weight: 100; border-bottom: 1px dotted #919191; }
+h1 { font-size: 27px; }
+h2 { font-size: 25px; }
+h3 { font-size: 23px; }
+h4 { font-size: 21px; }
+h5 { font-size: 19px; }
+ul { margin: 0 0 20px 30px; list-style-type: square; }
+ol { margin: 0 0 20px 30px; list-style-type: decimal; }
+blockquote { background: #eee; border-left: 5px solid #bcbcbc; padding: 10px; margin: 0 0 20px 0; }
+blockquote p { margin: 0; padding: 0; }
+p { padding: 0 0 20px 0; }
+table { margin: 0 0 20px 0; text-align: left; width: 100%; }
+td, th { padding: 5px; border: 1px solid #e7e7e7; }
+th { color: #323232; }
+
+#wrap { 
+    width: 1440px;
+    margin: 0 auto 20px auto;
+}
+
+#header-outer {
+    width: 100%;
+    position: relative;
+}
+#header {
+    padding: 30px 0 20px 0;
+    background: url(../images/ampere_logo.png) no-repeat;
+    background-position: left;
+    width: 400px;
+    display: block;
+}
+#header h1 {
+    font-family: 'Amaranth', arial, serif;
+    color: #f93822;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 132px;
+    font-weight: bold;
+    font-size: 51px;
+    border: none;
+    line-height: 1;
+}
+#header h2 {
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0 0 0 132px;
+    color: #000;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+#profile {
+    position: absolute;
+    bottom: 16px;
+    right: 32px;
+    display: block;
+    text-align: right;
+}
+
+.sidebar {
+    width: 300px;
+    padding: 0px 0;
+    float: left;
+    display: block;
+}
+
+.left { 
+    float: left;
+    background: url(../images/sidebarcontent.png) repeat-y;
+    width: 300px;
+    color: #717171;
+}
+.left h3 {
+    background: url(../images/sidebarh3.png) no-repeat;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 0 0 20px;
+    padding: 0 0 0 10px;
+    color: #000;
+    border: none;
+    font-size: 17px;
+    font-weight: bold;
+}
+.left ul { margin: 0; padding: 10px 20px 20px 30px; list-style-type: none; }
+.left ul li { background: url(../images/list.png) no-repeat left top; padding: 0 0 3px 20px; margin: 0; font-size: 13px;}
+.left ul li a { font-size: 14px; }
+
+.lefttop { width: 300px; float: left; background: url(../images/sidebartop.png) no-repeat; padding: 15px 0; }
+.leftbottom { width: 300px; float: left; background: url(../images/sidebarbottom.png) no-repeat; padding: 15px 0; }
+
+
+#page_body {
+    background: url(../images/content.jpg) repeat-y;
+    padding: 0px 20px 20px 0;
+    display: block;
+    float: left;
+    width: 1100px;
+}
+
+#page_title {
+    background: url(../images/menu.png) no-repeat;
+    height: 80px;
+    width: 1120px;
+    line-height: 80px;
+    font-size: 16px;
+    display: block;
+    float: left;
+}
+#page_title h1 {
+    padding-left: 22px;
+    font-weight: bolder;
+    border-bottom: unset;
+    line-height: unset;
+}
+
+.content {
+    margin: 0 0 0 22px;
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+#footer-outer {
+    width: 100%;
+    vertical-align: center;
+    display: block;
+    float: left;
+}
+
+#footer { 
+    background: url(../images/footer.png) no-repeat;
+    padding: 0 0px;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+    width: 1320px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#footer p { padding: 0; margin: 0; }
+#footer a { color: #fff; }
+#footer a:hover { border-bottom: 1px dotted #fff; text-decoration: none; }
+
+.footerleft { float: left; margin-left: 32px;}
+.footerright { float: right; margin-right: 32px;}

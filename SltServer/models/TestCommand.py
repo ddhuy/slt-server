@@ -7,13 +7,13 @@ class TestCommand ( models.Model ) :
     Test = models.CharField(max_length = 255)
     Mode = models.ForeignKey(TestMode)
     FailStop = models.BooleanField(default = False)
-    Command = models.TextField()
-    Prompt = models.TextField()
-    Pass = models.TextField()
-    Fail = models.TextField()
-    Timeout = models.IntegerField()
-    Msg = models.TextField()
-    Comment = models.TextField()
+    Command = models.TextField(null = True, blank = True)
+    Prompt = models.TextField(null = True, blank = True)
+    Pass = models.TextField(null = True, blank = True)
+    Fail = models.TextField(null = True, blank = True)
+    Timeout = models.IntegerField(null = True, blank = True)
+    Msg = models.TextField(null = True, blank = True)
+    Comment = models.TextField(null = True, blank = True)
     Arch = models.ForeignKey(Architecture)
 
     class Meta:
@@ -21,4 +21,4 @@ class TestCommand ( models.Model ) :
         verbose_name_plural = 'TestCommands'
 
     def __str__ ( self ) :
-        return "%s-%s" % (self.Test, self.Arch.Name)
+        return "%s-%s" % (self.Arch.Name, self.Test)

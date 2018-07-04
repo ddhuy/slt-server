@@ -6,124 +6,173 @@
     {% block site_title %}SLT Home{% endblock site_title %}
     </title>
 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <link rel="icon" type="image/png" href="{% static 'images/ampere_favicon.png' %}">
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Language" value="en-US" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     {% block site_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Buda:light' />
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Amaranth' />
     {% block page_css %}{% endblock page_css %}
     {% endblock site_css %}
 </head>
 <body>
     {% block site_body %}
-    <nav class="navbar navbar-fixed-top bg-info" style="background: #F93822">
-        <h1 style="background: #F93822;color: White;margin: 10px">
-            <a href="/" style="color: White">SLT Server</a>
-            <a href="#" class="pull-right" style="font-size: 14px;color: #280b92">Version <b>0.0.1</b></a>
-        </h1>
-        <div class="pull-right" style="font-size: 14px;color: #280b92">
-            Hi {{ user.get_full_name }},&nbsp;
-            <a href="{% url 'password_change' %}">CHANGE PASSWORD</a>&nbsp;/&nbsp;
-            <a href="{% url 'logout' %}">LOGOUT</a>
+    <div id="wrap">
+    <div id="header-outer">
+        <div id="header">
+            <h1>SLT Server</h1>
+            <h2>System Level Testing</h2>
         </div>
-    </nav>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col sidebar" style="witdth:220px">
-                <ul class="nav nav-sidebar">
-                    <li class="active">
-                        <a href="#" style="text-transform: uppercase">Management</a>
-                    </li>
-                    {% if user.profile.need_admin %}
-                    <li>
-                        <a href="/user">User</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.need_operator %}
-                    <li>
-                        <a href="/bench">Bench</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.need_dev %}
-                    <li>
-                        <a href="/test">DUT test</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.need_operator %}
-                    <li>
-                        <a href="/lotnumber">Customer Lot</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <ul class="nav nav-sidebar">
-                    <li class="active">
-                        <a href="#" style="text-transform: uppercase">Production Result</a>
-                    </li>
-                    <li>
-                        <a href="/summary/?Screened=1&Arch=skylark">Skylark Screening</a>
-                    </li>
-                    <li>
-                        <a href="/summary/?Screened=1&Arch=storm">Storm Screening</a>
-                    </li>
-                </ul>
-                {% if user.profile.need_dev %}
-                <ul class="nav nav-sidebar">
-                    <li class="active">
-                        <a href="#" style="text-transform: uppercase">Software test suite</a>
-                    </li>
-                    <li>
-                        <a href="/test?Default=1">Default Test Suite</a>
-                    </li>
-                    <li>
-                        <a href="/command?Arch=ast2500">AST2500 Test Suite</a>
-                    </li>
-                    <li>
-                        <a href="/command?Arch=skylark">Skylark Test Suite</a>
-                    </li>
-                    <li>
-                        <a href="/command?Arch=storm">Storm Test Suite</a>
-                    </li>
-                </ul>
-                {% endif %}
-                <ul class="nav nav-sidebar">
-                    <li class="active">
-                        <a href="#" style="text-transform: uppercase">Engineering Analyze</a>
-                    </li>
-                    <li>
-                        <a href="/summary/?Screened=0&Arch=osprey">Osprey</a>
-                    </li>
-                    <li>
-                        <a href="/summary/?Screened=0&Arch=skylark">Skylark</a>
-                    </li>
-                    <li>
-                        <a href="/summary/?Screened=0&Arch=storm">Storm</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col" id='page_content' style="margin-left: 220px">
-                <h2 style="text-align: left;color: #98CE50" id='page_title'>
-                    {% block page_title %}{% endblock page_title %}
-                </h2>
-                <br>
-                <div class="article">
-                    {% block page_content %}
-                    {% endblock page_content %}
-                </div>
-            </div>
+        <div id="profile">
+            Welcome {{ user.get_full_name }},&nbsp;
+            <br />
+            <a href="{% url 'password_change' %}">Change Password</a>&nbsp;/&nbsp;
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
     </div>
+
+    <div class="sidebar">
+        <div class="lefttop"> </div>
+        <div class="left">
+            <h3>MANAGEMENT</h3>
+            <ul>
+            {% if user.profile.need_admin %}
+            <li><a href="#">User Account</a><br />edit: display name, Rfid, etc.</li>
+            {% endif %}
+            {% if user.profile.need_operator %}
+            <li><a href="#">Bench Monitoring</a><br />get & set bench information</li>
+            {% endif %}
+            {% if user.profile.need_dev %}
+            <li><a href="#">Test Configuration</a><br />configure test bed</li>
+            {% endif %}
+            {% if user.profile.need_operator %}
+            <li><a href="#">Lot Number</a><br />manage cusomter Lot</li>
+            {% endif %}
+            </ul>
+            <h3>PRODUCTION RESULT</h3>
+            <ul>
+            <li><a href="/search/skylark/production">Skylark Screening</a><br />Skylark production test result</li>
+            <li><a href="/search/storm/production">Storm Screening</a><br />Storm production test result</li>
+            </ul>
+            {% if user.profile.need_operator %}
+            <h3>SOFTWARE TEST SUITE</h3>
+            <ul>
+            <li><a href="#">Default Test Suite</a></li>
+            <li><a href="#">Ast2500 Test Suite</a></li>
+            <li><a href="#">Skylark Test Suite</a></li>
+            <li><a href="#">Storm Test Suite</a></li>
+            </ul>
+            {% endif %}
+            <h3>ENGINEERING ANALYZE</h3>
+            <ul>
+            <li><a href="/search/osprey/fa">Osprey</a></li>
+            <li><a href="/search/skylark/fa">Skylark</a></li>
+            <li><a href="/search/storm/fa">Storm</a></li>
+            </ul>
+        </div>
+        <div class="leftbottom"> </div>
+        <div style="clear: both;"> </div>
+    </div>
+
+    <div id="page_body">
+        <div id="page_title"><h1 style="">{% block page_title %}Main Heading of Your New Web Site - H1{% endblock page_title %}</h1></div>
+        <div class="content">
+            {% block page_content %}
+            <p>
+            Sed vitae lectus libero, vitae tempus lacus. Quisque mollis, lectus sed placerat sodales, felis diam accumsan ligula, in auctor leo velit eu diam. Aenean tincidunt velit ac massa dictum bibendum. Ut vulputate tortor vitae orci cursus aliquam. Phasellus rutrum consequat purus, vel cursus odio fermentum non. Morbi luctus feugiat dictum. Duis sed metus vitae augue faucibus condimentum. Ut id velit eget magna venenatis ultrices in sit amet tellus. Praesent augue nibh, condimentum vel molestie sit amet, luctus nec neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus convallis erat nisl. Mauris feugiat pharetra pellentesque. Pellentesque vulputate mi quis erat fringilla tempus. Suspendisse potenti. 
+            </p>
+
+            <h2>Template License</h2>
+
+            <p>
+            This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+            </p>
+
+            <h3>You are free:</h3>
+
+            <ul>
+            <li>to Share — to copy, distribute and transmit the work</li>
+            <li>to Remix — to adapt the work</li>
+            </ul>
+
+
+            <h3>Under the following conditions:</h3>
+
+            <ul>
+            <li>Attribution — You must attribute the work in the manner specified by the author or licensor (keep the "Design by <a href="http://yoctotemplates.com">Yocto Templates</a>" link in the footer intact).</li>
+            </ul>
+
+            <h3 style="color: red; font-weight: bold;">Would You Like to Remove the Footer Link ?</h3>
+
+            <p>You can remove the footer link for a small fee of <strong>only $4.99</strong>.</p>
+
+            <p>Please visit the <a href="http://yoctotemplates.com/free-web-templates/green-stripes/">template</a> page to buy the <strong>linkback free</strong> License.</p>
+
+            <h4>Some Styling - H4</h4>
+
+            <table>
+            <tr>
+            <th>Table Header 1</th>
+            <th>Table Header 2</th>
+            </tr>
+            <tr>
+            <td>Aliquam erat volutpat. (row 1, cell 1)</td>
+            <td>Suspendisse potenti. (row 1, cell 2)</td>
+            </tr>
+            <tr>
+            <td>Phasellus rutrum consequat (row 2, cell 1)</td>
+            <td>Phasellus convallis (row 2, cell 2)</td>
+            </tr>
+            </table>
+
+            <h4>Unordered List - H4</h4>
+
+            <ul>
+            <li><a title="" href="#">Unordered List Link 1</a></li>
+            <li><a title="" href="#">Unordered List Link 2</a></li>
+            <li><a title="" href="#">Unordered List Link 3</a></li>
+            </ul>
+
+            <h5>Ordered List - H5</h5>
+
+            <ol>
+            <li><a title="" href="#">Ordered List Link 1</a></li>
+            <li><a title="" href="#">Ordered List Link 2</a></li>
+            <li><a title="" href="#">Ordered List Link 3</a></li>
+            </ol>
+
+            <h5>Blockquote - H5</h5>
+
+            <blockquote>
+            <p>Integer dapibus vulputate ornare. Aenean interdum fermentum felis. Aliquam congue, leo vel elementum tempor, quam lorem laoreet nunc, vel consequat purus tortor non mauris. Donec luctus sem at risus sagittis et venenatis nisi hendrerit. Maecenas iaculis vulputate sem id gravida. Maecenas et aliquet nisl. Integer ornare volutpat elit a lobortis. Sed vitae ligula est, in auctor mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </blockquote>
+            {% endblock page_content %}
+        </div>
+    </div>
+
+    <div id="footer-outer">
+    <div id="footer">
+        <div class="footerleft">Copyright &copy; 2018 by <a href="#">VDC SLT</a> | <a href="#">Privacy Policy</a> | <a href="#">Copyright</a></div>
+        <div class="footerright"><a href="http://www.amperecomputing.com">Ampere Computing</a> | Design by <a href="">VDC SLT</a></div>
+        <div style="clear: both;"> </div>
+    </div>
+    </div>
+
     {% endblock site_body %}
+
     {% block site_js %}
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery.qtip.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slt_common.js' %}"></script>
     {% block page_js %}{% endblock page_js %}
     {% endblock site_js %}
+
 </body>
 </html>

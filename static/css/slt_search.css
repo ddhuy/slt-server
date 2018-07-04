@@ -1,0 +1,31 @@
+.search_table {
+    width: 100%;
+}
+
+.search_table td, th {
+    border: 0px;
+    text-align: left;
+    width: 25%;
+}
+
+.search_table .label_thead {
+    font-weight: bold;
+    vertical-align: bottom;
+}
+
+.search_table .field_thead {
+    padding-bottom: 13px;
+    vertical-align: top;
+}
+
+select,
+.select2 {
+    width: 100%;
+}
+.select2-container .select2-selection {
+    height: 45px;
+    overflow: scroll;
+} 
+.select2-container--default .select2-selection--multiple {
+    line-height: 30px;
+}
