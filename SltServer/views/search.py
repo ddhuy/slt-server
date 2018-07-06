@@ -1,16 +1,16 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 from SltServer.models import Architecture
 from SltServer.models import SltMode
+from SltServer.models import TestResult
 
 from SltServer.views import BasePage
 
 class SearchPage ( BasePage ) :
     template_name = "search.html"
-
-    ArchName = None
-    SummMode = None
 
     # init POST controller functions
     def __init__ ( self ) :
@@ -21,10 +21,10 @@ class SearchPage ( BasePage ) :
             'GetStatisticsByLotNumber' : self.__GetStatisticsByLotNumber,
         }
 
-    def get ( self, request, arch, mode, *args, **kwargs ) :
-        self.ArchName = self._get_arch_name(arch)
-        self.SummMode = self._get_summary_mode_name(mode)
-        return render(request, self.template_name, {'ArchName': self.ArchName, 'SummMode': self.SummMode})
+    def get ( self, request, *args, **kwargs ) :
+        arch_name = self._get_arch_name(kwargs['arch'])
+        summ_mode = self._get_summary_mode_name(kwargs['mode'])
+        return render(request, self.template_name, {'ArchName': arch_name, 'SummMode': summ_mode})
 
     def _get_arch_name ( self, arch ) :
         arch_name = Architecture.get_name(arch)
@@ -38,8 +38,13 @@ class SearchPage ( BasePage ) :
             raise Http404
         return summ_mode
 
-    def __GetTestResult ( self, request ) :
-        return JsonResponse(status = 200, data = {'error': 0, 'data': 'OK'})
+    def __GetTestResult ( self, request, *args, **kwargs ) :
+        arch_name = kwargs['arch']
+        summ_mode = kwargs['mode']
+        Data = json.loads(request.POST.get('Data', {}))
+
+        JsonResp = TestResult.GetTestResult(arch_name, summ_mode, Data)
+        return JsonResponse(status = 200, data = {'Errno': 0, 'Data': 'OK'})
 
     def __GetTestHistory ( self, request ) :
         pass

@@ -16,6 +16,9 @@ class Architecture ( models.Model ) :
     def __str__ ( self ) :
         return "%s" % self.Name
 
+    def natural_key ( self ) :
+        return (self.Name, self.Description)
+
     @classmethod
     def __all_data ( cls ) :
         if (cls.ALL_DATA == None) :

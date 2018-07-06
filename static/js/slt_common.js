@@ -2,6 +2,11 @@
 const VM_PRODUCTION     = 1;
 const VM_NON_PRODUCTION = 0;
 
+const SUMM_MODE_CALIBRATION = "calibration";
+const SUMM_MODE_PRODUCTION  = "production";
+const SUMM_MODE_FA          = "fa";
+
+
 const SLT_MODE_CALIBRATION = 1;
 const SLT_MODE_PRODUCTION  = 2;
 const SLT_MODE_FA          = 3;
@@ -146,6 +151,35 @@ function select2_set_options ( options, select2_obj ) {
     return true;
 }
 
+function commit_json_data ( URL = "",
+                            Data = {},
+                            Param = {},
+                            OnSuccessCallback = null,
+                            OnErrorCallback = null ) {
+    $.ajax({
+        type     : "POST",
+        url      : URL,
+        cache    : true,
+        data     : Data,
+        dataType : "json",
+        success: function ( response ) {
+            if (OnSuccessCallback) {
+                var json_resp = response;
+                OnSuccessCallback(json_resp, Param);
+            }
+        },
+        error: function ( response ) {
+            var json_resp = response.responseJSON;
+            if (OnErrorCallback)
+                OnErrorCallback(json_resp, Param);
+            else {
+                $("#uid_MsgDlg").data("Message", json_resp.responseText);
+                $("#uid_MsgDlg").dialog("open");
+            }
+        }
+    });
+}
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -158,3 +192,27 @@ $.ajaxSetup({
         }
     }
 });
+
+$("#id_dialog").dialog({
+    autoOpen: false,
+    height: 'auto',
+    width: 'auto',
+    modal: true,
+    closeOnEscape:true,
+    resizable:false,
+    show:'fade',
+    buttons: {
+        "OK": function() {
+            $(this).dialog("close");
+        }
+    },
+    open: function() {
+        var message = $(this).data('Message');
+        $( "#MsgText" ).html(message);
+    }
+});
+
+function slt_dialog ( msg ) {
+    $('#id_dialog').data('Message', msg);
+    $('#id_dialog').dialog("open");
+}
