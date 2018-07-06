@@ -25,3 +25,4 @@ class SltMode ( models.Model ) :
             if (slt_mode.lower() == obj.Mode.lower()) :
                 return slt_mode.lower()
         return None
+
