@@ -1,3 +1,5 @@
+var test_result_tbl;
+
 function clear_search() {
     $("#id_TestNanme").val('');
     $("#id_PartId").val('');
@@ -81,32 +83,26 @@ function convert_testenv_short ( testenv_str ) {
     }
 }
 
+function build_summary_list_by_board ( search_results ) {
+
+}
+
 function build_summary_list_by_cpuid ( search_results ) {
     // clear the old list
     var summary_list = [];
-    // get the search result region for adding respond data from server
-    var html_table = document.getElementById("SearchingSummary");
-    while (html_table.firstChild)
-        html_table.removeChild(html_table.firstChild);
-
     // Convert Search Results to local data list for later usage
     for (var i in search_results) {
         var result = search_results[i];
         var found = 0;
-
         for (var j in summary_list) {
             var summary = summary_list[j];
-
             if (summary.CPUID == result['CPUID'] && summary.LotNumber == result['LotNumber']) {
-                // summary.LatestResult = result['Result'].toUpperCase();
                 summary.TotalResult = (summary.LatestResult == 'FAIL') ? 'FAIL' : summary.TotalResult;
-
                 summary.Summary.push(result);
                 found = 1;
                 break;
             } // end if
         } // end summary_list loop
-
         if (found == 0) {
             summary_list.push({
                 ID : result['id'],
@@ -124,15 +120,12 @@ function build_summary_list_by_cpuid ( search_results ) {
 function build_summary_list_by_lotnum ( search_results ) {
     // clear the old list
     var summary_list = [];
-
     // Convert Search Results to local data list for later usage
     for (var i in search_results) {
         var result = search_results[i];
         var found = 0;
-
         for (var j in summary_list) {
             var summary = summary_list[j];
-
             if (summary.LotNumber == result['LotNumber']) {
                 // count nopass/nofail
                 if (result['CPUID'] != summary.Summary[summary.Summary.length - 1].CPUID)
@@ -142,7 +135,6 @@ function build_summary_list_by_lotnum ( search_results ) {
                 break;
             } // end if
         } // end summary_list loop
-
         if (found == 0) {
             summary_list.push({
                 ID : result['id'],
@@ -158,16 +150,29 @@ function build_summary_list_by_lotnum ( search_results ) {
 
 function bind_search_result ( search_results ) {
     /*****
-     * get the search result region for adding respond data from server
-     */
-    var html_table = document.getElementById("SearchingSummary");
-    // clear existing data first
-    while (html_table.firstChild)
-        html_table.removeChild(html_table.firstChild);
-    /*****
      * Draw HTML table
      */
-    SummaryList = build_summary_list_by_cpuid(search_results);
+    var SummaryList = build_summary_list_by_cpuid(search_results);
+    var table = $("#SearchingSummary").DataTable({
+        paging: false,
+        searching: false,
+        destroy: true,
+        data: SummaryList,
+        columns: [
+            {
+                className: 'details-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+                width: '3%',
+            },
+            { title: 'Lot Number', data: 'LotNumber' },
+            { title: 'PASS', data: 'NoPass' },
+            { title: 'FAIL', data: 'NoFail' },
+        ],
+        order: [[1, 'asc']],
+    });
+
     for (var i in SummaryList) {
         var summary = SummaryList[i];
         // draw header
@@ -264,31 +269,16 @@ function bind_search_result_production ( search_results ) {
         return html_table;
     }
 
-    SummaryList = build_summary_list_by_lotnum(search_results);
-    var table = $("#SearchingSummary").DataTable({
-        paging: false,
-        searching: false,
-        destroy: true,
-        data: SummaryList,
-        columns: [
-            {
-                className: 'details-control',
-                orderable: false,
-                data: null,
-                defaultContent: '',
-                width: '3%',
-            },
-            { title: 'Lot Number', data: 'LotNumber' },
-            { title: 'PASS', data: 'NoPass' },
-            { title: 'FAIL', data: 'NoFail' },
-        ],
-        order: [[1, 'asc']],
-    });
+    var SummaryList = build_summary_list_by_lotnum(search_results);
+    test_result_tbl.clear().draw();
+    test_result_tbl.rows.add(SummaryList);
+    test_result_tbl.columns.adjust().draw();
 
     // Add event listener for opening and closing details
-    $('#SearchingSummary tbody').on('click', 'tr td.details-control', function () {
+    $('#SearchingSummary tbody').off('click', 'td.details-control');
+    $('#SearchingSummary tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = table.row(tr);
+        var row = test_result_tbl.row(tr);
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -297,8 +287,10 @@ function bind_search_result_production ( search_results ) {
             row.child(format(row.data())).show();
             tr.addClass('shown');
         }
+        return false;
     });
 
+    $('table').off('click', '.s_testdetails');
     $('table').on('click', '.s_testdetails', function () {
         var test_result_id = $(this).attr("data-id");
         commit_json_data(
@@ -349,6 +341,7 @@ function bind_search_result_production ( search_results ) {
         return false;
     });
 
+    $('table').off('click', '.s_testhistory');
     $('table').on('click', '.s_testhistory', function () {
         var search_req = {};
         search_req['PartId'] = $(this).attr("data-cpuid");
@@ -581,4 +574,43 @@ $(document).ready(function() {
 
         return false;
     });
+
+    if (SummMode == SUMM_MODE_PRODUCTION) {
+        test_result_tbl = $("#SearchingSummary").DataTable({
+            paging: false,
+            searching: false,
+            columns: [
+                {
+                    className: 'details-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                    width: '3%',
+                },
+                { title: 'Lot Number', data: 'LotNumber' },
+                { title: 'PASS', data: 'NoPass' },
+                { title: 'FAIL', data: 'NoFail' },
+            ],
+            order: [[1, 'asc']],
+        });
+    } else {
+        test_result_tbl = $("#SearchingSummary").DataTable({
+            paging: false,
+            searching: false,
+            columns: [
+                {
+                    className: 'details-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                    width: '3%',
+                },
+                { title: 'Lot Number', data: 'LotNumber' },
+                { title: 'PASS', data: 'NoPass' },
+                { title: 'FAIL', data: 'NoFail' },
+            ],
+            order: [[1, 'asc']],
+        });
+    }
+
 });
