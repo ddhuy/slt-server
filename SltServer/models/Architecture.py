@@ -26,8 +26,12 @@ class Architecture ( models.Model ) :
         return cls.ALL_DATA
 
     @classmethod
-    def get_name ( cls, arch ) :
+    def GetName ( cls, arch ) :
         for obj in cls.__all_data() :
             if (arch.lower() == obj.Name.lower()) :
                 return arch.lower()
         return None
+
+    @classmethod
+    def GetAll ( cls ) :
+        return cls.__all_data()

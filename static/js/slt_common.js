@@ -170,7 +170,7 @@ function commit_json_data ( URL = "",
         },
         error: function ( response ) {
             var json_resp = response.responseJSON;
-            if (OnErrorCallback)
+            if (OnErrorCallback && json_resp)
                 OnErrorCallback(json_resp, Param);
             else {
                 $("#uid_MsgDlg").data("Message", json_resp.responseText);

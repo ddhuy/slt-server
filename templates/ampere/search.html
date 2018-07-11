@@ -4,6 +4,7 @@
 {% block page_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'datatables.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/slt_search.css' %}">
 {% endblock page_css %}
 
@@ -45,13 +46,25 @@
                 <select id="id_TestName" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Operator Name">
-                <select id="id_Operator" multiple="multiple" data-placeholder="Please choose one or more"></select>
+                <select id="id_Operator" multiple="multiple" data-placeholder="Please choose one or more">
+                    {% for o in Operators %}
+                        <option value="{{ o.id }}">{{ o.profile.DisplayName }}</option>
+                    {% endfor  %}
+                </select>
             </td>
             <td class="field_thead" data-tooltip="Failure Signature">
                 <select id="id_FailSign" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Test environments">
-                <select id="id_TestEnv" multiple="multiple" data-placeholder="Please choose one or more"></select>
+                <select id="id_TestEnv" multiple="multiple" data-placeholder="Please choose one or more">
+                    {% for k, v in TestEnvironments.items %}
+                        <optgroup label="{{ k }}">
+                            {% for i in v %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
             </td>
         </tr>
         <tr>
@@ -96,8 +109,47 @@
     <img src="{% static 'images/loading.gif' %}"/>
 </div>
 
-<div id="SearchingSummary" title="Searching Summary">
+<table id="SearchingSummary" class="hover display" style="width:100%">
+</table>
+
+
+<!--//////////////////////////////// Test Result Detail ///////////////////////////////////////////-->
+<div id="TestDetail_Dlg" title="Test Result Detail" style="display: none;max-height: 300px;">
+    <table class="table table-bordered" id="TestDetail_Tbl">
+        <thead>
+            <tr>
+                <th style="text-align:center;">Test</th>
+                <th style="text-align:center;">Pass</th>
+                <th style="text-align:center;">Fail</th>
+                <th style="text-align:center;">Executing Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Add data here -->
+        </tbody>
+    </table>
 </div>
+
+<!--//////////////////////////////// Test History ///////////////////////////////////////////-->
+<div id="TestHistory_Dlg" title="Test History" style="display: none;">
+    <table class="table table-bordered" id="TestHistory_Tbl">
+        <thead>
+            <tr>
+                <th style="text-align:center;">Test</th>
+                <th style="text-align:center;">Bench</th>
+                <th style="text-align:center;">Operator</th>
+                <th style="text-align:center;">Result</th>
+                <th style="text-align:center;">Date</th>
+                <th style="text-align:center;">Environments</th>
+                <th style="text-align:center;">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Add data here -->
+        </tbody>
+    </table>
+</div>
+
 
 {% endblock page_content %}
 
@@ -108,5 +160,6 @@
     </script>
     <script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery.qtip.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'datatables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/slt_search.js' %}"></script>
 {% endblock page_js %}
