@@ -175,7 +175,7 @@ function bind_search_result ( search_results ) {
             if (row.Result.toUpperCase() == 'PASS')
                 html_table += '<td title="" style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
             else
-                html_table += '<td title="' + row.Description + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
+                html_table += '<td title="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
             html_table += '<td title="Execution Date">' + row.ExecutionDate + '</td>';
             html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
             html_table += '<td style="text-align:center;">\
@@ -239,7 +239,7 @@ function bind_search_result_production ( search_results ) {
             if (row.Result.toUpperCase() == 'PASS')
                 html_table += '<td style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
             else
-                html_table += '<td title="' + row.Description + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
+                html_table += '<td title="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
             html_table += '<td>' + row.ExecutionDate + '</td>';
             html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
             html_table += '<td style="text-align:center;">\
