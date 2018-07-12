@@ -153,24 +153,24 @@ function bind_search_result ( search_results ) {
      * Draw HTML table
      */
     var SummaryList = build_summary_list_by_cpuid(search_results);
-    var table = $("#SearchingSummary").DataTable({
-        paging: false,
-        searching: false,
-        destroy: true,
-        data: SummaryList,
-        columns: [
-            {
-                className: 'details-control',
-                orderable: false,
-                data: null,
-                defaultContent: '',
-                width: '3%',
-            },
-            { title: 'Lot Number', data: 'LotNumber' },
-            { title: 'PASS', data: 'NoPass' },
-            { title: 'FAIL', data: 'NoFail' },
-        ],
-        order: [[1, 'asc']],
+    test_result_tbl.clear().draw();
+    test_result_tbl.rows.add(SummaryList);
+    test_result_tbl.columns.adjust().draw();
+
+    // Add event listener for opening and closing details
+    $('#SearchingSummary tbody').off('click', 'td.details-control');
+    $('#SearchingSummary tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = test_result_tbl.row(tr);
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+        return false;
     });
 
     for (var i in SummaryList) {
@@ -222,7 +222,7 @@ function bind_search_result ( search_results ) {
                 html_tbl_row.innerHTML += '<td title="' + row.Description + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
             html_tbl_row.innerHTML += '<td title="Execution Date">' + row.ExecutionDate + '</td>';
             html_tbl_row.innerHTML += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
-            html_tbl_row.innerHTML += '<td style="text-align:center;"><a class="s_testdetails" href="#" title="Show test details" >Details</a> | <a title="Download log file" href="file/?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a></td>';
+            html_tbl_row.innerHTML += '<td style="text-align:center;"><a class="s_testdetails" href="" title="Show test details" >Details</a> | <a title="Download log file" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a></td>';
             html_tbl_row.TestDetail_Data = row.Details;
         }
         // draw table
@@ -261,7 +261,7 @@ function bind_search_result_production ( search_results ) {
             html_table += '<td style="text-align:center;">\
                                 <a title="Show test details" class="s_testdetails" href="" data-id="' + row.id + '">Details</a> | \
                                 <a title="Show test history" class="s_testhistory" href="" data-cpuid="' + row.CPUID + '" data-lotnum="' + row.LotNumber + '">History</a> | \
-                                <a title="Download log file" class="s_downloadlog" href="file/?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
+                                <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
                             </td>';
             html_table += '</tr>'
         }
@@ -384,7 +384,7 @@ function bind_search_result_production ( search_results ) {
                             row += '    <td title="' + convert_testenv(TestHistory_Data[i].TestEnvironments) + '">' + convert_testenv_short(TestHistory_Data[i].TestEnvironments) + '</td>';
                             row += '<td style="text-align:center;">\
                                         <a title="Show test details" class="s_testdetails" href="" data-id="' + TestHistory_Data[i].id + '">Details</a> | \
-                                        <a title="Download log file" class="s_downloadlog" href="file/?Action=DownloadLogFile&Rfid=' + TestHistory_Data[i].Rfid + '&Filename=' + TestHistory_Data[i].LogFilePath + '">Log</a>\
+                                        <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + TestHistory_Data[i].Rfid + '&Filename=' + TestHistory_Data[i].LogFilePath + '">Log</a>\
                                     </td>';
                             row += '</tr>';
                             $("#TestHistory_Tbl").find('tbody').append(row);
@@ -587,9 +587,24 @@ $(document).ready(function() {
                     defaultContent: '',
                     width: '3%',
                 },
-                { title: 'Lot Number', data: 'LotNumber' },
-                { title: 'PASS', data: 'NoPass' },
-                { title: 'FAIL', data: 'NoFail' },
+                {
+                    data: 'LotNumber',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>Lot Number:&nbsp;</b>' + data;
+                    }
+                },
+                {
+                    data: 'NoPass',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>PASS:&nbsp;</b>' + data;
+                    }
+                },
+                {
+                    data: 'NoFail',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>FAIL:&nbsp;</b>' + data;
+                    }
+                },
             ],
             order: [[1, 'asc']],
         });
@@ -605,9 +620,19 @@ $(document).ready(function() {
                     defaultContent: '',
                     width: '3%',
                 },
-                { title: 'Lot Number', data: 'LotNumber' },
-                { title: 'PASS', data: 'NoPass' },
-                { title: 'FAIL', data: 'NoFail' },
+                { data: 'LotNumber' },
+                // { data: 'NoPass' },
+                // { data: 'NoFail' },
+                // { data: 'Test' },
+                // { data: 'Bench' },
+                // { data: 'Board' },
+                // { data: 'Socket' },
+                // { data: 'Mode' },
+                // { data: 'Operator' },
+                // { data: 'Result' },
+                // { data: 'Date' },
+                // { data: 'Environments' },
+                // { data: 'Details' },
             ],
             order: [[1, 'asc']],
         });
