@@ -603,13 +603,19 @@ $(document).ready(function() {
                 {
                     data: 'LatestResult',
                     render: function ( data, type, row, meta ) {
-                        return '<b>Final Result:&nbsp;</b>' + data;
+                        if (data.toUpperCase() == 'PASS')
+                            return '<b>Final Result:&nbsp;</b><span style="color:green;">' + data + '</span>';
+                        else
+                            return '<b>Final Result:&nbsp;</b><span style="color:red;">' + data + '</span>';
                     }
                 },
                 {
                     data: 'TotalResult',
                     render: function ( data, type, row, meta ) {
-                        return '<b>Total Result:&nbsp;</b>' + data;
+                        if (data.toUpperCase() == 'PASS')
+                            return '<b>Total Result:&nbsp;</b><span style="color:green;">' + data + '</span>';
+                        else
+                            return '<b>Total Result:&nbsp;</b><span style="color:red;">' + data + '</span>';
                     }
                 },
             ],
