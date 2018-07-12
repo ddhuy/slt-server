@@ -149,6 +149,45 @@ function build_summary_list_by_lotnum ( search_results ) {
 }
 
 function bind_search_result ( search_results ) {
+    function format ( d ) {
+        var Summaries = d.Summary;
+        // draw table of cpu test result content
+        var html_table = '<table>'
+        html_table +=  '<tr><td style="text-align:center;">Test Name</td>'
+                     + '<td style="text-align:center;">Bench</td>'
+                     + '<td style="text-align:center;">Board</td>'
+                     + '<td style="text-align:center;">Socket</td>'
+                     + '<td style="text-align:center;">Mode</td>'
+                     + '<td style="text-align:center;">Operator</td>'
+                     + '<td style="text-align:center;">Result</td>'
+                     + '<td style="text-align:center;">Date</td>'
+                     + '<td style="text-align:center;">Environments</td>'
+                     + '<td style="text-align:center;">Details</td>'
+                     + '</tr><tr>';
+        for (var i in Summaries) {
+            var row = Summaries[i];
+            html_table +=  '<td title="Test Name">' + row.TestName + '</td>'
+                         + '<td title="Bench number">' + row.BenchNumber + '</td>'
+                         + '<td title="Board Serial">' + row.BoardSerial + '</td>'
+                         + '<td title="Socket Serial">' + row.SocketSerial + '</td>'
+                         + '<td title="Test Mode">' + row.SltMode.Mode + '</td>'
+                         + '<td title="Operator Name">' + row.Operator.first_name + '</td>';
+            if (row.Result.toUpperCase() == 'PASS')
+                html_table += '<td title="" style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
+            else
+                html_table += '<td title="' + row.Description + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
+            html_table += '<td title="Execution Date">' + row.ExecutionDate + '</td>';
+            html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
+            html_table += '<td style="text-align:center;">\
+                               <a class="s_testdetails" title="Show test details" href="" data-id="' + row.id + '">Details</a> | \
+                               <a class="s_downloadlog" title="Download log file" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
+                           </td>';
+            html_table += '</tr>';
+        }
+        html_table += '</table>';
+        return html_table;
+    }
+
     /*****
      * Draw HTML table
      */
@@ -173,61 +212,6 @@ function bind_search_result ( search_results ) {
         return false;
     });
 
-    for (var i in SummaryList) {
-        var summary = SummaryList[i];
-        // draw header
-        var div_cpu_hdr = document.createElement("div");
-        div_cpu_hdr.setAttribute("class", "table table-bordered table-responsive");
-        div_cpu_hdr.setAttribute("style", "width: 1160px;");
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:center;width:3%;float:left;"><a class="collapsed-button" data-summaryid="' + summary.ID + '" href="#" id="collapsed_' + summary.ID + '"><li class="icon-plus"></li></a></div>';
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:left;width:20%;float:left;"><b>Part ID:&nbsp;</b>' + summary.CPUID + '</div>';
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:left;width:30%;float:left;"><b>Lot Number:&nbsp;</b>' + summary.LotNumber + '</div>';
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:left;width:20%;float:left;"><div style="float:left;"><b>Final result:&nbsp;</b></div><div id="div_result_1_' + summary.ID + '"></div></div>';
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:left;width:20%;float:left;"><div style="float:left;"><b>Total result:&nbsp;</b></div><div id="div_result_2_' + summary.ID + '"></div></div>';
-        div_cpu_hdr.innerHTML += '<div class="table-responsive" style="text-align:right;width:7%;float:right;"><a class="cpu_stat" data-summaryid="' + summary.ID + '" href="#">Statistics</a></div>';
-        html_table.appendChild(div_cpu_hdr);
-
-        // draw table of cpu test result content
-        var tab_cpu = document.createElement("table");
-        tab_cpu.setAttribute("id", summary.ID);
-        // tab_cpu.setAttribute("style", "display:none;");
-        tab_cpu.setAttribute("class", "table table-bordered table-responsive");
-        // create row header
-        var thead = tab_cpu.createTHead();
-        thead.innerHTML =  '<th style="text-align:center;">Test Name</th>'
-                          + '<th style="text-align:center;">Bench</th>'
-                          + '<th style="text-align:center;">Board</th>'
-                          + '<th style="text-align:center;">Socket</th>'
-                          + '<th style="text-align:center;">Mode</th>'
-                          + '<th style="text-align:center;">Operator</th>'
-                          + '<th style="text-align:center;">Result</th>'
-                          + '<th style="text-align:center;">Date</th>'
-                          + '<th style="text-align:center;">Environments</th>'
-                          + '<th style="text-align:center;">Details</th>';
-        // create body & add data to table
-        var tbody = tab_cpu.createTBody();
-        for (var j in summary.Summary) {
-            var row = summary.Summary[j];
-            var html_tbl_row = tbody.insertRow();
-            html_tbl_row.innerHTML  =  '<td title="Test Name">' + row.TestName + '</td>'
-                                     + '<td title="Bench number">' + row.BenchNumber + '</td>'
-                                     + '<td title="Board Serial">' + row.BoardSerial + '</td>'
-                                     + '<td title="Socket Serial">' + row.SocketSerial + '</td>'
-                                     + '<td title="Test Mode">' + row.SltMode.Mode + '</td>'
-                                     + '<td title="Operator Name">' + row.Operator.first_name + '</td>';
-
-            if (row.Result.toUpperCase() == 'PASS')
-                html_tbl_row.innerHTML += '<td title="" style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
-            else
-                html_tbl_row.innerHTML += '<td title="' + row.Description + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
-            html_tbl_row.innerHTML += '<td title="Execution Date">' + row.ExecutionDate + '</td>';
-            html_tbl_row.innerHTML += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
-            html_tbl_row.innerHTML += '<td style="text-align:center;"><a class="s_testdetails" href="" title="Show test details" >Details</a> | <a title="Download log file" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a></td>';
-            html_tbl_row.TestDetail_Data = row.Details;
-        }
-        // draw table
-        div_cpu_hdr.appendChild(tab_cpu);
-    }
     return SummaryList;
 } // end bind_search_result
 
@@ -434,22 +418,6 @@ function calculate_statistic ( SummaryList ) {
          * count pass/fail parts
          */
         (summary.LatestResult === "PASS") ? pass_part++ : fail_part++;
-
-        /*
-         * Update HTML: Total Result / Final Result
-         */
-        var div_result_1 = document.getElementById("div_result_1_" + summary.ID);
-        var div_result_2 = document.getElementById("div_result_2_" + summary.ID);
-
-        if (summary.LatestResult === "PASS")
-            div_result_1.innerHTML = '<div style="color:green;">' + summary.LatestResult + '</div></td>';
-        else
-            div_result_1.innerHTML = '<div style="color:red;">' + summary.LatestResult + '</div></td>';
-
-        if (summary.TotalResult === "PASS")
-            div_result_2.innerHTML = '<div style="color:green;">' + summary.TotalResult + '</div></td>';
-        else
-            div_result_2.innerHTML = '<div style="color:red;">' + summary.TotalResult + '</div></td>';
     }
 
     /*
@@ -620,22 +588,32 @@ $(document).ready(function() {
                     defaultContent: '',
                     width: '3%',
                 },
-                { data: 'LotNumber' },
-                // { data: 'NoPass' },
-                // { data: 'NoFail' },
-                // { data: 'Test' },
-                // { data: 'Bench' },
-                // { data: 'Board' },
-                // { data: 'Socket' },
-                // { data: 'Mode' },
-                // { data: 'Operator' },
-                // { data: 'Result' },
-                // { data: 'Date' },
-                // { data: 'Environments' },
-                // { data: 'Details' },
+                {
+                    data: 'CPUID',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>Part Id:&nbsp;</b>' + data;
+                    }
+                },
+                {
+                    data: 'LotNumber',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>Lot Number:&nbsp;</b>' + data;
+                    }
+                },
+                {
+                    data: 'LatestResult',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>Final Result:&nbsp;</b>' + data;
+                    }
+                },
+                {
+                    data: 'TotalResult',
+                    render: function ( data, type, row, meta ) {
+                        return '<b>Total Result:&nbsp;</b>' + data;
+                    }
+                },
             ],
             order: [[1, 'asc']],
         });
     }
-
 });
