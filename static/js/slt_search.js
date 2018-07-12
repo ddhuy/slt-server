@@ -96,7 +96,7 @@ function build_summary_list_by_cpuid ( search_results ) {
         var found = 0;
         for (var j in summary_list) {
             var summary = summary_list[j];
-            if (summary.CPUID == result['CPUID'] && summary.LotNumber == result['LotNumber']) {
+            if (summary.CPUID == result['CPUID'] && summary.LotNumber.ID == result['LotNumber'].ID) {
                 summary.TotalResult = (summary.LatestResult == 'FAIL') ? 'FAIL' : summary.TotalResult;
                 summary.Summary.push(result);
                 found = 1;
@@ -126,7 +126,7 @@ function build_summary_list_by_lotnum ( search_results ) {
         var found = 0;
         for (var j in summary_list) {
             var summary = summary_list[j];
-            if (summary.LotNumber == result['LotNumber']) {
+            if (summary.LotNumber.ID == result['LotNumber'].ID) {
                 // count nopass/nofail
                 if (result['CPUID'] != summary.Summary[summary.Summary.length - 1].CPUID)
                     (result['Result'].toUpperCase() == "PASS") ? (++summary.NoPass) : (++summary.NoFail);
@@ -244,7 +244,7 @@ function bind_search_result_production ( search_results ) {
             html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
             html_table += '<td style="text-align:center;">\
                                 <a title="Show test details" class="s_testdetails" href="" data-id="' + row.id + '">Details</a> | \
-                                <a title="Show test history" class="s_testhistory" href="" data-cpuid="' + row.CPUID + '" data-lotnum="' + row.LotNumber + '">History</a> | \
+                                <a title="Show test history" class="s_testhistory" href="" data-cpuid="' + row.CPUID + '" data-lotnum="' + row.LotNumber.Number + '">History</a> | \
                                 <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
                             </td>';
             html_table += '</tr>'
@@ -448,14 +448,14 @@ $(document).ready(function() {
     });
 
     enable_select2($('#id_PartId'));
-    enable_select2($('#id_LotNum'));
-    enable_select2($('#id_BenchNum'));
+    enable_select2($('#id_LotNumber'));
+    enable_select2($('#id_BenchNumber'));
     enable_select2($('#id_BoardSerial'));
     enable_select2($('#id_TestName'));
     enable_select2($('#id_Operator'));
     enable_select2($('#id_FailSign'));
     enable_select2($('#id_ExecDate'));
-    enable_select2($('#id_TestEnv'));
+    enable_select2($('#id_TestEnvironments'));
     enable_select2($('#id_SocketSerial'));
 
     enable_qtip();
@@ -469,9 +469,9 @@ $(document).ready(function() {
         var FromDate = $('#id_FromDate').val();
         var ToDate = $('#id_ToDate').val();
         var Result = $('#id_Result').val();
-        var LotNum = $('#id_LotNum').val();
-        var BenchNum = $('#id_BenchNum').val();
-        var TestEnv = $('#id_TestEnv').val();
+        var LotNumber = $('#id_LotNumber').val();
+        var BenchNumber = $('#id_BenchNumber').val();
+        var TestEnvironments = $('#id_TestEnvironments').val();
         var BoardSerial = $('#id_BoardSerial').val();
         var SocketSerial = $('#id_SocketSerial').val();
 
@@ -488,12 +488,12 @@ $(document).ready(function() {
             search_req['From'] = FromDate;
         if (ToDate && ToDate.length > 0)
             search_req['To'] = ToDate;
-        if (LotNum && LotNum.length > 0)
-            search_req['LotNum'] = LotNum;
-        if (BenchNum && BenchNum.length > 0)
-            search_req['BenchNum'] = BenchNum;
-        if (TestEnv && TestEnv.length > 0)
-            search_req['TestEnvironments'] = TestEnv;
+        if (LotNumber && LotNumber.length > 0)
+            search_req['LotNumber'] = LotNumber;
+        if (BenchNumber && BenchNumber.length > 0)
+            search_req['BenchNumber'] = BenchNumber;
+        if (TestEnvironments && TestEnvironments.length > 0)
+            search_req['TestEnvironments'] = TestEnvironments;
         if (BoardSerial && BoardSerial.length > 0)
             search_req['BoardSerial'] = BoardSerial;
         if (SocketSerial && SocketSerial.length > 0)
@@ -556,7 +556,7 @@ $(document).ready(function() {
                     width: '3%',
                 },
                 {
-                    data: 'LotNumber',
+                    data: 'LotNumber.Number',
                     render: function ( data, type, row, meta ) {
                         return '<b>Lot Number:&nbsp;</b>' + data;
                     }
@@ -595,7 +595,7 @@ $(document).ready(function() {
                     }
                 },
                 {
-                    data: 'LotNumber',
+                    data: 'LotNumber.Number',
                     render: function ( data, type, row, meta ) {
                         return '<b>Lot Number:&nbsp;</b>' + data;
                     }

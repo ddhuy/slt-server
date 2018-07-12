@@ -26,10 +26,10 @@
                 <select id="id_PartId" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Lot Number">
-                <select id="id_LotNum" multiple="multiple" data-placeholder="Please choose one or more"></select>
+                <select id="id_LotNumber" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Bench Number">
-                <select id="id_BenchNum" multiple="multiple" data-placeholder="Please choose one or more"></select>
+                <select id="id_BenchNumber" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Board Serial">
                 <select id="id_BoardSerial" multiple="multiple" data-placeholder="Please choose one or more"></select>
@@ -56,7 +56,7 @@
                 <select id="id_FailSign" multiple="multiple" data-placeholder="Please choose one or more"></select>
             </td>
             <td class="field_thead" data-tooltip="Test environments">
-                <select id="id_TestEnv" multiple="multiple" data-placeholder="Please choose one or more">
+                <select id="id_TestEnvironments" multiple="multiple" data-placeholder="Please choose one or more">
                     {% for k, v in TestEnvironments.items %}
                         <optgroup label="{{ k }}">
                             {% for i in v %}

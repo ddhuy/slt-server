@@ -63,7 +63,7 @@ class TestResult ( models.Model ) :
     ECID3 = models.CharField(max_length = 255, default = '', blank = True, null = True)
     ECID4 = models.CharField(max_length = 255, default = '', blank = True, null = True)
     CPUID = models.CharField(max_length = 255, default = '', blank = True, null = True)
-    LotNumber = models.CharField(max_length= 255, blank = True, null = True)
+    LotNumber = models.ForeignKey(LotNumber, blank = True, null = True)
     BenchNumber = models.CharField(max_length = 255, blank = True, null = True)
     TestName = models.CharField(max_length = 255, blank = True, null = True)
     DutMode = models.CharField(max_length = 255, choices = DUT_MODES, blank = True, null = True)
