@@ -8,6 +8,8 @@ from SltServer.models import Architecture
 from SltServer.models import SltMode
 from SltServer.models import TestResult, TestResultDetail
 
+from SltServer.logger import *
+
 from SltServer.serializers import TestResultSerializer, TestResultDetailSerializer
 
 from SltServer.views import BasePage
@@ -53,7 +55,7 @@ class SearchPage ( BasePage ) :
         search_req = TestResult.ToSearchRequest(arch_name, Data)
         search_resp = TestResultSerializer(many = True, data = TestResult.GetTestResult(arch_name, summ_mode, search_req))
         if (search_resp.is_valid() == False) :
-            print('__GetTestResult: search_resp is not valid')
+            LOG.warn('__GetTestResult: search_resp is not valid')
         return {'Errno': 0, 'Data': search_resp.data}
 
     def __GetTestHistory ( self, request, *args, **kwargs  ) :
@@ -71,7 +73,7 @@ class SearchPage ( BasePage ) :
         test_result_details = TestResultDetail.objects.filter(TestResult_id = test_result_id)
         post_resp = TestResultDetailSerializer(many = True, data = test_result_details)
         if (post_resp.is_valid() == False) :
-            print('__GetTestResultDetails: post_resp is not valid')
+            LOG.warn('__GetTestResultDetails: post_resp is not valid')
         return {'Errno': 0, 'Data': post_resp.data}
 
     def __GetStatisticsByLotNumber ( self, request, *args, **kwargs  ) :

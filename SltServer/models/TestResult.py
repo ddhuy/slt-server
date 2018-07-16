@@ -11,6 +11,8 @@ from .Architecture import Architecture
 from .LotNumber import LotNumber
 from .SltMode import SltMode
 
+from SltServer.logger import *
+
 
 # Parsing PartId to ECID & CPUID.
 # PartId pattern: [ECID1-ECID2-]CPUID
@@ -107,7 +109,7 @@ class TestResult ( models.Model ) :
                     elif (v.strip() not in test_envs[k.strip()]) :
                         bisect.insort(test_envs[k.strip()], v.strip())
             except Exception as e:
-                print("Cannot convert test environment: ", e)
+                LOG.exception("Cannot convert test environment: ", e)
         return collections.OrderedDict(sorted(test_envs.items(), key = lambda t: t[0]))
 
 

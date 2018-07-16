@@ -129,6 +129,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging configuration
+LOGGING_CONFIG = None
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 

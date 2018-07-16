@@ -5,6 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
 from rest_framework.renderers import JSONRenderer
 
+from SltServer.logger import *
+
 class BasePage ( LoginRequiredMixin, TemplateView ) :
     def __init__ ( self ) :
         self._funcdict = {}
@@ -17,7 +19,7 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
                 s = time.clock()
                 post_resp = self._funcdict[action](request, *args, **kwargs)
                 e = time.clock()
-                print('Runtime: ', e - s)
+                LOG.info('POST process time: %f', e - s)
                 # json_resp = self._JSONRenderer.render(post_resp)
                 return JsonResponse(status = 200, data = post_resp)
         return JsonResponse(status = 404, data = {'errno': 404, 'Message': 'Request method not found'})
