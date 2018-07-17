@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>
-    {% block site_title %}SLT Home{% endblock site_title %}
+    {% block site_title %}SLT HOME{% endblock site_title %}
     </title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -48,7 +48,7 @@
             <li><a href="#">Bench Monitoring</a><br />get & set bench information</li>
             {% endif %}
             {% if user.profile.need_dev %}
-            <li><a href="#">Test Configuration</a><br />configure test bed</li>
+            <li><a href="/config">Test Configuration</a><br />configure test bed</li>
             {% endif %}
             {% if user.profile.need_operator %}
             <li><a href="#">Lot Number</a><br />manage cusomter Lot</li>

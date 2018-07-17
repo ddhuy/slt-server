@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'datatables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/all.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_testconfig.css' %}">
+{% endblock page_css %}
+
+{% block page_title %}Test Configurations{% endblock page_title %}
+
+{% block page_content %}
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2>Select Operator:&nbsp;</h2>
+                    <select id="id_Operator">
+                        <option disabled selected value>&nbsp;</option>S
+                    {% for o in Operators %}
+                        <option value="{{ o.id }}">{{ o.profile.DisplayName }}</option>
+                    {% endfor  %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                </div>
+            </div>
+        </div>
+        <div class="table-csv">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button id="id_ExportCsv" type="button" class="btn btn-info csv"><i class="fa fa-save"></i> Export CSV</button>
+                    <button id="id_ImportCsv" type="button" class="btn btn-info csv"><i class="fa fa-clone"></i> Import CSV</button>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Description</th>
+                    <th>Board Settings</th>
+                    <th>Test Configurations</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="display: none;">
+                    <td>Fran Wilson</td>
+                    <td>
+                        <a class="settings" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
+                    </td>
+                    <td>
+                        <a class="settings" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
+                    </td>
+                    <td>
+                        <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                        <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8"><h2>&nbsp;<b>&nbsp;</b></h2></div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.qtip.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'datatables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slt_testconfig.js' %}"></script>
+{% endblock page_js %}
