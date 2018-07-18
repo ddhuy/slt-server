@@ -1,4 +1,4 @@
-import json
+import httplib, json
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -22,7 +22,6 @@ class SearchPage ( BasePage ) :
         super(SearchPage, self).__init__()
         self._funcdict = {
             'GetTestResult' : self.__GetTestResult,
-            'GetTestHistory' : self.__GetTestHistory,
             'GetTestResultDetails' : self.__GetTestResultDetails,
             'GetStatisticsByLotNumber' : self.__GetStatisticsByLotNumber,
         }
@@ -56,13 +55,7 @@ class SearchPage ( BasePage ) :
         search_resp = TestResultSerializer(many = True, data = TestResult.GetTestResult(arch_name, summ_mode, search_req))
         if (search_resp.is_valid() == False) :
             LOG.warn('__GetTestResult: search_resp is not valid')
-        return {'Errno': 0, 'Data': search_resp.data}
-
-    def __GetTestHistory ( self, request, *args, **kwargs  ) :
-        arch_name = kwargs['arch']
-        summ_mode = kwargs['mode']
-        Data = json.loads(request.POST.get('Data', {}))
-        test_result_id = Data
+        return httplib.OK, search_resp.data
 
     def __GetTestResultDetails ( self, request, *args, **kwargs  ) :
         arch_name = kwargs['arch']
@@ -74,7 +67,7 @@ class SearchPage ( BasePage ) :
         post_resp = TestResultDetailSerializer(many = True, data = test_result_details)
         if (post_resp.is_valid() == False) :
             LOG.warn('__GetTestResultDetails: post_resp is not valid')
-        return {'Errno': 0, 'Data': post_resp.data}
+        return httplib.OK, post_resp.data
 
     def __GetStatisticsByLotNumber ( self, request, *args, **kwargs  ) :
         pass

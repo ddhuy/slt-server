@@ -1,4 +1,4 @@
-import time
+import time, httplib
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse, JsonResponse
@@ -17,9 +17,9 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
         for action in self._funcdict :
             if (action == req_action) :
                 s = time.clock()
-                post_resp = self._funcdict[action](request, *args, **kwargs)
+                http_resp, post_resp = self._funcdict[action](request, *args, **kwargs)
                 e = time.clock()
                 LOG.info('POST process time: %f', e - s)
                 # json_resp = self._JSONRenderer.render(post_resp)
-                return JsonResponse(status = 200, data = post_resp)
-        return JsonResponse(status = 404, data = {'errno': 404, 'Message': 'Request method not found'})
+                return JsonResponse(status = http_resp, data = {'Data': post_resp})
+        return JsonResponse(status = httplib.NOT_FOUND, data = {'Message': 'Request method not found'})

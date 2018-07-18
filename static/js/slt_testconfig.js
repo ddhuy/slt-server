@@ -38,44 +38,84 @@ $(document).on("click", "#id_ExportCsv", function(){
 $(document).on("click", ".add-new", function(){
     if (!OPERATOR_ID)
         return;
-    // send create new test plan to server
-    commit_json_data();
-    // UI jobs: create new html row & add it into table
-    $(this).attr("disabled", "disabled");
-    var index = $("table tbody tr:last-child").index();
-    var row = '<tr>' +
-        '<td><input type="text" class="form-control" name="description" id="description"></td>' +
-        '<td>' + TESTCFG_BTN + '</td>' +
-        '<td>' + BOARDST_BTN + '</td>' +
-        '<td>' + ACTIONS_BTN + '</td>' +
-    '</tr>';
-    $("table").append(row);     
-    $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-    $('[data-toggle="tooltip"]').tooltip();
+    // send generate new test plan id to server
+    var add_new_btn = $(this);
+    commit_json_data(
+        URL = '/config/',
+        Data = {
+            Action: 'GenerateTestId',
+            Data: JSON.stringify({'OperatorId': OPERATOR_ID}),
+        },
+        Param = {},
+        OnSuccessCallback = function ( json_resp, Param ) {
+            var test_id = json_resp.Data;
+            // UI jobs: create new html row & add it into table
+            add_new_btn.attr("disabled", "disabled");
+            var index = $("table tbody tr:last-child").index();
+            var row = '<tr class="test_plan_row" data-test-id="' + test_id + '">' +
+                        '<td class="test_plan_name"><input type="text" class="form-control"></td>' +
+                        '<td>' + TESTCFG_BTN + '</td>' +
+                        '<td>' + BOARDST_BTN + '</td>' +
+                        '<td>' + ACTIONS_BTN + '</td>' +
+                      '</tr>';
+            $("table").append(row);
+            $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+            $('[data-toggle="tooltip"]').tooltip();
+        },
+        OnErrorCallback = function ( json_resp, Param ) {
+        }
+    );
 });
+
+//
 $(document).on("click", ".add", function(){
     if (!OPERATOR_ID)
         return;
-
+    // check required data is filled or not
     var empty = false;
     var input = $(this).parents("tr").find('input[type="text"]');
     input.each(function(){
         if(!$(this).val()){
             $(this).addClass("error");
             empty = true;
-        } else{
+        } else {
             $(this).removeClass("error");
         }
     });
     $(this).parents("tr").find(".error").first().focus();
-    if(!empty){
+    if(!empty) {
         input.each(function(){
             $(this).parent("td").html($(this).val());
-        });         
+        });
         $(this).parents("tr").find(".add, .edit").toggle();
         $(".add-new").removeAttr("disabled");
-        // commit json: add new test or edit existing test
-    }       
+
+        // All data is filled, commit request to add new test plan
+        var data = $('.test_plan_row').map(function() {
+            return {
+                'ID': $(this).attr('data-test-id'),
+                'Name': $(this).children('td:first').text()
+            }
+        }).get();
+        var req_data = {
+            'OperatorId': OPERATOR_ID,
+            'TestPlans': data
+        };
+        commit_json_data(
+            URL = '/config/',
+            Data = {
+                Action: 'SetTestPlan',
+                Data: JSON.stringify(req_data),
+            },
+            Param = {},
+            OnSuccessCallback = function ( json_resp, Param ) {
+                var test_name = json_resp.Data;
+                input[0].parent("td").html(test_name);
+            },
+            OnErrorCallback = function ( json_resp, Param ) {
+            }
+        );
+    }
 });
 // Edit row on edit button click
 $(document).on("click", ".edit", function(){

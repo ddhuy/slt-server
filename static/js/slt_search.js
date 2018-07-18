@@ -522,17 +522,12 @@ $(document).ready(function() {
             },
             Param = {},
             OnSuccessCallback = function ( json_resp, Param ) {
-                if (json_resp.Errno == 0) {
-                    if (SummMode == SUMM_MODE_PRODUCTION) {
-                        var summary_list = bind_search_result_production(json_resp.Data);
-                        calculate_statistic_production(summary_list);
-                    } else {
-                        var summary_list = bind_search_result(json_resp.Data);
-                        calculate_statistic(summary_list);
-                    }
+                if (SummMode == SUMM_MODE_PRODUCTION) {
+                    var summary_list = bind_search_result_production(json_resp.Data);
+                    calculate_statistic_production(summary_list);
                 } else {
-                    clear_search();
-                    slt_dialog(json_resp.Message);
+                    var summary_list = bind_search_result(json_resp.Data);
+                    calculate_statistic(summary_list);
                 }
             },
             OnErrorCallback = function ( json_resp, Param ) {
@@ -556,7 +551,7 @@ $(document).ready(function() {
                     width: '3%',
                 },
                 {
-                    data: 'LotNumber.Number',
+                    data: 'LotNumber.ID',
                     render: function ( data, type, row, meta ) {
                         return '<b>Lot Number:&nbsp;</b>' + data;
                     }
@@ -595,7 +590,7 @@ $(document).ready(function() {
                     }
                 },
                 {
-                    data: 'LotNumber.Number',
+                    data: 'LotNumber.ID',
                     render: function ( data, type, row, meta ) {
                         return '<b>Lot Number:&nbsp;</b>' + data;
                     }
