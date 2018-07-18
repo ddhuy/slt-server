@@ -93,14 +93,14 @@ def compress_files ( archive_path, archive_name, filelist ) :
     return zip_filepath
 
 #
-# get filename only, remove full path
+# get filename & extension, remove path
 #
 def extract_filename ( file_path ) :
     return os.path.basename(file_path)
 
 
 #
-# get filename only without full path & extension
+# get file path only
 #
 def extract_filepath ( file_path ) :
     return os.path.dirname(file_path)

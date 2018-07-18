@@ -17,7 +17,7 @@ LOGGING = {
     },
     "handlers" : {
         "filelog" : {
-            "class" : "logging.handlers.TimedRotatingFileHandler",
+            "class" : "SltServer.SLT_FileHandlers.SLT_TimedRotatingFileHandler",
             "level" : "DEBUG",
             "formatter" : "verbose",
             "filename" : "Logs/slt-server.log",
