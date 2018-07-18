@@ -3,7 +3,7 @@ var TESTCFG_BTN = null;
 var BOARDST_BTN = null;
 var OPERATOR_ID = null;
 
-function refresh_test_plans () {
+function set_test_plans ( ) {
     // All data is filled, commit request to add new test plan
     var data = $('.test_plan_row').map(function() {
         return {
@@ -41,7 +41,35 @@ function refresh_test_plans () {
         OnErrorCallback = function ( json_resp, Param ) {
         }
     );
-    $(".add-new").removeAttr("disabled");
+}
+
+function refresh_test_plans () {
+    commit_json_data(
+        URL = '/config/',
+        Data = {
+            Action: 'GetTestPlan',
+            OperatorId: OPERATOR_ID
+        },
+        Param = {},
+        OnSuccessCallback = function ( json_resp, Param ) {
+            $("tr.test_plan_row").remove();
+            var test_plans = json_resp.Data;
+            test_plans.forEach(function(test) {
+                var index = $("table tbody tr:last-child").index();
+                var row = '<tr class="test_plan_row" data-test-id="' + test.ID + '">' +
+                            '<td>' + test.name + '</td>' +
+                            '<td>' + BOARDST_BTN + '</td>' +
+                            '<td>' + TESTCFG_BTN + '</td>' +
+                            '<td>' + ACTIONS_BTN + '</td>' +
+                          '</tr>';
+                $("table").append(row);
+                // $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        },
+        OnErrorCallback = function ( json_resp, Param ) {
+        }
+    );
 }
 
 $(document).ready(function() {
@@ -60,7 +88,7 @@ $(document).on("change", "#id_Operator", function(){
     OPERATOR_ID = $("#id_Operator").val();
     if (!OPERATOR_ID)
         return;
-    // request board settings & test configs from server
+    refresh_test_plans()
 });
 // Import data from CSV files
 $(document).on("click", "#id_ImportCsv", function(){
@@ -127,7 +155,9 @@ $(document).on("click", ".add", function() {
             $(this).parent("td").html($(this).val());
         });
         $(this).parents("tr").find(".add, .edit").toggle();
+        set_test_plans();
         refresh_test_plans();
+        $(".add-new").removeAttr("disabled");
     }
 });
 
@@ -148,5 +178,7 @@ $(document).on("click", ".delete", function(){
     if (!OPERATOR_ID)
         return;
     $(this).parents("tr").remove();
+    set_test_plans();
     refresh_test_plans();
+    $(".add-new").removeAttr("disabled");
 });

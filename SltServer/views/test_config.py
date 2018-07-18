@@ -20,6 +20,7 @@ class TestConfigPage ( BasePage ) :
         super(TestConfigPage, self).__init__()
         self._funcdict = {
             'GenerateTestId' : self.__GenerateTestId,
+            'GetTestPlan' : self.__GetTestPlan,
             'SetTestPlan' : self.__SetTestPlan,
         }
 
@@ -36,6 +37,17 @@ class TestConfigPage ( BasePage ) :
         # TODO: verify the duplicating of new generated id
         return httplib.OK, new_id
 
+    def __GetTestPlan ( self, request, *args, **kwargs ) :
+        OperatorId = json.loads(request.POST.get('OperatorId', None))
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'OperatorId is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            board_list = Csv_BoardList(Operator.profile.Rfid)
+            return httplib.OK, board_list.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
     def __SetTestPlan ( self, request, *args, **kwargs ) :
         Data = json.loads(request.POST.get('Data', None))
         if (Data == None) :
@@ -46,7 +58,6 @@ class TestConfigPage ( BasePage ) :
         TestPlans = Data.get('TestPlans', None)
         if (TestPlans == None) :
             return httplib.BAD_REQUEST, 'Test Plans is empty'
-        LOG.info(OperatorId)
         Operator = User.objects.filter(id = OperatorId).first()
         if (Operator and Operator.profile.Rfid) :
             board_list = Csv_BoardList(Operator.profile.Rfid)
@@ -58,4 +69,3 @@ class TestConfigPage ( BasePage ) :
             return httplib.OK, board_list.GetData()
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
-
