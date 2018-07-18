@@ -11,19 +11,21 @@ class CsvFile ( object ) :
         self.Rfid = Rfid
     def GetCsv ( self ) :
         Filepath = self.GetFilepath()
-        return FileHelper.read_file(Filepath)
+        if (FileHelper.isfile(Filepath)) :
+            return FileHelper.read_file(Filepath)
+        return None
     def SetCsv ( self, Content ) :
         Filepath = self.GetFilepath()
-        if (not FileHelper.isfile(Filepath)) :
-            FileHelper.create_file(Filepath)
+        FileHelper.create_file(Filepath)
         FileHelper.write_file(Filepath, Content)
     def GetData ( self ) :
         Filepath = self.GetFilepath()
-        return Csv_FileHelper.Read(Filepath)
+        if (FileHelper.isfile(Filepath)) :
+            return Csv_FileHelper.Read(Filepath)
+        return None
     def SetData ( self, Data ) :
         Filepath = self.GetFilepath()
-        if (not FileHelper.isfile(Filepath)) :
-            FileHelper.create_file(Filepath)
+        FileHelper.create_file(Filepath)
         Csv_FileHelper.Write(Filepath, self.CSV_COLUMNS, Data)
 
 class Csv_UserInformation ( CsvFile ) :
@@ -48,8 +50,9 @@ class Csv_BoardList ( CsvFile ) :
         return item
     def GetData ( self ) :
         data = super(Csv_BoardList, self).GetData()
-        for d in data :
-            d['ID'] = FileHelper.remove_extension(d['config'])
+        if (data) :
+            for d in data :
+                d['ID'] = FileHelper.remove_extension(d['config'])
         return data
 
 class Csv_MenuDisplay ( CsvFile ) :
