@@ -4,6 +4,8 @@ import ConfigParser
 from SltServer import FileHelper, Utils
 from SltServer.Csv_FileHelper import Csv_FileHelper
 
+CFG_BASE_DIR = 'Database'
+
 class CsvFile ( object ) :
     def __init__ ( self, Rfid ) :
         self.Rfid = Rfid
@@ -30,7 +32,7 @@ class Csv_UserInformation ( CsvFile ) :
     def __init__ ( self, Rfid ) :
         super(Csv_UserInformation, self).__init__(Rfid)
     def GetFilepath ( self ) :
-        return os.path.join(str(self.Rfid), self.FILENAME)
+        return os.path.join(CFG_BASE_DIR, str(self.Rfid), self.FILENAME)
 
 class Csv_BoardList ( CsvFile ) :
     CSV_COLUMNS = ['name','config']
@@ -38,7 +40,7 @@ class Csv_BoardList ( CsvFile ) :
     def __init__ ( self, Rfid ) :
         super(Csv_BoardList, self).__init__(Rfid)
     def GetFilepath ( self ) :
-        return os.path.join(str(self.Rfid), self.FILENAME)
+        return os.path.join(CFG_BASE_DIR, str(self.Rfid), self.FILENAME)
     def CreateItem ( self, **kwargs ) :
         item = dict((k, None) for k in self.CSV_COLUMNS)
         item['name'] = kwargs['Name']
@@ -57,4 +59,4 @@ class Csv_MenuDisplay ( CsvFile ) :
         super(Csv_MenuDisplay, self).__init__(Rfid)
         self.ID = ID
     def GetFilepath ( self ) :
-        return os.path.join(str(self.Rfid), self.ID, self.FILENAME)
+        return os.path.join(CFG_BASE_DIR, str(self.Rfid), self.ID, self.FILENAME)
