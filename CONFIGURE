@@ -1,0 +1,53 @@
+#!/bin/bash
+if [ "x$SLT_HOME" = "x" ]; then
+    export SLT_HOME=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+fi
+
+echo "SLT Home Directory: $SLT_HOME"
+
+# create virtual environment for SLT
+echo "+---------------+"
+echo "| Configuration | Configuring Web Environment."
+echo "+---------------+"
+virtualenv --always-copy --prompt="[SLT] " $SLT_HOME/WebEnv/
+if [ $? != 0 ]; then
+    echo "Cannot create virtual environment for SLT Web Server"
+    exit $?;
+fi
+
+virtualenv --relocatable $SLT_HOME/WebEnv/
+if [ $? != 0 ]; then
+    echo "Configure Web Environment failed"
+    exit $?;
+fi
+
+# activate virtualenv
+. $SLT_HOME/WebEnv/bin/activate
+if [ $? != 0 ]; then
+    echo "Unable to activate Web Environment"
+    exit $?;
+fi
+
+# install web.py on local project
+pip install -r $SLT_HOME/Requirements.txt
+if [ $? != 0 ]; then
+    echo "Cannot install python packages"
+    exit $?;
+fi
+
+# deactivate before exiting
+echo ""
+echo "+----------+"
+echo "| CLEAN-UP | Cleaning..."
+echo "+----------+"
+deactivate
+if [ $? != 0 ]; then
+    echo "Cleaning up after install failed"
+    exit $?;
+fi
+
+# DONE
+echo ""
+echo "+---------+"
+echo "| SUCCESS | You can start Web Server manually."
+echo "+---------+"

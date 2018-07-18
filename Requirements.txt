@@ -1,0 +1,6 @@
+Django==1.11.14
+django-extensions==2.1.0
+djangorestframework==3.8.2
+pytz==2018.5
+six==1.11.0
+typing==3.6.4
