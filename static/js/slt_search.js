@@ -53,7 +53,7 @@ function convert_testenv ( testenv_str ) {
         // parse to string
         for (var k in testenv_obj) {
             if (testenv_obj.hasOwnProperty(k)) {
-                ret_str += k + ": " + testenv_obj[k] + "\r\n";
+                ret_str += k + ": " + testenv_obj[k] + "<br/>";
             }
         }
         return ret_str;
@@ -166,21 +166,21 @@ function bind_search_result ( search_results ) {
                      + '</tr><tr>';
         for (var i in Summaries) {
             var row = Summaries[i];
-            html_table +=  '<td title="Test Name">' + row.TestName + '</td>'
-                         + '<td title="Bench number">' + row.BenchNumber + '</td>'
-                         + '<td title="Board Serial">' + row.BoardSerial + '</td>'
-                         + '<td title="Socket Serial">' + row.SocketSerial + '</td>'
-                         + '<td title="Test Mode">' + row.SltMode.Mode + '</td>'
-                         + '<td title="Operator Name">' + row.Operator.first_name + '</td>';
+            html_table +=  '<td>' + row.TestName + '</td>'
+                         + '<td>' + row.BenchNumber + '</td>'
+                         + '<td>' + row.BoardSerial + '</td>'
+                         + '<td>' + row.SocketSerial + '</td>'
+                         + '<td>' + row.SltMode.Mode + '</td>'
+                         + '<td>' + row.Operator.first_name + '</td>';
             if (row.Result.toUpperCase() == 'PASS')
-                html_table += '<td title="" style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
+                html_table += '<td style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
             else
-                html_table += '<td title="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
-            html_table += '<td title="Execution Date">' + row.ExecutionDate + '</td>';
-            html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
+                html_table += '<td data-tooltip="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
+            html_table += '<td>' + row.ExecutionDate + '</td>';
+            html_table += '<td data-tooltip="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
             html_table += '<td style="text-align:center;">\
-                               <a class="s_testdetails" title="Show test details" href="" data-id="' + row.id + '">Details</a> | \
-                               <a class="s_downloadlog" title="Download log file" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
+                               <a class="s_testdetails" href="" data-id="' + row.id + '">Details</a> | \
+                               <a class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
                            </td>';
             html_table += '</tr>';
         }
@@ -204,9 +204,9 @@ function bind_search_result ( search_results ) {
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
-        }
-        else {
+        } else {
             row.child(format(row.data())).show();
+            enable_qtip();
             tr.addClass('shown');
         }
         return false;
@@ -239,13 +239,13 @@ function bind_search_result_production ( search_results ) {
             if (row.Result.toUpperCase() == 'PASS')
                 html_table += '<td style="text-align: center;"> <div style="color:green;">' + row.Result + '</div></td>';
             else
-                html_table += '<td title="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
+                html_table += '<td data-tooltip="' + row.Description.replace(/\"/g, '&quot;') + '" style="text-align: center;"><div style="color:red;">' + row.Result + '</div></td>';
             html_table += '<td>' + row.ExecutionDate + '</td>';
-            html_table += '<td title="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
+            html_table += '<td data-tooltip="' + convert_testenv(row.TestEnvironments) + '">' + convert_testenv_short(row.TestEnvironments) + '</td>';
             html_table += '<td style="text-align:center;">\
-                                <a title="Show test details" class="s_testdetails" href="" data-id="' + row.id + '">Details</a> | \
-                                <a title="Show test history" class="s_testhistory" href="" data-cpuid="' + row.CPUID + '" data-lotnum="' + row.LotNumber.Number + '">History</a> | \
-                                <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
+                                <a class="s_testdetails" href="" data-id="' + row.id + '">Details</a> | \
+                                <a class="s_testhistory" href="" data-cpuid="' + row.CPUID + '" data-lotnum="' + row.LotNumber.Number + '">History</a> | \
+                                <a class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + row.Rfid + '&Filename=' + row.LogFilePath + '">Log</a>\
                             </td>';
             html_table += '</tr>'
         }
@@ -269,6 +269,7 @@ function bind_search_result_production ( search_results ) {
         }
         else {
             row.child(format(row.data())).show();
+            enable_qtip();
             tr.addClass('shown');
         }
         return false;
