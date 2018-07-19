@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <table id="id_TestPlans" class="table table-bordered table-hover">
+        <table id="id_TestPlansTable" class="table table-bordered table-hover">
             <thead class="thead-light">
                 <tr>
                     <th>Description</th>
@@ -53,17 +53,17 @@
             </thead>
             <tbody>
                 <tr style="display: none;">
-                    <td>Fran Wilson</td>
+                    <td>Dummy Row</td>
                     <td>
-                        <a class="board_settings" title="Edit Board Settings" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
+                        <a class="settings edit-board-settings" data-tooltip="Edit Board Settings"><i class="material-icons">&#xE8B8;</i></a>
                     </td>
                     <td>
-                        <a class="test_configuration" title="Edit Test Configurations" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
+                        <a class="settings edit-test-configurations" data-tooltip="Edit Test Configurations"><i class="material-icons">&#xE8B8;</i></a>
                     </td>
                     <td>
-                        <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
-                        <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                        <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                        <a class="accept-test-plan" data-tooltip="Accept"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="edit-test-plan" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                        <a class="delete-test-plan" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
             </tbody>
@@ -72,7 +72,38 @@
             <div class="row">
                 <div class="col-sm-8"><h2>&nbsp;<b>&nbsp;</b></h2></div>
                 <div class="col-sm-4">
-                    <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                    <button type="button" class="btn btn-info new-test-plan"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="id_BoardSettingsDialog" class="container" style="display: none;">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2 id="id_BoardSettingsTitle">eMag Analyzation</h2>
+                </div>
+            </div>
+        </div>
+        <div class="table-csv">
+            <div class="row">
+                <div class="col-sm-12" style="text-align: right;">
+                    <a id="id_ImportBoardSetting" href="" data-tooltip="Import Board Settings">
+                        <i class="fa fa-clone"></i> Import
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a id="id_ExportBoardSetting" href="" data-tooltip="Export Board Settings">
+                        <i class="fa fa-save"></i> Export
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                <textarea id="id_BoardSettingsText" style="width:550px;height:450px;resize:none;"></textarea>
                 </div>
             </div>
         </div>

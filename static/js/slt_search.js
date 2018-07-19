@@ -40,7 +40,7 @@ function enable_qtip ( ) {
             target: 'mouse', // Track the mouse as the positioning target
             adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
         }
-    })
+    });
 }
 
 function convert_testenv ( testenv_str ) {

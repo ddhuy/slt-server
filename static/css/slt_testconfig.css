@@ -33,7 +33,7 @@ select,
     display: inline-block;
     float: left;
 }
-.table-title .add-new {
+.table-title .new-test-plan {
     float: right;
     height: 30px;
     font-weight: bold;
@@ -43,7 +43,7 @@ select,
     border-radius: 50px;
     line-height: 13px;
 }
-.table-title .add-new i {
+.table-title .new-test-plan i {
     margin-right: 4px;
 }
 
@@ -101,22 +101,22 @@ table.table td a {
     margin: 0 5px;
     min-width: 24px;
 }    
-table.table td a.add {
+table.table td a.accept-test-plan {
     color: #27C46B;
 }
-table.table td a.edit {
+table.table td a.edit-test-plan {
     color: #FFC107;
 }
 table.table td a.settings {
     color: #2196F3;
 }
-table.table td a.delete {
+table.table td a.delete-test-plan {
     color: #E34724;
 }
 table.table td i {
     font-size: 19px;
 }
-table.table td a.add i {
+table.table td a.accept-test-plan i {
     font-size: 24px;
     margin-right: -1px;
     position: relative;
@@ -131,6 +131,6 @@ table.table .form-control {
 table.table .form-control.error {
     border-color: #f50000;
 }
-table.table td .add {
+table.table td .accept-test-plan {
     display: none;
 }
