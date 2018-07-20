@@ -173,7 +173,7 @@ function commit_json_data ( URL = "",
             if (OnErrorCallback && json_resp)
                 OnErrorCallback(json_resp, Param);
             else {
-                $("#uid_MsgDlg").data("Message", json_resp.responseText);
+                $("#uid_MsgDlg").data("Message", json_resp);
                 $("#uid_MsgDlg").dialog("open");
             }
         }

@@ -33,7 +33,7 @@ select,
     display: inline-block;
     float: left;
 }
-.table-title .new-test-plan {
+.table-title .btn-new {
     float: right;
     height: 30px;
     font-weight: bold;
@@ -43,7 +43,7 @@ select,
     border-radius: 50px;
     line-height: 13px;
 }
-.table-title .new-test-plan i {
+.table-title .btn-new i {
     margin-right: 4px;
 }
 
@@ -80,19 +80,9 @@ table.table th i {
     margin: 0 5px;
     cursor: pointer;
 }
+
 table.table th:last-child {
     width: 100px;
-    text-align: center;
-}
-table.table th:nth-last-child(2) {
-    width: 180px;
-    text-align: center;
-}
-table.table th:nth-last-child(3) {
-    width: 180px;
-    text-align: center;
-}
-table.table td:nth-last-child(-n+3) {
     text-align: center;
 }
 table.table td a {
@@ -101,22 +91,22 @@ table.table td a {
     margin: 0 5px;
     min-width: 24px;
 }    
-table.table td a.accept-test-plan {
+table.table td a.accept {
     color: #27C46B;
 }
-table.table td a.edit-test-plan {
+table.table td a.edit {
     color: #FFC107;
 }
 table.table td a.settings {
     color: #2196F3;
 }
-table.table td a.delete-test-plan {
+table.table td a.delete {
     color: #E34724;
 }
 table.table td i {
     font-size: 19px;
 }
-table.table td a.accept-test-plan i {
+table.table td a.accept i {
     font-size: 24px;
     margin-right: -1px;
     position: relative;
@@ -131,6 +121,70 @@ table.table .form-control {
 table.table .form-control.error {
     border-color: #f50000;
 }
-table.table td .accept-test-plan {
+table.table td .accept {
     display: none;
+}
+table.TestPlansTable th:nth-last-child(2) {
+    width: 180px;
+    text-align: center;
+}
+table.TestPlansTable th:nth-last-child(3) {
+    width: 180px;
+    text-align: center;
+}
+table.TestPlansTable td:nth-last-child(-n+3) {
+    text-align: center;
+}
+table.TestSuitesTable th {
+    text-align: center;
+}
+table.TestSuitesTable th.control-button {
+    width: 100px;
+    text-align: center;
+}
+table.TestSuitesTable td.control-button {
+    text-align: center;
+}
+/* Radio & Check box style */
+input[type=checkbox].css-checkbox {
+    position:absolute;
+    z-index:-1000;
+    left:-1000px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height:1px;
+    width:1px;
+    margin:-1px;
+    padding:0;
+    border:0;
+}
+input[type=checkbox].css-checkbox + label.css-label {
+    padding-left:30px;
+    height:12px; 
+    display:inline-block;
+    line-height:12px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:12px;
+    vertical-align:middle;
+    cursor:pointer;
+
+}
+input[type=checkbox].css-checkbox:checked + label.css-label {
+    background-position: 0 -12px;
+}
+label.css-label {
+    background-image:url('../images/checkbox.png');
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+select.sltmodes-selection {
+    width: 100%;
+    max-height: inherit;
+    margin: 0;
+    padding: auto 0;
 }

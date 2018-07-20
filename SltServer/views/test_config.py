@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 
 from SltServer.models.ConfigurationFile import *
+from SltServer.models import SltMode
 from SltServer.logger import *
 from SltServer.views import BasePage
 
@@ -20,15 +21,18 @@ class TestConfigPage ( BasePage ) :
         super(TestConfigPage, self).__init__()
         self._funcdict = {
             'GenerateTestId' : self.__GenerateTestId,
-            'GetTestPlan' : self.__GetTestPlan,
-            'SetTestPlan' : self.__SetTestPlan,
+            'GetTestPlans' : self.__GetTestPlans,
+            'SetTestPlans' : self.__SetTestPlans,
             'GetBoardSettings' : self.__GetBoardSettings,
             'SetBoardSettings' : self.__SetBoardSettings,
+            'GetTestSuites': self.__GetTestSuites,
+            'SetTestSuites': self.__SetTestSuites,
         }
 
     def get ( self, request, *args, **kwargs ) :
         operators = User.objects.all().order_by('username')
-        return render(request, self.template_name, {'Operators': operators})
+        sltmodes = SltMode.objects.all()
+        return render(request, self.template_name, {'Operators': operators, 'SltModes': sltmodes})
 
     def __GenerateTestId ( self, request, *args, **kwargs ) :
         Data = json.loads(request.POST.get('Data', {}))
@@ -39,7 +43,7 @@ class TestConfigPage ( BasePage ) :
         # TODO: verify the duplicating of new generated id
         return httplib.OK, new_id
 
-    def __GetTestPlan ( self, request, *args, **kwargs ) :
+    def __GetTestPlans ( self, request, *args, **kwargs ) :
         OperatorId = json.loads(request.POST.get('OperatorId', None))
         if (OperatorId == None) :
             return httplib.BAD_REQUEST, 'OperatorId is empty'
@@ -50,7 +54,7 @@ class TestConfigPage ( BasePage ) :
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
 
-    def __SetTestPlan ( self, request, *args, **kwargs ) :
+    def __SetTestPlans ( self, request, *args, **kwargs ) :
         Data = json.loads(request.POST.get('Data', None))
         if (Data == None) :
             return httplib.BAD_REQUEST, 'Request Data is empty'
@@ -101,5 +105,41 @@ class TestConfigPage ( BasePage ) :
             board_ini = Ini_BoardSetting(Operator.profile.Rfid, TestPlanId)
             board_ini.SetContent(BoardSettings)
             return httplib.OK, board_ini.GetContent()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __GetTestSuites ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            test_suites = Csv_MenuDisplay(Operator.profile.Rfid, TestPlanId)
+            return httplib.OK, test_suites.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __SetTestSuites ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        TestSuites = json.loads(request.POST.get('TestSuites', {}))
+        if (TestSuites == None) :
+            return httplib.BAD_REQUEST, 'Test Suites data is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            test_suites = Csv_MenuDisplay(Operator.profile.Rfid, TestPlanId)
+            test_suites_data = []
+            for suite in TestSuites :
+                data = test_suites.CreateItem(**suite)
+                test_suites_data.append(data)
+            test_suites.SetData(test_suites_data)
+            return httplib.OK, test_suites.GetData()
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'

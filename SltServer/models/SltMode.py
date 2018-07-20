@@ -1,14 +1,13 @@
 from django.db import models
 
 class SltMode ( models.Model ) :
-    Mode = models.CharField(max_length = 255, unique = True)
-    Text = models.CharField(max_length = 255)
-
     SLT_MODE_CALIB = 1
     SLT_MODE_PROD = 2
     SLT_MODE_FA = 3
-
     ALL_DATA = None
+
+    Mode = models.CharField(max_length = 255, unique = True)
+    Text = models.CharField(max_length = 255)
 
     class Meta:
         verbose_name = 'SltMode'

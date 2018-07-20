@@ -2,9 +2,6 @@
 {% load static from staticfiles %}
 
 {% block page_css %}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
     
@@ -30,8 +27,6 @@
                     {% endfor  %}
                     </select>
                 </div>
-                <div class="col-sm-4">
-                </div>
             </div>
         </div>
         <div class="table-csv">
@@ -42,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <table id="id_TestPlansTable" class="table table-bordered table-hover">
+        <table id="id_TestPlansTable" class="table table-bordered table-hover TestPlansTable">
             <thead class="thead-light">
                 <tr>
                     <th>Description</th>
@@ -58,21 +53,20 @@
                         <a class="settings edit-board-settings" data-tooltip="Edit Board Settings"><i class="material-icons">&#xE8B8;</i></a>
                     </td>
                     <td>
-                        <a class="settings edit-test-configurations" data-tooltip="Edit Test Configurations"><i class="material-icons">&#xE8B8;</i></a>
+                        <a class="settings edit-test-suites" data-tooltip="Edit Test Suites"><i class="material-icons">&#xE8B8;</i></a>
                     </td>
                     <td>
-                        <a class="accept-test-plan" data-tooltip="Accept"><i class="material-icons">&#xE03B;</i></a>
-                        <a class="edit-test-plan" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
-                        <a class="delete-test-plan" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                        <a class="accept accept-test-plan" data-tooltip="Accept"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="edit edit-test-plan" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                        <a class="delete delete-test-plan" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-8"><h2>&nbsp;<b>&nbsp;</b></h2></div>
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-info new-test-plan"><i class="fa fa-plus"></i> Add New</button>
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-test-plan"><i class="fa fa-plus"></i> Add New</button>
                 </div>
             </div>
         </div>
@@ -85,7 +79,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h2 id="id_BoardSettingsTitle">eMag Analyzation</h2>
+                    <h2 id="id_BoardSettingsTitle"></h2>
                 </div>
             </div>
         </div>
@@ -103,12 +97,95 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                <textarea id="id_BoardSettingsText" style="width:550px;height:450px;resize:none;"></textarea>
+                    <textarea id="id_BoardSettingsText" style="width:550px;height:450px;resize:none;"></textarea>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<div id="id_TestSuitesDialog" class="container" style="display: none;">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2 id="id_TestSuitesTitle"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="table-csv">
+            <div class="row">
+                <div class="col-sm-12" style="text-align: right;">
+                    <a id="id_ImportTestSuites" href="" data-tooltip="Import Test Suites">
+                        <i class="fa fa-clone"></i> Import
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a id="id_ExportTestSuites" href="" data-tooltip="Export Test Suites">
+                        <i class="fa fa-save"></i> Export
+                    </a>
+                </div>
+                </div>
+            </div>
+        </div>
+        <table id="id_TestSuitesTable" class="table table-bordered table-hover TestSuitesTable">
+            <thead class="thead-light">
+                <tr>
+                    <th class="control-button">Enable</th>
+                    <th>Display</th>
+                    <th class="control-button" style="width: 150px;">Mode</th>
+                    <th class="control-button">1st Test</th>
+                    <th class="control-button">2nd Test</th>
+                    <th class="control-button">Error 1</th>
+                    <th class="control-button">Error 2</th>
+                    <th class="control-button">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="display: none;">
+                    <td class="control-button">
+                        <input type="checkbox" class="enable-test-suite" value="1">
+                        <!-- <input type="checkbox" class="css-checkbox enable-test-suite" id="cb-test-suite" value="1"> -->
+                        <!-- <label for="cb-test-suite" class="css-label"></label> -->
+                    </td>
+                    <td>Dummy Test Suite</td>
+                    <td class="control-button">
+                        <select class="sltmodes-selection">
+                            {% for m in SltModes %}
+                            <option value="{{ m.id }}">{{ m.Mode }}</option>
+                            {% endfor  %}
+                        </select>
+                    </td>
+                    <td class="control-button">
+                        <a class="settings edit-test-1" data-tooltip="Edit Main Test"><i class="material-icons">&#xE8B8;</i></a>
+                    </td>
+                    <td class="control-button">
+                        <a class="settings edit-test-2" data-tooltip="Edit Secondary Test"><i class="material-icons">&#xE8B8;</i></a>
+                    </td>
+                    <td class="control-button">
+                        <a class="settings edit-error-1" data-tooltip="Edit Error Monitor 1"><i class="material-icons">&#xE8B8;</i></a>
+                    </td class="control-button">
+                    <td class="control-button">
+                        <a class="settings edit-error-2" data-tooltip="Edit Error Monitor 2"><i class="material-icons">&#xE8B8;</i></a>
+                    </td>
+                    <td class="control-button">
+                        <a class="accept accept-test-suite" data-tooltip="Accept"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="edit edit-test-suite" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                        <a class="delete delete-test-suite" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-test-suite"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock page_content %}
 
 {% block page_js %}

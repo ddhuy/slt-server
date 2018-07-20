@@ -2,6 +2,7 @@ import os, csv
 import ConfigParser
 
 from SltServer import FileHelper, Utils
+from SltServer.logger import *
 from SltServer.Csv_FileHelper import Csv_FileHelper
 from SltServer.Ini_FileHelper import Ini_FileHelper
 
@@ -79,3 +80,18 @@ class Csv_MenuDisplay ( CsvFile ) :
         self.ID = ID
     def GetFilepath ( self ) :
         return os.path.join(CFG_BASE_DIR, self.Rfid, self.ID, self.FILENAME)
+    def CreateItem ( self, **kwargs ) :
+        item = dict((k, None) for k in self.CSV_COLUMNS)
+        item = kwargs
+        item['ID'] = kwargs['ID']
+        item['test_cfg'] = kwargs['ID'] + '_TestCfg.csv'
+        item['second_test_cfg'] = kwargs['ID'] + '_TestCfg2.csv'
+        item['error_table1'] = kwargs['ID'] + '_Error1.csv'
+        item['error_table2'] = kwargs['ID'] + '_Error2.csv'
+        return item
+    def GetData ( self ) :
+        data = super(Csv_MenuDisplay, self).GetData()
+        if (data) :
+            for d in data :
+                d['ID'] = d['test_cfg'].split('_')[0]
+        return data
