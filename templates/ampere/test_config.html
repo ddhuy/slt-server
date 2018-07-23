@@ -125,7 +125,6 @@
                         <i class="fa fa-save"></i> Export
                     </a>
                 </div>
-                </div>
             </div>
         </div>
         <table id="id_TestSuitesTable" class="table table-bordered table-hover TestSuitesTable">
@@ -144,13 +143,14 @@
             <tbody>
                 <tr style="display: none;">
                     <td class="control-button">
-                        <input type="checkbox" class="enable-test-suite" value="1">
-                        <!-- <input type="checkbox" class="css-checkbox enable-test-suite" id="cb-test-suite" value="1"> -->
-                        <!-- <label for="cb-test-suite" class="css-label"></label> -->
+                        <label class="switch">
+                            <input type="checkbox" class="enable-test-suite" value="1">
+                            <span class="slider round"></span>
+                        </label>
                     </td>
                     <td>Dummy Test Suite</td>
                     <td class="control-button">
-                        <select class="sltmodes-selection">
+                        <select class="selection sltmodes-selection">
                             {% for m in SltModes %}
                             <option value="{{ m.id }}">{{ m.Mode }}</option>
                             {% endfor  %}
@@ -180,6 +180,88 @@
             <div class="row">
                 <div class="col-sm-12">
                     <button type="button" class="btn btn-info btn-new new-test-suite"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="id_TestStepsDialog" class="container-fluid" style="display: none;">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2 id="id_TestStepsTitle"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="table-csv">
+            <div class="row">
+                <div class="col-sm-12" style="text-align: right;">
+                    <a id="id_ImportTestSteps" href="" data-tooltip="Import Test Steps">
+                        <i class="fa fa-clone"></i> Import
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a id="id_ExportTestSteps" href="" data-tooltip="Export Test Steps">
+                        <i class="fa fa-save"></i> Export
+                    </a>
+                </div>
+            </div>
+        </div>
+        <table id="id_TestStepsTable" class="table table-bordered table-hover TestStepsTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>Test</th>
+                    <th style="width: 110px;">Mode</th>
+                    <th style="width: 90px;">Fail Stop</th>
+                    <th style="width: 120px;">Prompt</th>
+                    <th>Command</th>
+                    <th>Pass</th>
+                    <th>Fail</th>
+                    <th style="width: 90px;">Timeout</th>
+                    <th>Message</th>
+                    <th style="width: 90px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="display: none;">
+                    <td>
+                        <select class="selection ts-test-selection">
+                            {% for m in Commands %}
+                            <option value="{{ m.Test }}">{{ m.Test }}</option>
+                            {% endfor  %}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="selection ts-run-mode">
+                            {% for m in RunModes %}
+                            <option value="{{ m.Mode }}">{{ m.Mode }}</option>
+                            {% endfor  %}
+                        </select>
+                    </td>
+                    <td class="control-button">
+                        <label class="switch">
+                            <input type="checkbox" class="ts-fail-stop" value="1">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                    <td><input class="form-control input-sm ts-prompt" type="text"></td>
+                    <td><input class="form-control input-sm ts-cmd" type="text"></td>
+                    <td><input class="form-control input-sm ts-pass" type="text"></td>
+                    <td><input class="form-control input-sm ts-fail" type="text"></td>
+                    <td><input class="form-control input-sm ts-timeout" type="number" min=0 style="text-align: center;"></td>
+                    <td><input class="form-control input-sm ts-msg" type="text"></td>
+                    <td class="control-button">
+                        <a class="delete delete-test-step" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-test-step"><i class="fa fa-plus"></i> Add New</button>
                 </div>
             </div>
         </div>

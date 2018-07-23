@@ -13,7 +13,7 @@ class CsvFile ( object ) :
         Filepath = self.GetFilepath()
         if (FileHelper.isfile(Filepath)) :
             return FileHelper.read_file(Filepath)
-        return None
+        return ''
     def SetContent ( self, Content ) :
         Filepath = self.GetFilepath()
         FileHelper.create_file(Filepath)
@@ -22,7 +22,7 @@ class CsvFile ( object ) :
         Filepath = self.GetFilepath()
         if (FileHelper.isfile(Filepath)) :
             return Csv_FileHelper.Read(Filepath)
-        return None
+        return []
     def SetData ( self, Data ) :
         Filepath = self.GetFilepath()
         FileHelper.create_file(Filepath)
@@ -39,7 +39,7 @@ class Ini_BoardSetting ( Ini_FileHelper ) :
         Filepath = self.GetFilepath()
         if (FileHelper.isfile(Filepath)) :
             return FileHelper.read_file(Filepath)
-        return None
+        return ''
     def SetContent ( self, Content ) :
         Filepath = self.GetFilepath()
         FileHelper.create_file(Filepath)
@@ -95,3 +95,21 @@ class Csv_MenuDisplay ( CsvFile ) :
             for d in data :
                 d['ID'] = d['test_cfg'].split('_')[0]
         return data
+
+class Csv_TestConfiguration1 ( CsvFile ) :
+    CSV_COLUMNS = ['test','mode','fail_stop','prompt','cmd','pass','fail', 'timeout', 'msg', 'comments']
+    FILENAME = ''
+    def __init__ ( self, Rfid, TestPlanId, TestSuiteId ) :
+        self.Rfid = str(Rfid)
+        self.TestPlanId = TestPlanId
+        self.TestSuiteId = TestSuiteId
+    def GetFilepath ( self ) :
+        return os.path.join(CFG_BASE_DIR, self.Rfid, self.TestPlanId, self.TestSuiteId + '_TestCfg.csv')
+    def CreateItem ( self, **kwargs ) :
+        item = dict((k, None) for k in self.CSV_COLUMNS)
+        item = kwargs
+        return item
+
+class Csv_TestConfiguration2 ( Csv_TestConfiguration1 ) :
+    def GetFilepath ( self ) :
+        return os.path.join(CFG_BASE_DIR, self.Rfid, self.TestPlanId, self.TestSuiteId + '_TestCfg2.csv')

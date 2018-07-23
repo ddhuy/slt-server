@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 
 from SltServer.models.ConfigurationFile import *
-from SltServer.models import SltMode
+from SltServer.models import SltMode, TestMode, TestCommand
 from SltServer.logger import *
 from SltServer.views import BasePage
 
@@ -27,12 +27,16 @@ class TestConfigPage ( BasePage ) :
             'SetBoardSettings' : self.__SetBoardSettings,
             'GetTestSuites': self.__GetTestSuites,
             'SetTestSuites': self.__SetTestSuites,
+            'GetTestSteps': self.__GetTestSteps,
+            'SetTestSteps': self.__SetTestSteps,
         }
 
     def get ( self, request, *args, **kwargs ) :
         operators = User.objects.all().order_by('username')
         sltmodes = SltMode.objects.all()
-        return render(request, self.template_name, {'Operators': operators, 'SltModes': sltmodes})
+        runmodes = TestMode.objects.all()
+        commands = TestCommand.objects.all()
+        return render(request, self.template_name, {'Operators': operators, 'SltModes': sltmodes, 'RunModes': runmodes, 'Commands': commands})
 
     def __GenerateTestId ( self, request, *args, **kwargs ) :
         Data = json.loads(request.POST.get('Data', {}))
@@ -141,5 +145,64 @@ class TestConfigPage ( BasePage ) :
                 test_suites_data.append(data)
             test_suites.SetData(test_suites_data)
             return httplib.OK, test_suites.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __GetTestSteps ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        TestSuiteId = request.POST.get('TestSuiteId', None)
+        if (TestSuiteId == None) :
+            return httplib.BAD_REQUEST, 'Test Suites ID is empty'
+        CfgNumber = request.POST.get('CfgNumber', None)
+        if (CfgNumber == None) :
+            return httplib.BAD_REQUEST, 'Test Configuration Type is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            if (int(CfgNumber) == 1) :
+                test_steps = Csv_TestConfiguration1(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            elif (int(CfgNumber) == 2) :
+                test_steps = Csv_TestConfiguration2(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            else :
+                return httplib.BAD_REQUEST, 'Test Configuration Type is invalid'
+            return httplib.OK, test_steps.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __SetTestSteps ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        TestSuiteId = request.POST.get('TestSuiteId', None)
+        if (TestSuiteId == None) :
+            return httplib.BAD_REQUEST, 'Test Suites ID is empty'
+        TestSteps = json.loads(request.POST.get('TestSteps', []))
+        if (TestSteps == None) :
+            return httplib.BAD_REQUEST, 'Test Steps data is empty'
+        CfgNumber = request.POST.get('CfgNumber', None)
+        if (CfgNumber == None) :
+            return httplib.BAD_REQUEST, 'Test Configuration Type is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            LOG.info(type(CfgNumber))
+            if (int(CfgNumber) == 1) :
+                test_steps = Csv_TestConfiguration1(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            elif (int(CfgNumber) == 2) :
+                test_steps = Csv_TestConfiguration2(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            else :
+                return httplib.BAD_REQUEST, 'Test Configuration Type is invalid'
+            test_steps_data = []
+            for step in TestSteps :
+                data = test_steps.CreateItem(**step)
+                test_steps_data.append(data)
+            test_steps.SetData(test_steps_data)
+            return httplib.OK, test_steps.GetData()
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'

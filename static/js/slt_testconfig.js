@@ -12,7 +12,36 @@ var TEST_SUITE_ERROR1_BTN = null;
 var TEST_SUITE_ERROR2_BTN = null;
 var TEST_SUITE_ACTIONS_BTN = null;
 
-function enable_qtip ( ) {
+var TEST_STEP_TEST_INPUT = null;
+var TEST_STEP_MODE_INPUT = null;
+var TEST_STEP_FAILSTOP_INPUT = null;
+var TEST_STEP_PROMPT_INPUT = null;
+var TEST_STEP_COMMAND_INPUT = null;
+var TEST_STEP_PASS_INPUT = null;
+var TEST_STEP_FAIL_INPUT = null;
+var TEST_STEP_TIMEOUT_INPUT = null;
+var TEST_STEP_MESSAGE_INPUT = null;
+var TEST_STEP_ACTIONS_BTN = null;
+
+var current_test_plan_id = null;
+var current_test_plan_name = null;
+var current_test_suite_id = null;
+var current_test_suite_name = null;
+
+function enable_qtips ( container ) {
+    container.find('[data-tooltip != ""]').each(function () {
+        $(this).qtip({
+            content: {
+                attr: 'data-tooltip'
+            },
+            position: {
+                target: 'mouse',
+                adjust: { x: 5, y: 5 }
+            }
+        });
+    });
+}
+function enable_all_qtips ( ) {
     $('[data-tooltip != ""]').qtip({ // Grab all elements with a non-blank data-tooltip attr.
         content: {
             attr: 'data-tooltip' // Tell qTip2 to look inside this attr for its content
@@ -28,7 +57,7 @@ $(document).ready(function() {
     $("#id_Operator").select2({
         minimumResultsForSearch: Infinity
     });
-    enable_qtip();
+    enable_all_qtips();
 
     // test plans buttons
     TEST_PLAN_ACTIONS_BTN = $("#id_TestPlansTable td:last-child").html();
@@ -43,6 +72,17 @@ $(document).ready(function() {
     TEST_SUITE_ERROR2_BTN = $("#id_TestSuitesTable td:nth-child(7)").html();
     TEST_SUITE_ACTIONS_BTN = $("#id_TestSuitesTable td:nth-child(8)").html();
 
+    TEST_STEP_TEST_INPUT = $("#id_TestStepsTable td:nth-child(1)").html();
+    TEST_STEP_MODE_INPUT = $("#id_TestStepsTable td:nth-child(2)").html();
+    TEST_STEP_FAILSTOP_INPUT = $("#id_TestStepsTable td:nth-child(3)").html();
+    TEST_STEP_PROMPT_INPUT = $("#id_TestStepsTable td:nth-child(4)").html();
+    TEST_STEP_COMMAND_INPUT = $("#id_TestStepsTable td:nth-child(5)").html();
+    TEST_STEP_PASS_INPUT = $("#id_TestStepsTable td:nth-child(6)").html();
+    TEST_STEP_FAIL_INPUT = $("#id_TestStepsTable td:nth-child(7)").html();
+    TEST_STEP_TIMEOUT_INPUT = $("#id_TestStepsTable td:nth-child(8)").html();
+    TEST_STEP_MESSAGE_INPUT = $("#id_TestStepsTable td:nth-child(9)").html();
+    TEST_STEP_ACTIONS_BTN = $("#id_TestStepsTable td:nth-child(10)").html();
+
 });
 
 /***************************************
@@ -50,7 +90,7 @@ $(document).ready(function() {
  ***************************************/
 function set_test_plans ( ) {
     // All data is filled, commit request to add new test plan
-    var data = $('.test_plan_row').map(function() {
+    var data = $('.test-plan-row').map(function() {
         return {
             'ID': $(this).attr('data-test-plan-id'),
             'Name': $(this).children('td:first').text()
@@ -68,17 +108,18 @@ function set_test_plans ( ) {
         },
         Param = {},
         OnSuccessCallback = function ( json_resp, Param ) {
-            $("tr.test_plan_row").remove();
+            $("tr.test-plan-row").remove();
             var test_plans = json_resp.Data;
             test_plans.forEach(function(test) {
-                var row = '<tr class="test_plan_row" data-test-plan-id="' + test.ID + '">' +
+                var html = '<tr class="test-plan-row" data-test-plan-id="' + test.ID + '">' +
                             '<td>' + test.name + '</td>' +
                             '<td>' + TEST_PLAN_BOARDST_BTN + '</td>' +
                             '<td>' + TEST_PLAN_TESTCFG_BTN + '</td>' +
                             '<td>' + TEST_PLAN_ACTIONS_BTN + '</td>' +
                           '</tr>';
-                $("#id_TestPlansTable").append(row);
-                enable_qtip();
+                $("#id_TestPlansTable").append(html);
+                var row = $("#id_TestPlansTable tbody tr:last-child");
+                enable_qtips(row);
             });
         },
         OnErrorCallback = function ( json_resp, Param ) {
@@ -94,17 +135,18 @@ function refresh_test_plans () {
         },
         Param = {},
         OnSuccessCallback = function ( json_resp, Param ) {
-            $("tr.test_plan_row").remove();
+            $("tr.test-plan-row").remove();
             var test_plans = json_resp.Data;
             test_plans.forEach(function(test) {
-                var row = '<tr class="test_plan_row" data-test-plan-id="' + test.ID + '">' +
+                var row = '<tr class="test-plan-row" data-test-plan-id="' + test.ID + '">' +
                             '<td>' + test.name + '</td>' +
                             '<td>' + TEST_PLAN_BOARDST_BTN + '</td>' +
                             '<td>' + TEST_PLAN_TESTCFG_BTN + '</td>' +
                             '<td>' + TEST_PLAN_ACTIONS_BTN + '</td>' +
                           '</tr>';
                 $("#id_TestPlansTable").append(row);
-                enable_qtip();
+                var row = $("#id_TestPlansTable tbody tr:last-child");
+                enable_qtips(row);
             });
         },
         OnErrorCallback = function ( json_resp, Param ) {
@@ -145,16 +187,17 @@ $(document).on("click", ".new-test-plan", function(){
             var test_id = json_resp.Data;
             // UI jobs: create new html row & add it into table
             var index = $("#id_TestPlansTable tbody tr:last-child").index();
-            var row = '<tr class="test_plan_row" data-test-plan-id="' + test_id + '">' +
+            var html = '<tr class="test-plan-row" data-test-plan-id="' + test_id + '">' +
                         '<td><input type="text" class="form-control"></td>' +
                         '<td>' + TEST_PLAN_BOARDST_BTN + '</td>' +
                         '<td>' + TEST_PLAN_TESTCFG_BTN + '</td>' +
                         '<td>' + TEST_PLAN_ACTIONS_BTN + '</td>' +
                       '</tr>';
-            $("#id_TestPlansTable").append(row);
-            $("#id_TestPlansTable tbody tr").eq(index + 1).find(".accept-test-plan, .edit-test-plan").toggle();
+            $("#id_TestPlansTable").append(html);
             $(".new-test-plan").attr("disabled", "disabled");
-            enable_qtip();
+            var row = $("#id_TestPlansTable tbody tr:last-child");
+            row.find(".accept-test-plan, .edit-test-plan").toggle();
+            enable_qtips(row);
         },
         OnErrorCallback = function ( json_resp, Param ) {
         }
@@ -213,8 +256,8 @@ $(document).on("click", ".delete-test-plan", function(){
 // Open board settings dialog for editing
 $(document).on("click", ".edit-board-settings", function() {
     var tr = $(this).parents("tr");
-    var test_plan_id = tr.attr('data-test-plan-id');
-    var test_plan_name = tr.children("td:first").text();
+    current_test_plan_id = tr.attr('data-test-plan-id');
+    current_test_plan_name = tr.children("td:first").text();
 
     var boardsettings_dlg = $("#id_BoardSettingsDialog").dialog({
         width: 'auto',
@@ -229,7 +272,7 @@ $(document).on("click", ".edit-board-settings", function() {
                     Data = {
                         Action: 'SetBoardSettings',
                         OperatorId: OPERATOR_ID,
-                        TestPlanId: test_plan_id,
+                        TestPlanId: current_test_plan_id,
                         BoardSettings: $("#id_BoardSettingsText").val(),
                     },
                     Param = {},
@@ -248,14 +291,14 @@ $(document).on("click", ".edit-board-settings", function() {
             }
         },
         open: function() {
-            $('#id_BoardSettingsTitle').html(test_plan_name);
+            $('#id_BoardSettingsTitle').html(current_test_plan_name);
             $("#id_BoardSettingsText").val('DATA IS LOADING...');
             commit_json_data(
                 URL = '/config/',
                 Data = {
                     Action: 'GetBoardSettings',
                     OperatorId: OPERATOR_ID,
-                    TestPlanId: test_plan_id,
+                    TestPlanId: current_test_plan_id,
                 },
                 Param = {},
                 OnSuccessCallback = function ( json_resp, Param ) {
@@ -276,25 +319,26 @@ $(document).on("click", ".edit-board-settings", function() {
  ***************************************/
 function add_test_suite_row ( test_suite_id, test_suite_name = null, slt_mode = null, enable = null ) {
     var index = $("#id_TestSuitesTable tbody tr:last-child").index();
-    var row = '<tr class="test_suite_row" data-test-suite-id="' + test_suite_id + '">' + 
+    var html = '<tr class="test-suite-row" data-test-suite-id="' + test_suite_id + '">' + 
                '<td class="control-button">' + TEST_SUITE_ENABLE_TEST + '</td>';
     if (test_suite_name == null)
-        row += '<td><input type="text" class="form-control"></td>';
+        html += '<td><input type="text" class="form-control"></td>';
     else
-        row += '<td>' + test_suite_name + '</td>';
-    row += '<td class="control-button">' + TEST_SUITE_SLT_MODES + '</td>' +
-           '<td class="control-button">' + TEST_SUITE_TESTCFG1_BTN + '</td>' +
-           '<td class="control-button">' + TEST_SUITE_TESTCFG2_BTN + '</td>' +
-           '<td class="control-button">' + TEST_SUITE_ERROR1_BTN + '</td>' +
-           '<td class="control-button">' + TEST_SUITE_ERROR2_BTN + '</td>' +
-           '<td class="control-button">' + TEST_SUITE_ACTIONS_BTN + '</td>' +
-          '</tr>';
-    $("#id_TestSuitesTable").append(row);
-    enable_qtip();
+        html += '<td>' + test_suite_name + '</td>';
+    html += '<td class="control-button">' + TEST_SUITE_SLT_MODES + '</td>' +
+            '<td class="control-button">' + TEST_SUITE_TESTCFG1_BTN + '</td>' +
+            '<td class="control-button">' + TEST_SUITE_TESTCFG2_BTN + '</td>' +
+            '<td class="control-button">' + TEST_SUITE_ERROR1_BTN + '</td>' +
+            '<td class="control-button">' + TEST_SUITE_ERROR2_BTN + '</td>' +
+            '<td class="control-button">' + TEST_SUITE_ACTIONS_BTN + '</td>' +
+           '</tr>';
+    $("#id_TestSuitesTable").append(html);
+    var row = $("#id_TestSuitesTable tbody tr:last-child");
+    enable_qtips(row);
     if (slt_mode)
-        $("#id_TestSuitesTable tbody tr").eq(index + 1).find('select[class="sltmodes-selection"]').val(slt_mode);
+        row.find('select.sltmodes-selection').val(parseInt(slt_mode));
     if (enable)
-        $("#id_TestSuitesTable tbody tr").eq(index + 1).find('input[type="checkbox"]').prop("checked", enable ? true : false);
+        row.find('input[type="checkbox"]').prop("checked", parseInt(enable) ? true : false);
     if (test_suite_name == null)
         $(".new-test-suite").attr("disabled", "disabled");
     return index;
@@ -302,18 +346,18 @@ function add_test_suite_row ( test_suite_id, test_suite_name = null, slt_mode = 
 // Open dialog for modifying test suites
 $(document).on("click", ".edit-test-suites", function() {
     var tr = $(this).parents("tr");
-    var test_plan_id = tr.attr('data-test-plan-id');
-    var test_plan_name = tr.children("td:first").text();
+    current_test_plan_id = tr.attr('data-test-plan-id');
+    current_test_plan_name = tr.children("td:first").text();
 
     var testsuites_dlg = $("#id_TestSuitesDialog").dialog({
         width: 'auto',
-        height: 'auto',
+        height: '650',
         modal: true,
         resizable: false,
         title: 'Edit Test Suites',
         buttons: {
             'OK': function() {
-                var test_suites = $('.test_suite_row').map(function() {
+                var test_suites = $('.test-suite-row').map(function() {
                     return {
                         'ID': $(this).attr('data-test-suite-id'),
                         'display': $(this).children('td:nth-child(2)').text(),
@@ -327,15 +371,15 @@ $(document).on("click", ".edit-test-suites", function() {
                     Data = {
                         Action: 'SetTestSuites',
                         OperatorId: OPERATOR_ID,
-                        TestPlanId: test_plan_id,
+                        TestPlanId: current_test_plan_id,
                         TestSuites: JSON.stringify(test_suites)
                     },
                     Param = {},
                     OnSuccessCallback = function ( json_resp, Param ) {
-                        var test_suites = json_resp.Data;
-                        test_suites.forEach(function(test) {
-                            add_test_suite_row(test.ID, test.display, test.mode, test.enable)
-                        });
+                        // var test_suites = json_resp.Data;
+                        // test_suites.forEach(function(test) {
+                        //     add_test_suite_row(test.ID, test.display, test.mode, test.enable)
+                        // });
                     },
                     OnErrorCallback = function ( json_resp, Param ) {
                     }
@@ -347,14 +391,14 @@ $(document).on("click", ".edit-test-suites", function() {
             }
         },
         open: function() {
-            $('#id_TestSuitesTitle').html(test_plan_name);
-            $('tr.test_suite_row').remove();
+            $('#id_TestSuitesTitle').html(current_test_plan_name);
+            $('tr.test-suite-row').remove();
             commit_json_data(
                 URL = '/config/',
                 Data = {
                     Action: 'GetTestSuites',
                     OperatorId: OPERATOR_ID,
-                    TestPlanId: test_plan_id,
+                    TestPlanId: current_test_plan_id,
                 },
                 Param = {},
                 OnSuccessCallback = function ( json_resp, Param ) {
@@ -368,9 +412,9 @@ $(document).on("click", ".edit-test-suites", function() {
             );
         }
     });
-    testsuites_dlg.dialog('open');
+    testsuites_dlg.data('TestPlanId', current_test_plan_id).dialog('open');
 });
-$(document).on("click", ".new-test-suite", function(){
+$(document).on("click", ".new-test-suite", function() {
     if (!OPERATOR_ID)
         return;
     // send generate new test plan id to server
@@ -429,4 +473,162 @@ $(document).on("click", ".delete-test-suite", function(){
         return;
     $(this).parents("tr").remove();
     $(".new-test-suite").removeAttr("disabled");
+});
+
+/***************************************
+ * TEST 1 & TEST 2
+ ***************************************/
+function add_test_step_row ( test_data = null ) {
+    var html = '<tr class="test-step-rows">' + 
+                 '<td>' + TEST_STEP_TEST_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_MODE_INPUT + '</td>' +
+                 '<td class="control-button">' + TEST_STEP_FAILSTOP_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_PROMPT_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_COMMAND_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_PASS_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_FAIL_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_TIMEOUT_INPUT + '</td>' +
+                 '<td>' + TEST_STEP_MESSAGE_INPUT + '</td>' +
+                 '<td class="control-button">' + TEST_STEP_ACTIONS_BTN + '</td>' +
+              '</tr>';
+    $("#id_TestStepsTable").append(html);
+    var row = $("#id_TestStepsTable tbody tr:last-child");
+    var input = row.find('input');
+    input.each(function() {
+        $(this).css({
+            'border-radius': '5px',
+            'font-size': '12px',
+            'height': '18px',
+        });
+    });
+    enable_qtips(row);
+
+    if (test_data) {
+        if (test_data.test)
+            row.find('select.ts-test-selection').val(test_data.test);
+        if (test_data.mode)
+            row.find('select.ts-run-mode').val(test_data.mode);
+        if (test_data.fail_stop)
+            row.find('input.ts-fail-stop').prop("checked", parseInt(test_data.fail_stop) ? true : false);
+        if (test_data.prompt)
+            row.find('input.ts-prompt').val(test_data.prompt);
+        if (test_data.cmd)
+            row.find('input.ts-command').val(test_data.cmd);
+        if (test_data.pass)
+            row.find('input.ts-pass').val(test_data.pass);
+        if (test_data.fail)
+            row.find('input.ts-fail').val(test_data.fail);
+        if (test_data.timeout)
+            row.find('input.ts-timeout').val(parseInt(test_data.timeout));
+        if (test_data.message)
+            row.find('input.ts-msg').val(parseInt(test_data.message));
+    }
+}
+function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_name ) {
+    var test_dlg = $('#id_TestStepsDialog').dialog({
+        width: '1400',
+        height: '700',
+        modal: true,
+        resizable: false,
+        closeOnEscape: true,
+        title: 'Edit Test Steps',
+        buttons: {
+            'OK': function() {
+                $(this).dialog('close');
+                var test_steps = $('#id_TestStepsTable tbody tr.test-step-rows').map(function() {
+                    return {
+                        'test': $(this).find('select.ts-test-selection').val(),
+                        'mode': $(this).find('select.ts-run-mode').val(),
+                        'fail_stop': $(this).find('input.ts-fail-stop').prop("checked") ? 1 : 0,
+                        'prompt': $(this).find('input.ts-prompt').val(),
+                        'cmd': $(this).find('input.ts-command').val(),
+                        'pass': $(this).find('input.ts-pass').val(),
+                        'fail': $(this).find('input.ts-fail').val(),
+                        'timeout': $(this).find('input.ts-timeout').val(),
+                        'msg': $(this).find('input.ts-msg').val()
+                    }
+                }).get();
+
+                commit_json_data(
+                    URL = '/config/',
+                    Data = {
+                        Action: 'SetTestSteps',
+                        OperatorId: OPERATOR_ID,
+                        TestPlanId: test_plan_id,
+                        TestSuiteId: test_suite_id,
+                        TestSteps: JSON.stringify(test_steps),
+                        CfgNumber: cfg
+                    },
+                    Param = {},
+                    OnSuccessCallback = function ( json_resp, Param ) {
+                        var test_steps = json_resp.Data;
+                        test_steps.forEach(function(test) {
+                            add_test_step_row();
+                        });
+                    },
+                    OnErrorCallback = function ( json_resp, Param ) {
+                    }
+                );
+            },
+            'Cancel': function() {
+                $(this).dialog('close');
+            }
+        },
+        open: function() {
+            $('#id_TestStepsTitle').html(test_suite_name);
+            $('tr.test-step-rows').remove();
+            commit_json_data(
+                URL = '/config/',
+                Data = {
+                    Action: 'GetTestSteps',
+                    OperatorId: OPERATOR_ID,
+                    TestPlanId: test_plan_id,
+                    TestSuiteId: test_suite_id,
+                    CfgNumber: cfg
+                },
+                Param = {},
+                OnSuccessCallback = function ( json_resp, Param ) {
+                    var test_steps = json_resp.Data;
+                    test_steps.forEach(function(test) {
+                        add_test_step_row(test);
+                    });
+                },
+                OnErrorCallback = function ( json_resp, Param ) {
+                }
+            );
+        }
+    });
+    test_dlg.data('TestPlanId', test_plan_id).data('TestSuiteId', test_suite_id).dialog('open');
+}
+function handle_errormonitor_dialog ( test_plan_id, test_suite_id, test_suite_name ) {
+}
+$(document).on('click', '.edit-test-1', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_teststeps_dialog(1, current_test_plan_id, current_test_suite_id, current_test_suite_name); 
+});
+$(document).on('click', '.edit-test-2', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_teststeps_dialog(2, current_test_plan_id, current_test_suite_id, current_test_suite_name);
+});
+$(document).on('click', '.edit-error-1', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_errormonitor_dialog(current_test_plan_id, current_test_suite_id, current_test_suite_name);
+});
+$(document).on('click', '.edit-error-2', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_errormonitor_dialog(current_test_plan_id, current_test_suite_id, current_test_suite_name);
+});
+$(document).on('click', '.new-test-step', function() {
+    if (!OPERATOR_ID)
+        return;
+    add_test_step_row();
+});
+$(document).on('click', '.delete-test-step', function() {
+    if (!OPERATOR_ID)
+        return;
+    $(this).parents("tr").remove();
 });
