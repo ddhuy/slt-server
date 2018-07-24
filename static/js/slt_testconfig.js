@@ -677,7 +677,7 @@ function add_monitor_row ( monitor_rule ) {
 function handle_errormonitor_dialog ( number, test_plan_id, test_suite_id, test_suite_name ) {
     var errmon_dlg = $("#id_ErrorMonitorDialog").dialog({
         width: '1000',
-        height: '800',
+        height: '700',
         modal: true,
         resizable: false,
         closeOnEscape: true,
