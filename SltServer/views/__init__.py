@@ -1,5 +1,6 @@
 from .base import BasePage
 from .home import HomePage
+from .lot_number import LotNumberPage
 from .login import LoginPage
 from .search import SearchPage
 from .test_config import TestConfigPage
@@ -7,6 +8,7 @@ from .test_config import TestConfigPage
 __all__ = [
     'BasePage',
     'HomePage',
+    'LotNumberPage',
     'LoginPage',
     'SearchPage',
     'TestConfigPage',
