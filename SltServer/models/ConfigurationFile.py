@@ -113,3 +113,13 @@ class Csv_TestConfiguration1 ( CsvFile ) :
 class Csv_TestConfiguration2 ( Csv_TestConfiguration1 ) :
     def GetFilepath ( self ) :
         return os.path.join(CFG_BASE_DIR, self.Rfid, self.TestPlanId, self.TestSuiteId + '_TestCfg2.csv')
+
+class Csv_ErrorMonitor1 ( Csv_TestConfiguration1 ) :
+    CSV_COLUMNS = ['name','type','expected','result','timeout','msg']
+    FILENAME = ''
+    def GetFilepath ( self ) :
+        return os.path.join(CFG_BASE_DIR, self.Rfid, self.TestPlanId, self.TestSuiteId + '_Error1.csv')
+
+class Csv_ErrorMonitor2 ( Csv_ErrorMonitor1 ) :
+    def GetFilepath ( self ) :
+        return os.path.join(CFG_BASE_DIR, self.Rfid, self.TestPlanId, self.TestSuiteId + '_Error2.csv')

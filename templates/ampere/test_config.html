@@ -268,6 +268,65 @@
     </div>
 </div>
 
+
+<div id="id_ErrorMonitorDialog" class="container-fluid" style="display: none;">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2 id="id_ErrorMonitorTitle"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="table-csv">
+            <div class="row">
+                <div class="col-sm-12" style="text-align: right;">
+                    <a id="id_ImportErrorMonitor" href="" data-tooltip="Import Error Monitor">
+                        <i class="fa fa-clone"></i> Import
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a id="id_ExportErrorMonitor" href="" data-tooltip="Export Error Monitor">
+                        <i class="fa fa-save"></i> Export
+                    </a>
+                </div>
+            </div>
+        </div>
+        <table id="id_ErrorMonitorTable" class="table table-bordered table-hover ErrorMonitorTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Expected</th>
+                    <th>Result</th>
+                    <th>Timeout</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="display: none;">
+                    <td><input class="form-control input-sm em-name" type="text"></td>
+                    <td><input class="form-control input-sm em-type" type="text"></td>
+                    <td><input class="form-control input-sm em-expected" type="text"></td>
+                    <td><input class="form-control input-sm em-result" type="text"></td>
+                    <td><input class="form-control input-sm em-timeout" type="number" min=0 style="text-align: center;"></td>
+                    <td><input class="form-control input-sm em-msg" type="text"></td>
+                    <td class="control-button">
+                        <a class="delete delete-monitor-rule" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-monitor-rule"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock page_content %}
 
 {% block page_js %}

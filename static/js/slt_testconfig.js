@@ -23,6 +23,13 @@ var TEST_STEP_TIMEOUT_INPUT = null;
 var TEST_STEP_MESSAGE_INPUT = null;
 var TEST_STEP_ACTIONS_BTN = null;
 
+var ERRMON_NAME_INPUT = null;
+var ERRMON_TYPE_INPUT = null;
+var ERRMON_EXPECTED_INPUT = null;
+var ERRMON_RESULT_INPUT = null;
+var ERRMON_TIMEOUT_INPUT = null;
+var ERRMON_MESSAGE_INPUT = null;
+
 var current_test_plan_id = null;
 var current_test_plan_name = null;
 var current_test_suite_id = null;
@@ -59,11 +66,10 @@ $(document).ready(function() {
     });
     enable_all_qtips();
 
-    // test plans buttons
     TEST_PLAN_ACTIONS_BTN = $("#id_TestPlansTable td:last-child").html();
     TEST_PLAN_TESTCFG_BTN = $("#id_TestPlansTable td:nth-last-child(2)").html();
     TEST_PLAN_BOARDST_BTN = $("#id_TestPlansTable td:nth-last-child(3)").html();
-    // test suites buttons
+
     TEST_SUITE_ENABLE_TEST = $("#id_TestSuitesTable td:nth-child(1)").html();
     TEST_SUITE_SLT_MODES = $("#id_TestSuitesTable td:nth-child(3)").html();
     TEST_SUITE_TESTCFG1_BTN = $("#id_TestSuitesTable td:nth-child(4)").html();
@@ -83,6 +89,12 @@ $(document).ready(function() {
     TEST_STEP_MESSAGE_INPUT = $("#id_TestStepsTable td:nth-child(9)").html();
     TEST_STEP_ACTIONS_BTN = $("#id_TestStepsTable td:nth-child(10)").html();
 
+    ERRMON_NAME_INPUT = $("#id_ErrorMonitorTable td:nth-child(1)").html();
+    ERRMON_TYPE_INPUT = $("#id_ErrorMonitorTable td:nth-child(2)").html();
+    ERRMON_EXPECTED_INPUT = $("#id_ErrorMonitorTable td:nth-child(3)").html();
+    ERRMON_RESULT_INPUT = $("#id_ErrorMonitorTable td:nth-child(4)").html();
+    ERRMON_TIMEOUT_INPUT = $("#id_ErrorMonitorTable td:nth-child(5)").html();
+    ERRMON_MESSAGE_INPUT = $("#id_ErrorMonitorTable td:nth-child(6)").html();
 });
 
 /***************************************
@@ -498,7 +510,10 @@ function add_test_step_row ( test_data = null ) {
         $(this).css({
             'border-radius': '5px',
             'font-size': '12px',
-            'height': '18px',
+            'height': '22px',
+            'padding-top': '0',
+            'padding-bottom': '0',
+            'padding-left': '5px',
         });
     });
     enable_qtips(row);
@@ -534,7 +549,6 @@ function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_
         title: 'Edit Test Steps',
         buttons: {
             'OK': function() {
-                $(this).dialog('close');
                 var test_steps = $('#id_TestStepsTable tbody tr.test-step-rows').map(function() {
                     return {
                         'test': $(this).find('select.ts-test-selection').val(),
@@ -548,7 +562,6 @@ function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_
                         'msg': $(this).find('input.ts-msg').val()
                     }
                 }).get();
-
                 commit_json_data(
                     URL = '/config/',
                     Data = {
@@ -561,14 +574,11 @@ function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_
                     },
                     Param = {},
                     OnSuccessCallback = function ( json_resp, Param ) {
-                        var test_steps = json_resp.Data;
-                        test_steps.forEach(function(test) {
-                            add_test_step_row();
-                        });
                     },
                     OnErrorCallback = function ( json_resp, Param ) {
                     }
                 );
+                $(this).dialog('close');
             },
             'Cancel': function() {
                 $(this).dialog('close');
@@ -600,8 +610,6 @@ function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_
     });
     test_dlg.data('TestPlanId', test_plan_id).data('TestSuiteId', test_suite_id).dialog('open');
 }
-function handle_errormonitor_dialog ( test_plan_id, test_suite_id, test_suite_name ) {
-}
 $(document).on('click', '.edit-test-1', function() {
     current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
     current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
@@ -612,22 +620,143 @@ $(document).on('click', '.edit-test-2', function() {
     current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
     handle_teststeps_dialog(2, current_test_plan_id, current_test_suite_id, current_test_suite_name);
 });
-$(document).on('click', '.edit-error-1', function() {
-    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
-    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
-    handle_errormonitor_dialog(current_test_plan_id, current_test_suite_id, current_test_suite_name);
-});
-$(document).on('click', '.edit-error-2', function() {
-    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
-    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
-    handle_errormonitor_dialog(current_test_plan_id, current_test_suite_id, current_test_suite_name);
-});
 $(document).on('click', '.new-test-step', function() {
     if (!OPERATOR_ID)
         return;
     add_test_step_row();
 });
 $(document).on('click', '.delete-test-step', function() {
+    if (!OPERATOR_ID)
+        return;
+    $(this).parents("tr").remove();
+});
+
+/***************************************
+ * ERROR MONITOR 1 & 2
+ ***************************************/
+function add_monitor_row ( monitor_rule ) {
+    var html = '<tr class="monitor-rows">' + 
+                 '<td>' + ERRMON_NAME_INPUT + '</td>' +
+                 '<td>' + ERRMON_TYPE_INPUT + '</td>' +
+                 '<td>' + ERRMON_EXPECTED_INPUT + '</td>' +
+                 '<td>' + ERRMON_RESULT_INPUT + '</td>' +
+                 '<td>' + ERRMON_TIMEOUT_INPUT + '</td>' +
+                 '<td>' + ERRMON_MESSAGE_INPUT + '</td>' +
+                 '<td class="control-button">' + TEST_STEP_ACTIONS_BTN + '</td>' +
+              '</tr>';
+    $("#id_ErrorMonitorTable").append(html);
+    var row = $("#id_ErrorMonitorTable tbody tr:last-child");
+    var input = row.find('input');
+    input.each(function() {
+        $(this).css({
+            'border-radius': '5px',
+            'font-size': '12px',
+            'height': '22px',
+            'padding-top': '0',
+            'padding-bottom': '0',
+            'padding-left': '5px',
+        });
+    });
+    enable_qtips(row);
+
+    if (monitor_rule) {
+        if (monitor_rule.name)
+            row.find('input.em-name').val(monitor_rule.name);
+        if (monitor_rule.type)
+            row.find('input.em-type').val(monitor_rule.type);
+        if (monitor_rule.expected)
+            row.find('input.em-expected').val(monitor_rule.expected);
+        if (monitor_rule.result)
+            row.find('input.ts-result').val(monitor_rule.result);
+        if (monitor_rule.timeout)
+            row.find('input.ts-timeout').val(monitor_rule.timeout);
+        if (monitor_rule.msg)
+            row.find('input.ts-msg').val(monitor_rule.msg);
+    }
+}
+function handle_errormonitor_dialog ( number, test_plan_id, test_suite_id, test_suite_name ) {
+    var errmon_dlg = $("#id_ErrorMonitorDialog").dialog({
+        width: '1000',
+        height: '800',
+        modal: true,
+        resizable: false,
+        closeOnEscape: true,
+        title: 'Edit Error Monitor',
+        buttons: {
+            'OK': function() {
+                var monitor_rules = $('#id_ErrorMonitorTable tbody tr.monitor-rows').map(function() {
+                    return {
+                        'name': $(this).find('input.em-name').val(),
+                        'type': $(this).find('input.em-type').val(),
+                        'expected': $(this).find('input.em-expected').val(),
+                        'result': $(this).find('input.em-result').val(),
+                        'timeout': $(this).find('input.em-timeout').val(),
+                        'msg': $(this).find('input.em-msg').val(),
+                    }
+                }).get();
+                commit_json_data(
+                    URL = '/config/',
+                    Data = {
+                        Action: 'SetErrorMonitor',
+                        OperatorId: OPERATOR_ID,
+                        TestPlanId: test_plan_id,
+                        TestSuiteId: test_suite_id,
+                        MonitorRules: JSON.stringify(monitor_rules),
+                        Number: number
+                    },
+                    Param = {},
+                    OnSuccessCallback = function ( json_resp, Param ) {
+                    },
+                    OnErrorCallback = function ( json_resp, Param ) {
+                    }
+                );
+                $(this).dialog('close');
+            },
+            'Cancel': function() {
+                $(this).dialog('close');
+            }
+        },
+        open: function() {
+            $('#id_ErrorMonitorTitle').html(test_suite_name);
+            $('tr.monitor-rows').remove();
+            commit_json_data(
+                URL = '/config/',
+                Data = {
+                    Action: 'GetErrorMonitor',
+                    OperatorId: OPERATOR_ID,
+                    TestPlanId: test_plan_id,
+                    TestSuiteId: test_suite_id,
+                    Number: number
+                },
+                Param = {},
+                OnSuccessCallback = function ( json_resp, Param ) {
+                    var monitor_rules = json_resp.Data;
+                    monitor_rules.forEach(function(test) {
+                        add_monitor_row(test);
+                    });
+                },
+                OnErrorCallback = function ( json_resp, Param ) {
+                }
+            );
+        }
+    });
+}
+$(document).on('click', '.edit-error-1', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_errormonitor_dialog(1, current_test_plan_id, current_test_suite_id, current_test_suite_name);
+});
+$(document).on('click', '.edit-error-2', function() {
+    current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
+    current_test_suite_name = $(this).parents('tr').children('td:nth-child(2)').text();
+    handle_errormonitor_dialog(2, current_test_plan_id, current_test_suite_id, current_test_suite_name);
+});
+$(document).on('click', '.new-monitor-rule', function() {
+    if (!OPERATOR_ID)
+        return;
+    add_monitor_row();
+});
+$(document).on('click', '.delete-monitor-rule', function() {
     if (!OPERATOR_ID)
         return;
     $(this).parents("tr").remove();

@@ -16,14 +16,6 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def get_env_variables ( var_name ) :
-    try :
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-ENV_ROLE = get_env_variables("ENV_ROLE")
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -31,9 +23,7 @@ ENV_ROLE = get_env_variables("ENV_ROLE")
 SECRET_KEY = 'rdlz2@bkf1w3-3x9n*%3n%1yhm@5dwyzbc2a6=x-ti(0jg)&p1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-if (ENV_ROLE == 'development') :
-    DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '*',

@@ -29,6 +29,8 @@ class TestConfigPage ( BasePage ) :
             'SetTestSuites': self.__SetTestSuites,
             'GetTestSteps': self.__GetTestSteps,
             'SetTestSteps': self.__SetTestSteps,
+            'GetErrorMonitor': self.__GetErrorMonitor,
+            'SetErrorMonitor': self.__SetErrorMonitor,
         }
 
     def get ( self, request, *args, **kwargs ) :
@@ -204,5 +206,64 @@ class TestConfigPage ( BasePage ) :
                 test_steps_data.append(data)
             test_steps.SetData(test_steps_data)
             return httplib.OK, test_steps.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __GetErrorMonitor ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        TestSuiteId = request.POST.get('TestSuiteId', None)
+        if (TestSuiteId == None) :
+            return httplib.BAD_REQUEST, 'Test Suites ID is empty'
+        Number = request.POST.get('Number', None)
+        if (Number == None) :
+            return httplib.BAD_REQUEST, 'Error Monitor Type is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            if (int(Number) == 1) :
+                error_monitor = Csv_ErrorMonitor1(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            elif (int(Number) == 2) :
+                error_monitor = Csv_ErrorMonitor2(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            else :
+                return httplib.BAD_REQUEST, 'Error Monitor Type is invalid'
+            return httplib.OK, error_monitor.GetData()
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __SetErrorMonitor ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        TestPlanId = request.POST.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return httplib.BAD_REQUEST, 'Test Plan ID is empty'
+        TestSuiteId = request.POST.get('TestSuiteId', None)
+        if (TestSuiteId == None) :
+            return httplib.BAD_REQUEST, 'Test Suites ID is empty'
+        MonitorRules = json.loads(request.POST.get('MonitorRules', []))
+        if (MonitorRules == None) :
+            return httplib.BAD_REQUEST, 'Monitor Rules data is empty'
+        Number = request.POST.get('Number', None)
+        if (Number == None) :
+            return httplib.BAD_REQUEST, 'Error Monitor Type is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            LOG.info(type(Number))
+            if (int(Number) == 1) :
+                error_monitor = Csv_ErrorMonitor1(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            elif (int(Number) == 2) :
+                error_monitor = Csv_ErrorMonitor2(Operator.profile.Rfid, TestPlanId, TestSuiteId)
+            else :
+                return httplib.BAD_REQUEST, 'Error Monitor Type is invalid'
+            error_monitor_data = []
+            for rule in MonitorRules :
+                data = error_monitor.CreateItem(**rule)
+                error_monitor_data.append(data)
+            error_monitor.SetData(error_monitor_data)
+            return httplib.OK, error_monitor.GetData()
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
