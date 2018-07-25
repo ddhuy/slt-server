@@ -2,14 +2,51 @@
 {% load static from staticfiles %}
 
 {% block page_css %}
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/slt_lotnumber.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_lotnumber.css' %}">
 {% endblock page_css %}
 
 {% block page_title %}Lot Management{% endblock page_title %}
 
 {% block page_content %}
+<div class="container">
+    <div class="table-wrapper">
+        <table id="id_LotNumberTable" class="table table-bordered table-hover LotNumberTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Lot Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lot in LotNumbers %}
+                <tr>
+                    <td>{{ lot.ID }}</td>
+                    <td>{{ lot.Number }}</td>
+                    <td>&nbsp;</td>
+                </tr>
+                {% endfor %}
+                <tr class="seed-row">
+                    <td></td>
+                    <td></td>
+                    <td class="seed-row">
+                        <a class="accept accept-lot" data-tooltip="Accept"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="delete delete-lot" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-lot"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock page_content %}
 
 {% block page_js %}
-    <!-- <script type="text/javascript" src="{% static 'js/slt_lotnumber.js' %}"></script> -->
+    <script type="text/javascript" src="{% static 'js/slt_lotnumber.js' %}"></script>
 {% endblock page_js %}

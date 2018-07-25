@@ -35,31 +35,6 @@ var current_test_plan_name = null;
 var current_test_suite_id = null;
 var current_test_suite_name = null;
 
-function enable_qtips ( container ) {
-    container.find('[data-tooltip != ""]').each(function () {
-        $(this).qtip({
-            content: {
-                attr: 'data-tooltip'
-            },
-            position: {
-                target: 'mouse',
-                adjust: { x: 5, y: 5 }
-            }
-        });
-    });
-}
-function enable_all_qtips ( ) {
-    $('[data-tooltip != ""]').qtip({ // Grab all elements with a non-blank data-tooltip attr.
-        content: {
-            attr: 'data-tooltip' // Tell qTip2 to look inside this attr for its content
-        },
-        position: {
-            target: 'mouse', // Track the mouse as the positioning target
-            adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
-        }
-    });
-}
-
 $(document).ready(function() {
     $("#id_Operator").select2({
         minimumResultsForSearch: Infinity

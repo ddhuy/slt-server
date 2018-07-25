@@ -216,3 +216,33 @@ function slt_dialog ( msg ) {
     $('#id_dialog').data('Message', msg);
     $('#id_dialog').dialog("open");
 }
+
+function enable_qtips ( container ) {
+    container.find('[data-tooltip != ""]').each(function () {
+        $(this).qtip({
+            content: {
+                attr: 'data-tooltip'
+            },
+            position: {
+                target: 'mouse',
+                adjust: { x: 5, y: 5 }
+            }
+        });
+    });
+}
+function clear_qtips ( container ) {
+    container.find('[data-tooltip != ""]').each(function() {
+        $(this).qtip("destroy", true);
+    });
+}
+function enable_all_qtips ( ) {
+    $('[data-tooltip != ""]').qtip({ // Grab all elements with a non-blank data-tooltip attr.
+        content: {
+            attr: 'data-tooltip' // Tell qTip2 to look inside this attr for its content
+        },
+        position: {
+            target: 'mouse', // Track the mouse as the positioning target
+            adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
+        }
+    });
+}

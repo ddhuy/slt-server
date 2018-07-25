@@ -320,7 +320,7 @@ function bind_search_result_production ( search_results ) {
                 // testdetail_dlg.dialog("option", "position", "center");
             },
             OnErrorCallback = function ( json_resp, Param ) {
-                slt_dialog(json_resp.Message);
+                slt_dialog(json_resp.Data);
             }
         );
         return false;
@@ -383,7 +383,7 @@ function bind_search_result_production ( search_results ) {
                 // testhistory_dlg.dialog("option", "position", "center");
             },
             OnErrorCallback = function ( json_resp, Param ) {
-                slt_dialog(json_resp.Message);
+                slt_dialog(json_resp.Data);
             }
         );
         return false;
@@ -533,7 +533,7 @@ $(document).ready(function() {
             },
             OnErrorCallback = function ( json_resp, Param ) {
                 clear_search();
-                slt_dialog(json_resp.Message);
+                slt_dialog(json_resp.Data);
         });
 
         return false;
