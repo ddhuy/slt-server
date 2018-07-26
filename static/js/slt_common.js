@@ -217,6 +217,30 @@ function slt_dialog ( msg ) {
     $('#id_dialog').dialog("open");
 }
 
+function slt_confirm_dialog( Title, Message, YesFn, NoFn ) {
+    $('<div></div>').appendTo('body')
+    .html('<div><h6>' + Message + '?</h6></div>')
+    .dialog({
+        modal: true, title: Title, zIndex: 10000, autoOpen: true,
+        width: 'auto', resizable: false,
+        buttons: {
+            Yes: function () {
+                if (YesFn)
+                    YesFn();
+                $(this).dialog("close");
+            },
+            No: function () {
+                if (NoFn)
+                    NoFn();
+                $(this).dialog("close");
+            }
+        },
+        close: function (event, ui) {
+            $(this).remove();
+        }
+    });
+}
+
 function enable_qtips ( container ) {
     container.find('[data-tooltip != ""]').each(function () {
         $(this).qtip({

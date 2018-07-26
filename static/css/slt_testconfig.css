@@ -90,9 +90,18 @@ table.table td a {
     display: inline-block;
     margin: 0 5px;
     min-width: 24px;
-}    
+}
+table.table td .accept {
+    display: none;
+}
 table.table td a.accept {
     color: #27C46B;
+}
+table.table td a.accept i {
+    font-size: 24px;
+    margin-right: -1px;
+    position: relative;
+    top: 3px;
 }
 table.table td a.edit {
     color: #FFC107;
@@ -106,12 +115,6 @@ table.table td a.delete {
 table.table td i {
     font-size: 19px;
 }
-table.table td a.accept i {
-    font-size: 24px;
-    margin-right: -1px;
-    position: relative;
-    top: 3px;
-}    
 table.table .form-control {
     height: 32px;
     line-height: 32px;
@@ -120,9 +123,6 @@ table.table .form-control {
 }
 table.table .form-control.error {
     border-color: #f50000;
-}
-table.table td .accept {
-    display: none;
 }
 table.TestPlansTable th:nth-last-child(2) {
     width: 180px;

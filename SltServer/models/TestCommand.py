@@ -6,7 +6,7 @@ from .TestMode import TestMode
 class TestCommand ( models.Model ) :
     Test = models.CharField(max_length = 255)
     Mode = models.ForeignKey(TestMode)
-    FailStop = models.BooleanField(default = False)
+    FailStop = models.IntegerField(default = 0)
     Command = models.TextField(null = True, blank = True)
     Prompt = models.TextField(null = True, blank = True)
     Pass = models.TextField(null = True, blank = True)

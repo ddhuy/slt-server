@@ -1,4 +1,5 @@
 from .base import BasePage
+from .command import TestCommandPage
 from .home import HomePage
 from .lot_number import LotNumberPage
 from .login import LoginPage
@@ -12,4 +13,5 @@ __all__ = [
     'LoginPage',
     'SearchPage',
     'TestConfigPage',
+    'TestCommandPage',
 ]

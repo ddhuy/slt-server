@@ -22,4 +22,4 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
                 LOG.info('POST process time: %f', e - s)
                 # json_resp = self._JSONRenderer.render(post_resp)
                 return JsonResponse(status = http_resp, data = {'Data': post_resp})
-        return JsonResponse(status = httplib.NOT_FOUND, data = {'Message': 'Request method not found'})
+        return JsonResponse(status = httplib.NOT_FOUND, data = {'Data': 'Request method not found'})

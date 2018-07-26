@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_command.css' %}">
+{% endblock page_css %}
+
+{% block page_title %}Test Commands Management{% endblock page_title %}
+
+{% block page_content %}
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>SKYLARK</h2>
+                </div>
+            </div>
+        </div>
+        <div class="table-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-info btn-new new-command"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        </div>
+        {% for cmd in Commands %}
+        <div class="command-row" data-cmd-id="{{ cmd.id }}">
+            <div class="command-brief">
+                <p class="full-width">
+                    <label for="">Test</label>
+                    <input type="text" name="Test" value="{{ cmd.Test }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Mode</label>
+                    <input type="text" name="Mode" value="{{ cmd.Mode.id }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Fail Stop</label>
+                    <input type="text" name="FailStop" value="{{ cmd.FailStop }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Timeout</label>
+                    <input type="number" min=0 name="Timeout" value="{{ cmd.Timeout }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Prompt</label>
+                    <input type="text" name="Prompt" value="{{ cmd.Prompt }}" disabled="disabled">
+                </p>
+                <div class="control-buttons">
+                    <a class="accept accept-command" data-tooltip="Accept"><i class="material-icons">&#xE876;</i></a>
+                    <a class="cancel cancel-command" data-tooltip="Cancel"><i class="material-icons">&#xE14C;</i></a>
+                    <a class="edit edit-command" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                    <a class="delete delete-command" data-tooltip="Delete"><i class="material-icons">&#xE872;</i></a>
+                </div>
+            </div>
+            <div class="command-detail">
+                <p class="full-width">
+                    <label for="">Commands / Scripts</label>
+                    <input type="text" name="Command" value="{{ cmd.Command }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Pass criteria</label>
+                    <input type="text" name="Pass" value="{{ cmd.Pass }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Fail Criteria</label>
+                    <input type="text" name="Fail" value="{{ cmd.Fail }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Messages</label>
+                    <input type="text" name="Msg" value="{{ cmd.Msg }}" disabled="disabled">
+                </p>
+                <p class="full-width">
+                    <label for="">Comments</label>
+                    <input type="text" name="Comment" value="{{ cmd.Comment }}" disabled="disabled">
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block page_js %}
+    <script type="text/javascript">
+        var ArchName = "{{ ArchName }}";
+    </script>
+    <script type="text/javascript" src="{% static 'js/slt_command.js' %}"></script>
+{% endblock page_js %}

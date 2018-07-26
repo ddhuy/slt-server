@@ -1,0 +1,193 @@
+.container {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.table-wrapper {
+    width: 100%;
+    /*margin: 30px auto;*/
+    /*background: #fff;*/
+    /*padding: 20px;*/
+    /*box-shadow: 0 1px 1px rgba(0,0,0,.05);*/
+}
+.table-footer {
+    padding-bottom: 10px;
+    margin: 0 0 10px;
+    border-bottom: 1px dotted #919191;
+}
+.table-footer h2 {
+    margin: 6px 0 0;
+    font-size: 22px;
+    border-bottom: none;
+    display: inline-block;
+    float: left;
+}
+.table-footer .btn-new {
+    float: right;
+    height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 50px;
+    line-height: 13px;
+}
+.table-footer .btn-new i {
+    margin-right: 4px;
+}
+
+.table-header {
+    padding-bottom: 10px;
+    /*margin: 0 0 10px;*/
+    /*border-bottom: 1px dotted #919191;*/
+}
+.table-header h2 {
+    margin: 6px 0 0;
+    font-size: 22px;
+    /*border-bottom: none;*/
+    display: inline-block;
+    float: left;
+}
+.table-header .header i {
+    margin-right: 4px;
+    color: #fff;
+}
+.table-header .btn-new {
+    float: right;
+    height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 50px;
+    line-height: 13px;
+}
+.table-header .btn-new i {
+    margin-right: 4px;
+}
+/* Radio & Check box style */
+input[type=checkbox].css-checkbox {
+    position:absolute;
+    z-index:-1000;
+    left:-1000px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height:1px;
+    width:1px;
+    margin:-1px;
+    padding:0;
+    border:0;
+}
+input[type=checkbox].css-checkbox + label.css-label {
+    padding-left:30px;
+    height:12px; 
+    display:inline-block;
+    line-height:12px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:12px;
+    vertical-align:middle;
+    cursor:pointer;
+
+}
+input[type=checkbox].css-checkbox:checked + label.css-label {
+    background-position: 0 -12px;
+}
+label.css-label {
+    background-image:url('../images/checkbox.png');
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+select.selection {
+    width: 100%;
+    max-height: inherit;
+    margin: 0;
+    padding: auto 0;
+    font-size: 12px;
+}
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+select {
+    width: 100%;
+    margin: 1px 0 0;
+}
+input {
+    width: 100%;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 0 7px 0 7px;
+}
+input:enabled {
+    border: 1px solid #f93822;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+input:disabled {
+    background: #fff;
+    cursor: copy all-scroll;
+}
+.full-width {
+    width: 100%;
+    padding: 0 0 0 0;
+    margin: 0 0 5px 0;
+}
+p label {
+    font-weight: bold;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+.command-row {
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    margin-bottom: 13px;
+    padding-bottom: 0;
+}
+@media (min-width: 700px) {
+    .command-row {
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+    }
+    .command-row > * {
+        padding: 10px 10px;
+    }
+}
+.command-brief {
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+    background: #e9e9e9;
+    border-radius: 5px;
+    /*padding-bottom: 30px*/
+}
+.control-buttons {
+    text-align: center;
+    padding-top: 5px;
+}
+.control-buttons a {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+    min-width: 24px;
+}
+.control-buttons i {
+    font-size: 19px;
+}
+.control-buttons a.edit {
+    color: #FFC107;
+}
+.control-buttons a.delete {
+    color: #E34724;
+}
+.control-buttons a.accept {
+    color: #27C46B;
+    display: none;
+}
+.control-buttons a.cancel {
+    color: #E34724;
+    display: none;
+}
