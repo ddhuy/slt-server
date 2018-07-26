@@ -35,14 +35,22 @@
                     <label for="">Mode</label>
                     <input type="text" name="Mode" value="{{ cmd.Mode.id }}" disabled="disabled">
                 </p>
-                <p class="full-width">
-                    <label for="">Fail Stop</label>
-                    <input type="text" name="FailStop" value="{{ cmd.FailStop }}" disabled="disabled">
-                </p>
-                <p class="full-width">
-                    <label for="">Timeout</label>
-                    <input type="number" min=0 name="Timeout" value="{{ cmd.Timeout }}" disabled="disabled">
-                </p>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="full-width">
+                                <label for="">Fail Stop</label>
+                                <input type="text" name="FailStop" value="{{ cmd.FailStop }}" disabled="disabled">
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p class="full-width">
+                                <label for="">Timeout</label>
+                                <input type="number" min=0 name="Timeout" value="{{ cmd.Timeout }}" disabled="disabled">
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <p class="full-width">
                     <label for="">Prompt</label>
                     <input type="text" name="Prompt" value="{{ cmd.Prompt }}" disabled="disabled">
@@ -67,14 +75,22 @@
                     <label for="">Fail Criteria</label>
                     <input type="text" name="Fail" value="{{ cmd.Fail }}" disabled="disabled">
                 </p>
-                <p class="full-width">
-                    <label for="">Messages</label>
-                    <input type="text" name="Msg" value="{{ cmd.Msg }}" disabled="disabled">
-                </p>
-                <p class="full-width">
-                    <label for="">Comments</label>
-                    <input type="text" name="Comment" value="{{ cmd.Comment }}" disabled="disabled">
-                </p>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="full-width">
+                                <label for="">Messages</label>
+                                <input type="text" name="Msg" value="{{ cmd.Msg }}" disabled="disabled">
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p class="full-width">
+                                <label for="">Comments</label>
+                                <input type="text" name="Comment" value="{{ cmd.Comment }}" disabled="disabled">
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
