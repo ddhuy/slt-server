@@ -147,12 +147,11 @@ p label {
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.6);
     border-radius: 5px;
     margin-bottom: 13px;
-    padding-bottom: 0;
 }
 @media (min-width: 700px) {
     .command-row {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 4fr;
     }
     .command-row > * {
         padding: 10px 10px;
@@ -165,8 +164,12 @@ p label {
     /*padding-bottom: 30px*/
 }
 .control-buttons {
+    width: 75px;
     text-align: center;
     padding-top: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.9);
+    margin: 0 auto;
 }
 .control-buttons a {
     cursor: pointer;
