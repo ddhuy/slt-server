@@ -15,6 +15,30 @@ const SLT_MODES = ["", "Calibration", "Production", "FA"]
 
 var csrftoken = Cookies.get('csrftoken');
 
+$("#id_dialog").dialog({
+    autoOpen: false,
+    height: 'auto',
+    width: 'auto',
+    modal: true,
+    closeOnEscape:true,
+    resizable:false,
+    show:'fade',
+    buttons: {
+        "OK": function() {
+            $(this).dialog("close");
+        }
+    },
+    open: function() {
+        var message = $(this).data('Message');
+        $( "#MsgText" ).html(message);
+    }
+});
+
+function slt_dialog ( msg ) {
+    $('#id_dialog').data('Message', msg);
+    $('#id_dialog').dialog("open");
+}
+
 /** 
  * Get parameter value from URL
  */
@@ -173,8 +197,7 @@ function commit_json_data ( URL = "",
             if (OnErrorCallback && json_resp)
                 OnErrorCallback(json_resp, Param);
             else {
-                $("#uid_MsgDlg").data("Message", json_resp);
-                $("#uid_MsgDlg").dialog("open");
+                slt_dialog(json_resp);
             }
         }
     });
@@ -193,29 +216,6 @@ $.ajaxSetup({
     }
 });
 
-$("#id_dialog").dialog({
-    autoOpen: false,
-    height: 'auto',
-    width: 'auto',
-    modal: true,
-    closeOnEscape:true,
-    resizable:false,
-    show:'fade',
-    buttons: {
-        "OK": function() {
-            $(this).dialog("close");
-        }
-    },
-    open: function() {
-        var message = $(this).data('Message');
-        $( "#MsgText" ).html(message);
-    }
-});
-
-function slt_dialog ( msg ) {
-    $('#id_dialog').data('Message', msg);
-    $('#id_dialog').dialog("open");
-}
 
 function slt_confirm_dialog( Title, Message, YesFn, NoFn ) {
     $('<div></div>').appendTo('body')

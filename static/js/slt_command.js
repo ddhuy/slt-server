@@ -12,23 +12,59 @@ function display_test_command ( cmd_row, cmd_data ) {
 }
 function parse_test_command ( container ) {
     var cmd_data = {};
-    cmd_data['Test'] = container.find('input[name="Test"]').val();
-    cmd_data['Mode'] = container.find('select[name="Mode"]').val();
-    cmd_data['FailStop'] = container.find('input[name="FailStop"]').prop("checked") ? 1 : 0;
-    cmd_data['Timeout'] = container.find('input[name="Timeout"]').val();
-    cmd_data['Prompt'] = container.find('input[name="Prompt"]').val();
-    cmd_data['Command'] = container.find('input[name="Command"]').val();
-    cmd_data['Pass'] = container.find('input[name="Pass"]').val();
-    cmd_data['Fail'] = container.find('input[name="Fail"]').val();
-    cmd_data['Msg'] = container.find('input[name="Msg"]').val();
-    cmd_data['Comment'] = container.find('input[name="Comment"]').val();
+    cmd_data['Test'] = container.find('[name="Test"]').val();
+    cmd_data['Mode'] = container.find('[name="Mode"]').val();
+    cmd_data['FailStop'] = container.find('[name="FailStop"]').prop("checked") ? 1 : 0;
+    cmd_data['Timeout'] = container.find('[name="Timeout"]').val();
+    cmd_data['Prompt'] = container.find('[name="Prompt"]').val();
+    cmd_data['Command'] = container.find('[name="Command"]').val();
+    cmd_data['Pass'] = container.find('[name="Pass"]').val();
+    cmd_data['Fail'] = container.find('[name="Fail"]').val();
+    cmd_data['Msg'] = container.find('[name="Msg"]').val();
+    cmd_data['Comment'] = container.find('[name="Comment"]').val();
     return cmd_data;
 }
 $(document).ready(function() {
     enable_all_qtips();
 });
 $(document).on('click', '.new-command', function() {
-
+    var new_cmd_dlg = $("#id_TestCommandDialog").dialog({
+        width: 'auto',
+        height: 'auto',
+        modal: true,
+        resizable: false,
+        title: 'Insert new test command',
+        buttons: {
+            'OK': function() {
+                var cmd_data = parse_test_command($(this));
+                commit_json_data(
+                    URL = '/command/',
+                    Data = {
+                        Action: 'InsertCommand',
+                        Arch: ArchName,
+                        Data: JSON.stringify(cmd_data),
+                    },
+                    Param = {},
+                    OnSuccessCallback = function ( json_resp, Param ) {
+                        location.reload(true);
+                    },
+                    OnErrorCallback = function( json_resp, Param ) {
+                        slt_dialog(json_resp.Data);
+                    }
+                );
+            },
+            'Cancel': function() {
+                $(this).dialog('close');
+            }
+        },
+        close: function() {
+            var input = $(this).find('.cmd-controls');
+            input.each(function() {
+                $(this).val('');
+            })
+        }
+    });
+    new_cmd_dlg.dialog('open');
 });
 $(document).on('click', '.accept-command', function() {
     var cmd_row = $(this).parents('.command-row');

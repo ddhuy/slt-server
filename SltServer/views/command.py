@@ -16,6 +16,7 @@ class TestCommandPage ( BasePage ) :
     def __init__ ( self ) :
         super(TestCommandPage, self).__init__()
         self._funcdict = {
+            'InsertCommand' : self.__InsertCommand,
             'DeleteCommand' : self.__DeleteCommand,
             'UpdateCommand' : self.__UpdateCommand,
         }
@@ -27,7 +28,26 @@ class TestCommandPage ( BasePage ) :
         return render(request, self.template_name, {'ArchName': arch.Name,'Commands': commands, 'TestModes': test_modes})
 
     def __InsertCommand ( self, request, *args, **kwargs ) :
-        pass
+        ArchName = request.POST.get('Arch', None)
+        if (ArchName == None) :
+            return httplib.BAD_REQUEST, 'Architecture Name is not prodived'
+        Data = json.loads(request.POST.get('Data', None))
+        if (Data == None) :
+            return httplib.BAD_REQUEST, 'Test Command data is not prodived'
+        Cmd = TestCommand()
+        Cmd.Test = Data['Test']
+        Cmd.Mode = TestMode.objects.get(id = int(Data['Mode']))
+        Cmd.FailStop = int(Data['FailStop'])
+        Cmd.Timeout = int(Data['Timeout'])
+        Cmd.Prompt = Data['Prompt']
+        Cmd.Command = Data['Command']
+        Cmd.Pass = Data['Pass']
+        Cmd.Fail = Data['Fail']
+        Cmd.Msg = Data['Msg']
+        Cmd.Comment = Data['Comment']
+        Cmd.Arch = Architecture.objects.get(Name = ArchName)
+        Cmd.save()
+        return httplib.OK, TestCommandSerializer(Cmd).data
 
     def __DeleteCommand ( self, request, *args, **kwargs ) :
         Id = request.POST.get('CommandId', None)
@@ -52,12 +72,6 @@ class TestCommandPage ( BasePage ) :
             Cmd.Mode = TestMode.objects.get(id = int(Data['Mode']))
             Cmd.FailStop = int(Data['FailStop'])
             Cmd.Timeout = int(Data['Timeout'])
-            Cmd.Prompt = Data['Prompt']
-            Cmd.Command = Data['Command']
-            Cmd.Pass = Data['Pass']
-            Cmd.Fail = Data['Fail']
-            Cmd.Msg = Data['Msg']
-            Cmd.Comment = Data['Comment']
             LOG.info(Cmd)
             Cmd.save()
             return httplib.OK, TestCommandSerializer(Cmd).data
