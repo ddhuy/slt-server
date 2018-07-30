@@ -8,6 +8,88 @@
 {% block page_title %}Test Commands Management{% endblock page_title %}
 
 {% block page_content %}
+<div class="container" id="id_TestCommandDialog">
+    <div class="command-row">
+        <div class="command-brief">
+            <p class="full-width">
+                <label for="">Test</label>
+                <input type="text" name="Test" id="id_Test" class="cmd-controls">
+            </p>
+            <p class="full-width">
+                <label for="">Mode</label>
+                <select name="Mode" id="id_Mode" class="cmd-controls">
+                    {% for m in TestModes %}
+                    <option value="{{ m.id }}">{{ m.Mode }}</option>
+                    {% endfor%}
+                </select>
+            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Fail Stop</label>
+                            <label class="switch">
+                                <input type="checkbox" name="FailStop" id="id_FailStop" class="cmd-controls">
+                                <span class="slider round"></span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Timeout</label>
+                            <input type="number" min=0 name="Timeout" id="id_Timeout" class="cmd-controls">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p class="full-width">
+                <label for="">Prompt</label>
+                <input type="text" id="id_Prompt" name="Prompt" class="cmd-controls">
+            </p>
+        </div>
+        <div class="command-detail">
+            <p class="full-width">
+                <label for="">Commands / Scripts</label>
+                <input type="text" id="id_Command" name="Command" class="cmd-controls">
+            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Pass criteria</label>
+                            <textarea name="Pass" id="id_Pass" class="cmd-controls"></textarea>
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Fail Criteria</label>
+                            <textarea name="Fail" id="id_Fail" class="cmd-controls"></textarea>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Messages</label>
+                            <input type="text" id="id_Msg" name="Msg" class="cmd-controls">
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p class="full-width">
+                            <label for="">Comments</label>
+                            <input type="text" id="id_Comment" name="Comment" class="cmd-controls">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="container">
     <div class="table-wrapper">
         <div class="table-title">
@@ -29,31 +111,46 @@
             <div class="command-brief">
                 <p class="full-width">
                     <label for="">Test</label>
-                    <input type="text" name="Test" value="{{ cmd.Test }}" disabled="disabled">
+                    <input type="text" name="Test" class="cmd-controls cmd-test" value="{{ cmd.Test }}" disabled="disabled">
                 </p>
                 <p class="full-width">
                     <label for="">Mode</label>
-                    <input type="text" name="Mode" value="{{ cmd.Mode.id }}" disabled="disabled">
+                    <select name="Mode" class="cmd-controls cmd-mode" disabled="disabled">
+                        {% for m in TestModes %}
+                            {% if m.id == cmd.Mode.id %}
+                            <option value="{{ m.id }}" selected="">{{ m.Mode }}</option>
+                            {% else %}
+                            <option value="{{ m.id }}">{{ m.Mode }}</option>
+                            {% endif %}
+                        {% endfor%}
+                    </select>
                 </p>
                 <div class="container">
                     <div class="row">
                         <div class="col">
                             <p class="full-width">
                                 <label for="">Fail Stop</label>
-                                <input type="text" name="FailStop" value="{{ cmd.FailStop }}" disabled="disabled">
+                                <label class="switch">
+                                    {% if cmd.FailStop == 1 %}
+                                    <input type="checkbox" name="FailStop" class="cmd-controls cmd-fail-stop" disabled="disabled" checked>
+                                    {% else %}
+                                    <input type="checkbox" name="FailStop" class="cmd-controls cmd-fail-stop" disabled="disabled">
+                                    {% endif %}
+                                    <span class="slider round"></span>
+                                </label>
                             </p>
                         </div>
                         <div class="col">
                             <p class="full-width">
                                 <label for="">Timeout</label>
-                                <input type="number" min=0 name="Timeout" value="{{ cmd.Timeout }}" disabled="disabled">
+                                <input type="number" name="Timeout" class="cmd-controls cmd-timeout" min=0 value="{{ cmd.Timeout }}" disabled="disabled">
                             </p>
                         </div>
                     </div>
                 </div>
                 <p class="full-width">
                     <label for="">Prompt</label>
-                    <input type="text" name="Prompt" value="{{ cmd.Prompt }}" disabled="disabled">
+                    <input type="text" name="Prompt" class="cmd-controls cmd-prompt" value="{{ cmd.Prompt }}" disabled="disabled">
                 </p>
                 <div class="control-buttons">
                     <a class="accept accept-command" data-tooltip="Accept"><i class="material-icons">&#xE876;</i></a>
@@ -65,28 +162,28 @@
             <div class="command-detail">
                 <p class="full-width">
                     <label for="">Commands / Scripts</label>
-                    <input type="text" name="Command" value="{{ cmd.Command }}" disabled="disabled">
+                    <input type="text" name="Command" class="cmd-controls cmd-command" value="{{ cmd.Command }}" disabled="disabled">
                 </p>
                 <p class="full-width">
                     <label for="">Pass criteria</label>
-                    <input type="text" name="Pass" value="{{ cmd.Pass }}" disabled="disabled">
+                    <input type="text" name="Pass" class="cmd-controls cmd-pass" value="{{ cmd.Pass }}" disabled="disabled">
                 </p>
                 <p class="full-width">
                     <label for="">Fail Criteria</label>
-                    <input type="text" name="Fail" value="{{ cmd.Fail }}" disabled="disabled">
+                    <input type="text" name="Fail" class="cmd-controls cmd-fail" value="{{ cmd.Fail }}" disabled="disabled">
                 </p>
                 <div class="container">
                     <div class="row">
                         <div class="col">
                             <p class="full-width">
                                 <label for="">Messages</label>
-                                <input type="text" name="Msg" value="{{ cmd.Msg }}" disabled="disabled">
+                                <input type="text" name="Msg" class="cmd-controls cmd-msg" value="{{ cmd.Msg }}" disabled="disabled">
                             </p>
                         </div>
                         <div class="col">
                             <p class="full-width">
                                 <label for="">Comments</label>
-                                <input type="text" name="Comment" value="{{ cmd.Comment }}" disabled="disabled">
+                                <input type="text" name="Comment" class="cmd-controls cmd-comment" value="{{ cmd.Comment }}" disabled="disabled">
                             </p>
                         </div>
                     </div>

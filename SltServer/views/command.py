@@ -23,7 +23,8 @@ class TestCommandPage ( BasePage ) :
     def get ( self, request, *args, **kwargs ) :
         arch = Architecture.objects.filter(Name = kwargs['arch']).first()
         commands = TestCommand.objects.filter(Arch__id = arch.id)
-        return render(request, self.template_name, {'ArchName': arch.Name,'Commands': commands})
+        test_modes = TestMode.objects.all()
+        return render(request, self.template_name, {'ArchName': arch.Name,'Commands': commands, 'TestModes': test_modes})
 
     def __InsertCommand ( self, request, *args, **kwargs ) :
         pass

@@ -115,22 +115,25 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
-select {
-    width: 100%;
-    margin: 1px 0 0;
+
+textarea {
+    height: 69px;
+    resize: none;
+    display: block;
 }
-input {
+.cmd-controls {
     width: 100%;
     border: 1px solid #000;
     border-radius: 5px;
-    padding: 0 7px 0 7px;
+    padding: 0 5px 0 5px;
 }
-input:enabled {
+.cmd-controls:enabled {
     border: 1px solid #f93822;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
 }
-input:disabled {
+.cmd-controls:disabled {
     background: #fff;
+    border: 1px solid #000;
     cursor: copy all-scroll;
 }
 .full-width {
@@ -154,11 +157,11 @@ p label {
         grid-template-columns: 1fr 4fr;
     }
     .command-row > * {
-        padding: 10px 10px;
+        padding: 5px 10px;
     }
 }
 .command-brief {
-    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.6);
     background: #e9e9e9;
     border-radius: 5px;
     /*padding-bottom: 30px*/
