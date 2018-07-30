@@ -45,7 +45,7 @@
             <li><a href="#">User Account</a><br />edit: display name, Rfid, etc.</li>
             {% endif %}
             {% if user.profile.need_operator %}
-            <li><a href="#">Bench Monitoring</a><br />get & set bench information</li>
+            <li><a href="/bench">Bench Monitoring</a><br />get & set bench information</li>
             {% endif %}
             {% if user.profile.need_dev %}
             <li><a href="/config">Test Configuration</a><br />configure test bed</li>
