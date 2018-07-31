@@ -15,3 +15,25 @@ table.table td a.edit {
 table.table td a.history {
     color: #551A8B;
 }
+textarea {
+    height: 210px;
+    resize: none;
+    display: block;
+}
+.control-input {
+    border: 1px solid #000;
+    border-radius: 5px;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+    padding: 0 5px 0 5px;
+    width: 100%;
+}
+.full-width {
+    width: 100%;
+    padding: 0 0 0 0;
+    margin: 0 0 5px 0;
+}
+p label {
+    font-weight: bold;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}

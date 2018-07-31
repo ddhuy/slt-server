@@ -197,7 +197,7 @@ function commit_json_data ( URL = "",
             if (OnErrorCallback && json_resp)
                 OnErrorCallback(json_resp, Param);
             else {
-                slt_dialog(json_resp);
+                slt_dialog(json_resp.Data);
             }
         }
     });

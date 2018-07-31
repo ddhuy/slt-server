@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row">
         <table class="table table-list-search">
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th>#</th>
                     <th>Bench</th>
@@ -26,18 +26,18 @@
             </thead>
             <tbody>
                 {% for b in Benches%}
-                <tr>
+                <tr id="{{ b.id }}">
                     <td>{{ b.Number }}</td>
                     <td>{{ b.Name }}</td>
                     <td>{{ b.BoardSerial }}</td>
                     <td>{{ b.SocketSerial }}</td>
-                    <td>{{ b.User.profile.DisplayName}}</td>
+                    <td>{{ b.Operator.profile.DisplayName}}</td>
                     <td>{{ b.MacAddress }}</td>
                     <td>{{ b.IpAddress }}</td>
                     <td>{{ b.Status }}</td>
                     <td class="control-buttons">
-                        <a class="edit" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
-                        <a class="history" data-tooltip="History"><i class="material-icons">&#xE889;</i></a>
+                        <a class="edit edit_bench" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                        <a class="history history_bench" data-tooltip="History"><i class="material-icons">&#xE889;</i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -45,6 +45,49 @@
         </table>   
     </div>
 </div>
+
+<div class="container" id="id_BenchInfoDialog" style="display: none;">
+    <div class="command-row">
+        <div class="row">
+            <div class="col">
+                <p class="full-width">
+                    <label for="">Bench Number:</label>
+                    <input type="number" id="id_BenchNumber" name="BenchNumber" class="control-input">
+                </p>
+            </div>
+            <div class="col">
+                <p class="full-width">
+                    <label for="">Architecture:</label>
+                    <select id="id_Architecture" name="Architecture" class="control-input">
+                        {% for a in Architectures %}
+                        <option value="{{ a.id }}">{{ a.Name }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p class="full-width">
+                    <label for="">Board Serial:</label>
+                    <input type="text" id="id_BoardSerial" name="BoardSerial" class="control-input">
+                </p>
+            </div>
+            <div class="col">
+                <p class="full-width">
+                    <label for="">Socket Serial:</label>
+                    <input type="text" id="id_SocketSerial" name="SocketSerial" class="control-input">
+                </p>
+            </div>
+        </div>
+        <p class="full-width">
+            <label for="">Hardware Infos:</label>
+            <textarea id="id_HardwareInfo" name="HardwareInfo" class="control-input"></textarea>
+        </p>
+    </div>
+</div>
+
+
 {% endblock page_content %}
 
 {% block page_js %}
