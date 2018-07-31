@@ -12,7 +12,7 @@ class Bench ( models.Model ) :
     Operator = models.ForeignKey(User, related_name = 'User', null = True, blank = True)
     MacAddress = models.CharField(max_length = 255, null = True, blank = True)
     IpAddress = models.CharField(max_length = 255, null = True, blank = True)
-    Status = models.IntegerField(null = True, blank = True)
+    Status = models.CharField(max_length = 255, null = True, blank = True)
     HardwareInfo = models.TextField(null = True, blank = True)
 
     class Meta:

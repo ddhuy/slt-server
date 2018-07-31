@@ -25,20 +25,22 @@
                 </tr>
             </thead>
             <tbody>
+                {% for b in Benches%}
                 <tr>
-                    <td>1</td>
-                    <td>Control panel_5C1426</td>
-                    <td>OSP-A1_003</td>
-                    <td>S161124-033</td>
-                    <td>Fernando</td>
-                    <td>AA:BB:CC:DD:EE:FF</td>
-                    <td>255.255.255.255</td>
-                    <td>13d:14h:31m</td>
+                    <td>{{ b.Number }}</td>
+                    <td>{{ b.Name }}</td>
+                    <td>{{ b.BoardSerial }}</td>
+                    <td>{{ b.SocketSerial }}</td>
+                    <td>{{ b.User.profile.DisplayName}}</td>
+                    <td>{{ b.MacAddress }}</td>
+                    <td>{{ b.IpAddress }}</td>
+                    <td>{{ b.Status }}</td>
                     <td class="control-buttons">
                         <a class="edit" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
                         <a class="history" data-tooltip="History"><i class="material-icons">&#xE889;</i></a>
                     </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>   
     </div>

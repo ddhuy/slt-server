@@ -4,9 +4,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 from django.contrib.auth.models import User
-from SltServer.models import Architecture
+from SltServer.models import Bench
 from SltServer.logger import *
-from SltServer.serializers import TestCommandSerializer
+from SltServer.serializers import BenchSerializer
 from SltServer.views import BasePage
 
 class BenchMonitorPage ( BasePage ) :
@@ -18,4 +18,5 @@ class BenchMonitorPage ( BasePage ) :
         }
 
     def get ( self, request, *args, **kwargs ) :
-        return render(request, self.template_name)
+        benches = Bench.objects.all()
+        return render(request, self.template_name, {'Benches': benches})
