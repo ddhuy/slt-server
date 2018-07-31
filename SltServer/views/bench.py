@@ -33,7 +33,7 @@ class BenchMonitorPage ( BasePage ) :
         SocketSerial = request.POST.get('SocketSerial', None)
         HardwareInfo = request.POST.get('HardwareInfo', None)
         ArchId = request.POST.get('ArchId', None)
-        
+
         bench = Bench.objects.get(id = BenchId)
         if (BenchNumber != None) :
             bench.Number = BenchNumber

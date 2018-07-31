@@ -14,6 +14,10 @@ function display_bench_info ( bench_info ) {
     $('#id_HardwareInfo').val(bench_info.HardwareInfo);
 }
 
+$(document).ready(function() {
+    enable_all_qtips();
+});
+
 $(document).on('click', '.edit_bench', function() {
     var bench_id = $(this).parents('tr').attr('id');
     var edit_bench_dlg = $('#id_BenchInfoDialog').dialog({
@@ -68,4 +72,8 @@ $(document).on('click', '.edit_bench', function() {
         }
     });
     edit_bench_dlg.dialog('open');
+});
+
+$(document).on('click', '.history_bench', function() {
+    var bench_id = $(this).parents('tr').attr('id');
 });
