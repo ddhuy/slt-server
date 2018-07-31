@@ -1,0 +1,17 @@
+.control-buttons {
+    text-align: center;
+}
+.control-buttons a {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 3px;
+}
+.control-buttons i {
+    font-size: 19px;
+}
+table.table td a.edit {
+    color: #FFC107;
+}
+table.table td a.history {
+    color: #551A8B;
+}

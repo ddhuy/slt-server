@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_bench.css' %}">
+{% endblock page_css %}
+
+{% block page_title %}SLT Bench Monitor{% endblock page_title %}
+
+{% block page_content %}
+<div class="container">
+    <div class="row">
+        <table class="table table-list-search">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bench</th>
+                    <th>Board Serial</th>
+                    <th>Socket Serial</th>
+                    <th>Operator</th>
+                    <th>MAC address</th>
+                    <th>IP address</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Control panel_5C1426</td>
+                    <td>OSP-A1_003</td>
+                    <td>S161124-033</td>
+                    <td>Fernando</td>
+                    <td>AA:BB:CC:DD:EE:FF</td>
+                    <td>255.255.255.255</td>
+                    <td>13d:14h:31m</td>
+                    <td class="control-buttons">
+                        <a class="edit" data-tooltip="Edit"><i class="material-icons">&#xE254;</i></a>
+                        <a class="history" data-tooltip="History"><i class="material-icons">&#xE889;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>   
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'js/slt_bench.js' %}"></script>
+{% endblock page_js %}
