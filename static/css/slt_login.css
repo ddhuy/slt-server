@@ -28,7 +28,7 @@ body{
     font-family: 'Open Sans', sans-serif;
 
 }
-.login-form {
+.login-form, .change-password-form {
     background:#eee;
     width: 26%;
     margin:9% auto 4% auto;
