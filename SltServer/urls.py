@@ -5,6 +5,7 @@ import views
 urlpatterns = [
     url(r'^$', views.HomePage.as_view(), name = 'home'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^api/$', views.WebApiPage.as_view(), name = 'web_api'),
     url(r'^bench/', views.BenchMonitorPage.as_view(), name = 'bench'),
     url(r'^config/$', views.TestConfigPage.as_view(), name = 'config'),
     url(r'^config/(?P<rfid>\w+)/$', views.TestConfigPage.as_view(), name = 'config'),

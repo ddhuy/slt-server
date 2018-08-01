@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_webapi.css' %}">
+{% endblock page_css %}
+
+{% block page_title %}Web Service API{% endblock page_title %}
+
+{% block page_content %}
+{% endblock page_content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'js/slt_webapi.js' %}"></script>
+{% endblock page_js %}
