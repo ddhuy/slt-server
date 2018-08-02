@@ -1,10 +1,13 @@
 import os, httplib
 
+from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from django.shortcuts import render
 
+from SltServer.models import Bench
 from SltServer.logger import *
+from SltServer.serializers import BenchSerializer, UserSerializer
 from SltServer.settings import *
 from SltServer.utils import *
 from SltServer.views import BasePageNoAuth
@@ -27,13 +30,13 @@ class WebApiPage ( BasePageNoAuth ) :
             'GetServerInfo': self.__GetServerInfo,
             # 'GetSoftwareInfo': self.__GetSoftwareInfo,
             # 'GetTestConfig': self.__GetTestConfig,
-            # 'GetUserInfo': self.__GetUserInfo,
+            'GetUserInfo': self.__GetUserInfo,
 
             # 'SetBenchInfo': self.__SetBenchInfo,
 
             # 'UpdateTestResult': self.__UpdateTestResult,
             # 'UpdateBenchEvent': self.__UpdateBenchEvent,
-            # 'UpdateBoardStatus': self.__UpdateBoardStatus,
+            'UpdateBenchStatus': self.__UpdateBenchStatus,
 
             'UploadLogFile': self.__UploadLogFile,
         }
@@ -48,6 +51,24 @@ class WebApiPage ( BasePageNoAuth ) :
         }
         return httplib.OK, server_info
 
+    def __GetUserInfo ( self, request, *args, **kwargs ) :
+        Rfid = request.POST.get('Rfid', None)
+        if (Rfid is None) :
+            return httplib.BAD_REQUEST, 'Unknown Rfid'
+        operator = User.objects.get(profile__Rfid = Rfid)
+        return httplib.OK, UserSerializer(operator).data
+
+    def __UpdateBenchStatus ( self, request, *args, **kwargs ) :
+        MacAddress = request.POST.get('MacAddress', None)
+        if (MacAddress is None) :
+            return httplib.BAD_REQUEST, 'Unknown MAC Address'
+        Status = request.POST.get('Status', None)
+        if (Status is None) :
+            return httplib.BAD_REQUEST, 'Unknown Bench Status'
+        bench = Bench.objects.get(MacAddress = MacAddress)
+        bench.Status = Status
+        bench.save()
+        return httplib.OK, BenchSerializer(bench).data
 
     def __UploadLogFile ( self, request, *args, **kwargs ) :
         LogFile = request.FILES['LogFile']

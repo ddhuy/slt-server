@@ -11,7 +11,7 @@ class BenchHistory ( models.Model ) :
 
     class Meta:
         verbose_name = 'BenchHistory'
-        verbose_name_plural = 'BencheHistories'
+        verbose_name_plural = 'BenchHistories'
 
     def __str__ ( self ) :
         return "%s:%d" % (self.Bench.Name, self.EventId)
