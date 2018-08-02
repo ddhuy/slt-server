@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from SltServer.models import Architecture
 
 class Bench ( models.Model ) :
-    Architecture = models.ForeignKey(Architecture)
+    Architecture = models.ForeignKey(Architecture, null = True, blank = True)
     Number = models.IntegerField(null = True, blank = True)
     Name = models.CharField(max_length = 255, null = True, blank = True)
     BoardSerial = models.CharField(max_length = 255, null = True, blank = True)
