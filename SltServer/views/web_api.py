@@ -1,15 +1,20 @@
-import httplib, json
+import os, httplib
 
-from django.http import HttpResponse, JsonResponse
+from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
 
-from django.contrib.auth.models import User
-from SltServer.models import Architecture, Bench
 from SltServer.logger import *
-from SltServer.serializers import BenchSerializer
+from SltServer.settings import *
+from SltServer.utils import *
+from SltServer.views import BasePageNoAuth
 
-class WebApiPage ( TemplateView ) :
+SLT_LOG_FILE_PATH = 'Logs/Clients'
+
+def getLogFilePath ( Rfid, Filename ) :
+    return os.path.join(SLT_LOG_FILE_PATH, Rfid, Filename)
+
+class WebApiPage ( BasePageNoAuth ) :
     template_name = "web_api.html"
 
     def __init__ ( self ) :
@@ -19,7 +24,7 @@ class WebApiPage ( TemplateView ) :
 
             # 'GetBoardConfig': self.__GetBoardConfig,
             # 'GetBoardInfo': self.__GetBoardInfo,
-            # 'GetServerInfo': self.__GetServerInfo,
+            'GetServerInfo': self.__GetServerInfo,
             # 'GetSoftwareInfo': self.__GetSoftwareInfo,
             # 'GetTestConfig': self.__GetTestConfig,
             # 'GetUserInfo': self.__GetUserInfo,
@@ -30,9 +35,24 @@ class WebApiPage ( TemplateView ) :
             # 'UpdateBenchEvent': self.__UpdateBenchEvent,
             # 'UpdateBoardStatus': self.__UpdateBoardStatus,
 
-            # 'UploadTestLog': self.__UploadTestLog,
-            # 'UploadFile': self.__UploadFile,
+            'UploadLogFile': self.__UploadLogFile,
         }
 
     def get ( self, request, *args, **kwargs ) :
         return render(request, self.template_name)
+
+    def __GetServerInfo ( self, request, *args, **kwargs ) :
+        server_info = {
+            'Version': ("%s.%s.%s" % (SLT_MAJOR_VERSION, SLT_MINOR_VERSION, SLT_REVISION_NUMBER)),
+            'Timezone': get_system_timezone(),
+        }
+        return httplib.OK, server_info
+
+
+    def __UploadLogFile ( self, request, *args, **kwargs ) :
+        LogFile = request.FILES['LogFile']
+        Rfid = request.POST.get('Rfid', None)
+        if ((Rfid is None) or (LogFile is None)) :
+            return httplib.BAD_REQUEST, 'UploadLogFile request needs File & Rfid'
+        LogFilePath = getLogFilePath(Rfid, LogFile.name)
+        return httplib.OK, FileSystemStorage().save(LogFilePath, LogFile)

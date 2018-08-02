@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy
 from .models import *
 admin.site.register(Architecture)
 admin.site.register(Bench)
+admin.site.register(BenchHistory)
 admin.site.register(LotNumber)
 admin.site.register(Profile)
 admin.site.register(SltMode)

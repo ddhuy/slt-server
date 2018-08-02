@@ -1,6 +1,11 @@
+certifi==2018.4.16
+chardet==3.0.4
 Django==1.11.14
 django-extensions==2.1.0
 djangorestframework==3.8.2
+idna==2.7
 pytz==2018.5
+requests==2.19.1
 six==1.11.0
 typing==3.6.4
+urllib3==1.23

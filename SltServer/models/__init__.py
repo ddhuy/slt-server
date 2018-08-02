@@ -1,5 +1,6 @@
 from .Architecture import Architecture
 from .Bench import Bench
+from .BenchHistory import BenchHistory
 from .LotNumber import LotNumber
 from .Profile import Profile
 from .SltMode import SltMode
@@ -11,6 +12,7 @@ from .TestResultDetail import TestResultDetail
 __all__ = [
     'Architecture',
     'Bench',
+    'BenchHistory',
     'LotNumber',
     'Profile',
     'SltMode',

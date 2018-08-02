@@ -1,4 +1,4 @@
-from .base import BasePage
+from .base import BasePage, BasePageNoAuth
 from .bench import BenchMonitorPage
 from .command import TestCommandPage
 from .home import HomePage
@@ -10,6 +10,7 @@ from .web_api import WebApiPage
 
 __all__ = [
     'BasePage',
+    'BasePageNoAuth',
     'BenchMonitorPage',
     'HomePage',
     'LotNumberPage',
