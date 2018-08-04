@@ -14,12 +14,12 @@ from SltServer.serializers import TestResultSerializer, TestResultDetailSerializ
 
 from SltServer.views import BasePage
 
-class SearchPage ( BasePage ) :
-    template_name = "search.html"
+class SummaryPage ( BasePage ) :
+    template_name = "summary.html"
 
     # init POST controller functions
     def __init__ ( self ) :
-        super(SearchPage, self).__init__()
+        super(SummaryPage, self).__init__()
         self._funcdict = {
             'GetTestResult' : self.__GetTestResult,
             'GetTestResultDetails' : self.__GetTestResultDetails,

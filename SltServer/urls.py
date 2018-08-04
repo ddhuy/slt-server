@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^command/$', views.TestCommandPage.as_view(), name = 'command'),
     url(r'^command/(?P<arch>\w+)/$', views.TestCommandPage.as_view(), name = 'command'),
     url(r'^lot/$', views.LotNumberPage.as_view(), name = 'lot_number'),
-    url(r'^search/(?P<arch>\w+)/(?P<mode>\w+)/$', views.SearchPage.as_view(), name = 'search'),
+    url(r'^summary/(?P<arch>\w+)/(?P<mode>\w+)/$', views.SummaryPage.as_view(), name = 'summary'),
 ]
