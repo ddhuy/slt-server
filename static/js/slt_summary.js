@@ -148,6 +148,121 @@ function build_summary_list_by_lotnum ( search_results ) {
     return summary_list;
 }
 
+$('table').off('click', '.s_testdetails');
+$('table').on('click', '.s_testdetails', function () {
+    var test_result_id = $(this).attr("data-id");
+    commit_json_data(
+        URL = '/summary/' + ArchName +'/' + SummMode + '/',
+        Data = {
+            Action: 'GetTestResultDetails',
+            Data: test_result_id
+        },
+        Param = {},
+        OnSuccessCallback = function ( json_resp, Param ) {
+            var testdetail_dlg = $("#TestDetail_Dlg").dialog({
+                height: '400',
+                width: 'auto',
+                autoOpen: false,
+                closeOnEscape:true,
+                resizable:false,
+                modal: true,
+                show:'fade',
+                buttons: {
+                    "OK": function() {
+                        $(this).dialog("close");
+                    }
+                },
+                open: function() {
+                    var TestDetail_Data = json_resp.Data;
+                    for (i in TestDetail_Data) {
+                        var row = "";
+                        row += '<tr id=' + TestDetail_Data[i].id + '>';
+                        row += '    <td title="Test">' + TestDetail_Data[i].Test + '</td>';
+                        row += '    <td title="Pass">' + TestDetail_Data[i].Pass + '</td>';
+                        row += '    <td title="Fail">' + TestDetail_Data[i].Fail + '</td>';
+                        row += '    <td title="Executing time">' + hhmmss(TestDetail_Data[i].ExecutingTime) + '</td>';
+                        row += '</tr>';
+                        $("#TestDetail_Tbl").find('tbody').append(row);
+                    }
+                },
+                close: function() {
+                    $("#TestDetail_Tbl").find('tbody').empty();
+                }
+            });
+            testdetail_dlg.dialog("open");
+            // testdetail_dlg.dialog("option", "position", "center");
+        },
+        OnErrorCallback = function ( json_resp, Param ) {
+            slt_dialog(json_resp.Data);
+        }
+    );
+    return false;
+});
+
+$('table').off('click', '.s_testhistory');
+$('table').on('click', '.s_testhistory', function () {
+    var search_req = {};
+    search_req['PartId'] = $(this).attr("data-cpuid");
+    search_req['LotNum'] = $(this).attr("data-lotnum");
+
+    commit_json_data(
+        URL = '/summary/' + ArchName +'/' + SummMode + '/',
+        Data = {
+            Action: 'GetTestResult',
+            Data: JSON.stringify(search_req)
+        },
+        Param = {},
+        OnSuccessCallback = function ( json_resp, Param ) {
+            var testhistory_dlg = $("#TestHistory_Dlg").dialog({
+                height: '400',
+                width: '850',
+                autoOpen: false,
+                closeOnEscape:true,
+                resizable:false,
+                modal: true,
+                show:'fade',
+                buttons: {
+                    "OK": function() {
+                        $(this).dialog("close");
+                    }
+                },
+                open: function() {
+                    var TestHistory_Data = json_resp.Data;
+                    for (i in TestHistory_Data) {
+                        var row = "";
+                        row += '<tr id=' + TestHistory_Data[i].id + '>';
+                        row += '    <td>' + TestHistory_Data[i].TestName + '</td>';
+                        row += '    <td>' + TestHistory_Data[i].BenchNumber + '</td>';
+                        row += '    <td>' + TestHistory_Data[i].Operator.first_name + '</td>';
+                        if (TestHistory_Data[i].Result.toUpperCase() == 'PASS')
+                            row += '    <td><div style="color:green;">PASS</div></td>';
+                        else
+                            row += '    <td><div style="color:red;">' + TestHistory_Data[i].Result + '</div></td>';
+                        row += '    <td>' + TestHistory_Data[i].ExecutionDate + '</td>';
+                        row += '    <td title="' + convert_testenv(TestHistory_Data[i].TestEnvironments) + '">' + convert_testenv_short(TestHistory_Data[i].TestEnvironments) + '</td>';
+                        row += '<td style="text-align:center;">\
+                                    <a title="Show test details" class="s_testdetails" href="" data-id="' + TestHistory_Data[i].id + '">Details</a> | \
+                                    <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + TestHistory_Data[i].Rfid + '&Filename=' + TestHistory_Data[i].LogFilePath + '">Log</a>\
+                                </td>';
+                        row += '</tr>';
+                        $("#TestHistory_Tbl").find('tbody').append(row);
+                    }
+                },
+                close: function() {
+                    $("#TestDetail_Tbl").find('tbody').empty();
+                }
+            });
+            testhistory_dlg.dialog("open");
+            // testhistory_dlg.dialog("option", "position", "center");
+        },
+        OnErrorCallback = function ( json_resp, Param ) {
+            slt_dialog(json_resp.Data);
+        }
+    );
+    return false;
+});
+
+
 function bind_search_result ( search_results ) {
     function format ( d ) {
         var Summaries = d.Summary;
@@ -275,120 +390,6 @@ function bind_search_result_production ( search_results ) {
         return false;
     });
 
-    $('table').off('click', '.s_testdetails');
-    $('table').on('click', '.s_testdetails', function () {
-        var test_result_id = $(this).attr("data-id");
-        commit_json_data(
-            URL = '/search/' + ArchName +'/' + SummMode + '/',
-            Data = {
-                Action: 'GetTestResultDetails',
-                Data: test_result_id
-            },
-            Param = {},
-            OnSuccessCallback = function ( json_resp, Param ) {
-                var testdetail_dlg = $("#TestDetail_Dlg").dialog({
-                    height: '400',
-                    width: 'auto',
-                    autoOpen: false,
-                    closeOnEscape:true,
-                    resizable:false,
-                    modal: true,
-                    show:'fade',
-                    buttons: {
-                        "OK": function() {
-                            $(this).dialog("close");
-                        }
-                    },
-                    open: function() {
-                        var TestDetail_Data = json_resp.Data;
-                        for (i in TestDetail_Data) {
-                            var row = "";
-                            row += '<tr id=' + TestDetail_Data[i].id + '>';
-                            row += '    <td title="Test">' + TestDetail_Data[i].Test + '</td>';
-                            row += '    <td title="Pass">' + TestDetail_Data[i].Pass + '</td>';
-                            row += '    <td title="Fail">' + TestDetail_Data[i].Fail + '</td>';
-                            row += '    <td title="Executing time">' + hhmmss(TestDetail_Data[i].ExecutingTime) + '</td>';
-                            row += '</tr>';
-                            $("#TestDetail_Tbl").find('tbody').append(row);
-                        }
-                    },
-                    close: function() {
-                        $("#TestDetail_Tbl").find('tbody').empty();
-                    }
-                });
-                testdetail_dlg.dialog("open");
-                // testdetail_dlg.dialog("option", "position", "center");
-            },
-            OnErrorCallback = function ( json_resp, Param ) {
-                slt_dialog(json_resp.Data);
-            }
-        );
-        return false;
-    });
-
-    $('table').off('click', '.s_testhistory');
-    $('table').on('click', '.s_testhistory', function () {
-        var search_req = {};
-        search_req['PartId'] = $(this).attr("data-cpuid");
-        search_req['LotNum'] = $(this).attr("data-lotnum");
-
-        commit_json_data(
-            URL = '/search/' + ArchName +'/' + SummMode + '/',
-            Data = {
-                Action: 'GetTestResult',
-                Data: JSON.stringify(search_req)
-            },
-            Param = {},
-            OnSuccessCallback = function ( json_resp, Param ) {
-                var testhistory_dlg = $("#TestHistory_Dlg").dialog({
-                    height: '400',
-                    width: '850',
-                    autoOpen: false,
-                    closeOnEscape:true,
-                    resizable:false,
-                    modal: true,
-                    show:'fade',
-                    buttons: {
-                        "OK": function() {
-                            $(this).dialog("close");
-                        }
-                    },
-                    open: function() {
-                        var TestHistory_Data = json_resp.Data;
-                        for (i in TestHistory_Data) {
-                            var row = "";
-                            row += '<tr id=' + TestHistory_Data[i].id + '>';
-                            row += '    <td>' + TestHistory_Data[i].TestName + '</td>';
-                            row += '    <td>' + TestHistory_Data[i].BenchNumber + '</td>';
-                            row += '    <td>' + TestHistory_Data[i].Operator.first_name + '</td>';
-                            if (TestHistory_Data[i].Result.toUpperCase() == 'PASS')
-                                row += '    <td><div style="color:green;">PASS</div></td>';
-                            else
-                                row += '    <td><div style="color:red;">' + TestHistory_Data[i].Result + '</div></td>';
-                            row += '    <td>' + TestHistory_Data[i].ExecutionDate + '</td>';
-                            row += '    <td title="' + convert_testenv(TestHistory_Data[i].TestEnvironments) + '">' + convert_testenv_short(TestHistory_Data[i].TestEnvironments) + '</td>';
-                            row += '<td style="text-align:center;">\
-                                        <a title="Show test details" class="s_testdetails" href="" data-id="' + TestHistory_Data[i].id + '">Details</a> | \
-                                        <a title="Download log file" class="s_downloadlog" href="?Action=DownloadLogFile&Rfid=' + TestHistory_Data[i].Rfid + '&Filename=' + TestHistory_Data[i].LogFilePath + '">Log</a>\
-                                    </td>';
-                            row += '</tr>';
-                            $("#TestHistory_Tbl").find('tbody').append(row);
-                        }
-                    },
-                    close: function() {
-                        $("#TestDetail_Tbl").find('tbody').empty();
-                    }
-                });
-                testhistory_dlg.dialog("open");
-                // testhistory_dlg.dialog("option", "position", "center");
-            },
-            OnErrorCallback = function ( json_resp, Param ) {
-                slt_dialog(json_resp.Data);
-            }
-        );
-        return false;
-    });
-
     return SummaryList;
 }
 
@@ -512,11 +513,11 @@ $(document).ready(function() {
          * jQuery.param() -> create a serialized representation of an array or
          *     object, suitable for use in a URL query string or Ajax request.
          */
-        // var url = '/search/?' + $.param(search_req);
+        // var url = '/summary/?' + $.param(search_req);
         // window.history.pushState(', ', url); // Causes page to reload
 
         commit_json_data(
-            URL = '/search/' + ArchName +'/' + SummMode + '/',
+            URL = '/summary/' + ArchName +'/' + SummMode + '/',
             Data = {
                 Action: 'GetTestResult',
                 Data: JSON.stringify(search_req)

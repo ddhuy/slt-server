@@ -49,10 +49,22 @@ select,
     padding-left: 90px;
 }
 
+.datepicker_block input {
+    border-radius: 5px;
+}
+
 td.details-control {
     background: url('../images/details_open.png') no-repeat center center;
     cursor: pointer;
 }
 tr.shown td.details-control {
     background: url('../images/details_close.png') no-repeat center center;
+}
+.buttons {
+    height: 30px;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 50px;
+    line-height: 13px;
 }

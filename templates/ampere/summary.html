@@ -5,7 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'datatables.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_search.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slt_summary.css' %}">
 {% endblock page_css %}
 
 {% block page_title %}{{ SummMode|title }} Screening > {{ ArchName|title }}{% endblock page_title %}
@@ -91,10 +92,16 @@
     </tbody>
 </table> 
 
-<div>
-    <input class="button" id="id_Search" data-tooltip="Click to search." type="image" src="{% static 'images/search.png' %}" />
-    <input class="button" id="id_Statistics" data-tooltip="Click to view data statistic." type="image" src="{% static 'images/statistic.png' %}" />
-    <input class="button" id="id_Report" data-tooltip="Click to get report" type="image" src="{% static 'images/analytics.png' %}" />
+<div style="text-align: center;">
+    <button class="btn btn-secondary buttons" id="id_Search" data-tooltip="Start searching">
+        <i class="fa fa-search"></i> Search
+    </button>
+    <button class="btn btn-secondary buttons" id="id_Statistics" data-tooltip="View statistic">
+        <i class="fa fa-chart-bar"></i> Statistics
+    </button>
+    <button class="btn btn-secondary buttons" id="id_Report" data-tooltip="Report result">
+        <i class="fa fa-book"></i> Report
+    </button>
 </div>
 
 <br />
@@ -159,5 +166,5 @@
     <script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery.qtip.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'datatables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/slt_search.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slt_summary.js' %}"></script>
 {% endblock page_js %}
