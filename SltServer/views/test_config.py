@@ -12,7 +12,6 @@ from SltServer.models import SltMode, TestMode, TestCommand
 from SltServer.logger import *
 from SltServer.views import BasePage
 
-
 class TestConfigPage ( BasePage ) :
     template_name = "test_config.html"
 
@@ -45,7 +44,7 @@ class TestConfigPage ( BasePage ) :
         OperatorId = Data.get('OperatorId', None)
         if (OperatorId == None) :
             return httplib.BAD_REQUEST, 'Not provide Operator ID'
-        new_id = Utils.generate_id()
+        new_id = utils.generate_id()
         # TODO: verify the duplicating of new generated id
         return httplib.OK, new_id
 

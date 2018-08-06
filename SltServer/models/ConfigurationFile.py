@@ -1,7 +1,7 @@
 import os, csv
 import ConfigParser
 
-from SltServer import FileHelper, Utils
+from SltServer import FileHelper, utils
 from SltServer.logger import *
 from SltServer.Csv_FileHelper import Csv_FileHelper
 from SltServer.Ini_FileHelper import Ini_FileHelper
