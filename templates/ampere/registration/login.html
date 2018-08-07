@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 
-
-{% block site_title %}SLT Login{% endblock site_title %}
+{% block site_title %}SLT | Login{% endblock site_title %}
 {% block page_css %}
-    <link rel='stylesheet' type='text/css' href="{% static 'css/slt_login.css' %}"/>
+    <link rel='stylesheet' type='text/css' href="{% static 'css/slt_registration.css' %}"/>
 {% endblock page_css %}
 
 {% block site_body %}
 <div class="main">
-    <div class="login-form">
+    <div class="registration-form">
         <div class="head">
             <img src="{% static 'images/ampere_logo.png' %}" alt=""/>
         </div>
@@ -29,7 +28,6 @@
     </div>
 </div>
 {% endblock site_body %}
-
 
 {% block page_js %}
     <!-- <script type="text/javascript" src="{% static 'js/slt_login.js' %}"></script> -->

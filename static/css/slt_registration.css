@@ -28,7 +28,7 @@ body{
     font-family: 'Open Sans', sans-serif;
 
 }
-.login-form, .change-password-form {
+.registration-form {
     background:#eee;
     width: 26%;
     margin:9% auto 4% auto;
@@ -76,7 +76,7 @@ text-align: center;
 form p a:hover {
     color:#21A957;
 }
- input[type="text"], input[type="password"]{
+input[type="text"], input[type="password"] {
     text-align:left;
     position: relative;
     width:100%;
