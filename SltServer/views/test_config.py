@@ -34,6 +34,7 @@ class TestConfigPage ( BasePage ) :
             # Functions for import/export/raw file content
             'ParseBoardSettings': self.__ParseBoardSettings,
             'ExportBoardSettings': self.__ExportBoardSettings,
+            'ParseTestSteps': self.__ParseTestSteps,
         }
 
     def get ( self, request, *args, **kwargs ) :
@@ -274,17 +275,17 @@ class TestConfigPage ( BasePage ) :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
 
     def __ParseBoardSettings ( self, request, *args, **kwargs ) :
-        BoardSettings = request.POST.get('BoardSettings', None)
-        if (BoardSettings is None) :
+        Data = request.POST.get('Data', None)
+        if (Data is None) :
             return httplib.BAD_REQUEST, 'Board Setting content is not provided'
         # save new uploaded board settings to temp file then read it again.
         # we do this becasue we need to re-use the parsing function to ensure the uploaded data is valid
         try :
             ini_boardsetting = Ini_BoardSetting(request.user.profile.Rfid, 'tmp_board_settings')
-            ini_boardsetting.SetContent(BoardSettings)
-            board_settings = ini_boardsetting.GetContent()
+            ini_boardsetting.SetContent(Data)
+            resp_data = ini_boardsetting.GetContent()
             FileHelper.rm(ini_boardsetting.GetFilepath())
-            return httplib.OK, board_settings
+            return httplib.OK, resp_data
         except Exception as e:
             return httplib.BAD_REQUEST, 'Invalid Board Settings content'
 
@@ -304,3 +305,30 @@ class TestConfigPage ( BasePage ) :
         else :
             return HttpResponse(status = httplib.NOT_FOUND, reason = 'Operator not found or Rfid not assigned')
 
+    def __ParseTestSteps ( self, request, *args, **kwargs ) :
+        OperatorId = request.POST.get('OperatorId', None)
+        if (OperatorId == None) :
+            return httplib.BAD_REQUEST, 'Operator ID is empty'
+        Data = request.POST.get('Data', [])
+        if (Data == None) :
+            return httplib.BAD_REQUEST, 'Test Steps data is empty'
+        CfgNumber = request.POST.get('CfgNumber', None)
+        if (CfgNumber == None) :
+            return httplib.BAD_REQUEST, 'Test Configuration Type is empty'
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            if (int(CfgNumber) == 1) :
+                test_steps = Csv_TestConfiguration1(Operator.profile.Rfid, 'TestPlanTmp', 'TestSuiteTmp')
+            elif (int(CfgNumber) == 2) :
+                test_steps = Csv_TestConfiguration2(Operator.profile.Rfid, 'TestPlanTmp', 'TestSuiteTmp')
+            else :
+                return httplib.BAD_REQUEST, 'Test Configuration Type is invalid'
+            try:
+                test_steps.SetContent(Data)
+                resp_data = test_steps.GetData()
+                FileHelper.rmdir_r(FileHelper.extract_filepath(test_steps.GetFilepath()))
+                return httplib.OK, resp_data
+            except Exception as e:
+                return httplib.BAD_REQUEST, 'Bad file format'
+        else :
+            return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'

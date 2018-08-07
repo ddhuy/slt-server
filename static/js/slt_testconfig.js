@@ -35,13 +35,13 @@ var current_test_plan_name = null;
 var current_test_suite_id = null;
 var current_test_suite_name = null;
 
-function read_text_file ( callback )
+function read_text_file ( filetype, callback )
 {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         var boardini_dlg = document.createElement("input");
         boardini_dlg.setAttribute("type", "file");
-        boardini_dlg.setAttribute("accept", ".ini");
+        boardini_dlg.setAttribute("accept", filetype);
         boardini_dlg.onchange = function(e) {
             if (!e || e.target.files.length <= 0)
                 return;
@@ -335,17 +335,17 @@ $(document).on("click", ".edit-board-settings", function() {
             );
         }
     });
-    boardsettings_dlg.data('TestPlanId', current_test_plan_id).dialog('open');
+    boardsettings_dlg.dialog('open');
 });
 $(document).on("click", "#id_ImportBoardSetting", function() {
     if (!OPERATOR_ID)
         return false;
-    read_text_file(function ( board_settings ) {
+    read_text_file('.ini', function ( board_settings ) {
         commit_json_data(
             URL = '/config/',
             Data = {
                 Action: 'ParseBoardSettings',
-                BoardSettings: board_settings
+                Data: board_settings
             },
             Param = {},
             OnSuccessCallback = function ( json_resp, Param ) {
@@ -454,7 +454,7 @@ $(document).on("click", ".edit-test-suites", function() {
             );
         }
     });
-    testsuites_dlg.data('TestPlanId', current_test_plan_id).dialog('open');
+    testsuites_dlg.dialog('open');
 });
 $(document).on("click", ".new-test-suite", function() {
     if (!OPERATOR_ID)
@@ -647,7 +647,7 @@ function handle_teststeps_dialog ( cfg, test_plan_id, test_suite_id, test_suite_
             );
         }
     });
-    test_dlg.data('TestPlanId', test_plan_id).data('TestSuiteId', test_suite_id).dialog('open');
+    test_dlg.data('CfgNumber', cfg).dialog('open');
 }
 $(document).on('click', '.edit-test-1', function() {
     current_test_suite_id = $(this).parents('tr').attr('data-test-suite-id');
@@ -672,6 +672,28 @@ $(document).on('click', '.delete-test-step', function() {
 $(document).on('click', '#id_ImportTestSteps', function() {
     if (!OPERATOR_ID)
         return false;
+    read_text_file('.csv', function ( test_steps ) {
+        commit_json_data(
+            URL = '/config/',
+            Data = {
+                Action: 'ParseTestSteps',
+                OperatorId: OPERATOR_ID,
+                Data: test_steps,
+                CfgNumber: $('#id_TestStepsDialog').data('CfgNumber')
+            },
+            Param = {},
+            OnSuccessCallback = function ( json_resp, Param ) {
+                $('tr.test-step-rows').remove();
+                var test_steps = json_resp.Data;
+                test_steps.forEach(function(test) {
+                    add_test_step_row(test);
+                });
+            },
+            OnErrorCallback = function ( json_resp, Param ) {
+            }
+        );
+    });
+    return false;
 });
 $(document).on('click', '#id_ExportTestSteps', function() {
     if (!OPERATOR_ID)

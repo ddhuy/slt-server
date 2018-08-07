@@ -97,7 +97,7 @@ class Csv_MenuDisplay ( CsvFile ) :
         return data
 
 class Csv_TestConfiguration1 ( CsvFile ) :
-    CSV_COLUMNS = ['test','mode','fail_stop','prompt','cmd','pass','fail', 'timeout', 'msg', 'comments']
+    CSV_COLUMNS = ['test','mode','fail_stop','prompt','cmd','pass','fail','timeout','msg','comments']
     FILENAME = ''
     def __init__ ( self, Rfid, TestPlanId, TestSuiteId ) :
         self.Rfid = str(Rfid)
