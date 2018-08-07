@@ -148,8 +148,16 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+DEFAULT_FROM_EMAIL = ''
+SERVER_EMAIL = ''
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PORT = 587
+EMAIL_USE_TLS = True
+
 
 # Other settings
 DATA_UPLOAD_MAX_MEMORY_SIZE = None

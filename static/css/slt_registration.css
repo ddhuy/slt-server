@@ -76,7 +76,7 @@ text-align: center;
 form p a:hover {
     color:#21A957;
 }
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="email"] {
     text-align:left;
     position: relative;
     width:100%;
