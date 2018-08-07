@@ -406,7 +406,7 @@ $(document).on("click", ".edit-test-suites", function() {
                     return {
                         'ID': $(this).attr('data-test-suite-id'),
                         'display': $(this).children('td:nth-child(2)').text(),
-                        'mode': $(this).find('select[class="sltmodes-selection"]').val(),
+                        'mode': $(this).find('select.sltmodes-selection').val(),
                         'enable': $(this).find('input[type="checkbox"]').prop("checked") ? 1 : 0
                     }
                 }).get();
@@ -421,10 +421,6 @@ $(document).on("click", ".edit-test-suites", function() {
                     },
                     Param = {},
                     OnSuccessCallback = function ( json_resp, Param ) {
-                        // var test_suites = json_resp.Data;
-                        // test_suites.forEach(function(test) {
-                        //     add_test_suite_row(test.ID, test.display, test.mode, test.enable)
-                        // });
                     },
                     OnErrorCallback = function ( json_resp, Param ) {
                     }
@@ -438,6 +434,7 @@ $(document).on("click", ".edit-test-suites", function() {
         open: function() {
             $('#id_TestSuitesTitle').html(current_test_plan_name);
             $('tr.test-suite-row').remove();
+            $(".new-test-suite").removeAttr("disabled");
             commit_json_data(
                 URL = '/config/',
                 Data = {
