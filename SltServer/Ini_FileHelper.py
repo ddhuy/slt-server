@@ -7,7 +7,8 @@ class Ini_FileHelper ( object ):
         # Init ConfigParser
         self.Config = ConfigParser.ConfigParser()
         self.Config.read(filename)
-    def get(self, section, option, default=None, type=None):
+
+    def get ( self, section, option, default = None, type = None ) :
         if not self.Config.has_section(section) or not self.Config.has_option(section, option):
             return default
         else:
@@ -24,7 +25,8 @@ class Ini_FileHelper ( object ):
                     return self.Config.get(section, option)
             except Exception, e:
                 return default
-    def set(self, section, option, value):
+
+    def set ( self, section, option, value ) :
         if not self.Config.has_section(section):
             self.Config.add_section(section)
         self.Config.set(section, option, str(value))

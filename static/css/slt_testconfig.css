@@ -52,23 +52,6 @@ select,
     /*margin: 0 0 10px;*/
     /*border-bottom: 1px dotted #919191;*/
 }
-.table-csv .csv {
-    float: right;
-    height: 30px;
-    font-weight: bold;
-    font-size: 12px;
-    text-shadow: none;
-    min-width: 100px;
-    border-radius: 50px;
-    line-height: 13px;
-    margin-left: 10px;
-    /*background-color: #4b5366;*/
-    /*border-color: #4b5366;*/
-}
-.table-csv .csv i {
-    margin-right: 4px;
-    color: #fff;
-}
 table.table {
     table-layout: fixed;
 }

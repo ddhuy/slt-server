@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from SltServer.models.ConfigurationFile import *
 from SltServer.models import SltMode, TestMode, TestCommand
 from SltServer.logger import *
+from SltServer.FileHelper import *
 from SltServer.views import BasePage
 
 class TestConfigPage ( BasePage ) :
@@ -30,9 +31,14 @@ class TestConfigPage ( BasePage ) :
             'SetTestSteps': self.__SetTestSteps,
             'GetErrorMonitor': self.__GetErrorMonitor,
             'SetErrorMonitor': self.__SetErrorMonitor,
+            # Functions for import/export/raw file content
+            'ParseBoardSettings': self.__ParseBoardSettings,
+            'ExportBoardSettings': self.__ExportBoardSettings,
         }
 
     def get ( self, request, *args, **kwargs ) :
+        if (request.GET.get('Action', None) == 'ExportBoardSettings') :
+            return self.__ExportBoardSettings(request, *args, **kwargs)
         operators = User.objects.all().order_by('username')
         sltmodes = SltMode.objects.all()
         runmodes = TestMode.objects.all()
@@ -266,3 +272,35 @@ class TestConfigPage ( BasePage ) :
             return httplib.OK, error_monitor.GetData()
         else :
             return httplib.NOT_FOUND, 'Operator not found or Rfid not assigned'
+
+    def __ParseBoardSettings ( self, request, *args, **kwargs ) :
+        BoardSettings = request.POST.get('BoardSettings', None)
+        if (BoardSettings is None) :
+            return httplib.BAD_REQUEST, 'Board Setting content is not provided'
+        # save new uploaded board settings to temp file then read it again.
+        # we do this becasue we need to re-use the parsing function to ensure the uploaded data is valid
+        try :
+            ini_boardsetting = Ini_BoardSetting(request.user.profile.Rfid, 'tmp_board_settings')
+            ini_boardsetting.SetContent(BoardSettings)
+            board_settings = ini_boardsetting.GetContent()
+            FileHelper.rm(ini_boardsetting.GetFilepath())
+            return httplib.OK, board_settings
+        except Exception as e:
+            return httplib.BAD_REQUEST, 'Invalid Board Settings content'
+
+    def __ExportBoardSettings ( self, request, *args, **kwargs ) :
+        OperatorId = request.GET.get('OperatorId', None)
+        if (OperatorId == None) :
+            return HttpResponse(status = httplib.BAD_REQUEST, reason = 'Operator ID is empty')
+        TestPlanId = request.GET.get('TestPlanId', None)
+        if (TestPlanId == None) :
+            return HttpResponse(status = httplib.BAD_REQUEST, reason = 'Test Plan ID is empty')
+        Operator = User.objects.filter(id = OperatorId).first()
+        if (Operator and Operator.profile.Rfid) :
+            board_ini = Ini_BoardSetting(Operator.profile.Rfid, TestPlanId)
+            response = HttpResponse(board_ini.GetContent(), content_type = 'application/x-download')
+            response['Content-Disposition'] = 'attachment; filename=%s' % FileHelper.extract_filename(board_ini.GetFilepath())
+            return response
+        else :
+            return HttpResponse(status = httplib.NOT_FOUND, reason = 'Operator not found or Rfid not assigned')
+

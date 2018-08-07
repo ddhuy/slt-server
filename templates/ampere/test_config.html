@@ -4,7 +4,7 @@
 {% block page_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.qtip.min.css' %}">
-    
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/all.css' %}">
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/slt_testconfig.css' %}">
@@ -30,9 +30,14 @@
         </div>
         <div class="table-csv">
             <div class="row">
-                <div class="col-sm-12">
-                    <button id="id_ExportCsv" type="button" class="btn btn-info csv"><i class="fa fa-save"></i> Export CSV</button>
-                    <button id="id_ImportCsv" type="button" class="btn btn-info csv"><i class="fa fa-clone"></i> Import CSV</button>
+                <div class="col-sm-12" style="text-align: right;">
+                    <a id="id_ImportCsv" href="" data-tooltip="Import All Test Plans">
+                        <i class="fa fa-clone"></i> Import
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a id="id_ExportCsv" href="" data-tooltip="Export All Test Plans">
+                        <i class="fa fa-save"></i> Export
+                    </a>
                 </div>
             </div>
         </div>

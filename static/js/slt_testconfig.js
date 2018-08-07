@@ -35,6 +35,32 @@ var current_test_plan_name = null;
 var current_test_suite_id = null;
 var current_test_suite_name = null;
 
+function read_text_file ( callback )
+{
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        var boardini_dlg = document.createElement("input");
+        boardini_dlg.setAttribute("type", "file");
+        boardini_dlg.setAttribute("accept", ".ini");
+        boardini_dlg.onchange = function(e) {
+            if (!e || e.target.files.length <= 0)
+                return;
+            var file_reader = new FileReader();
+            file_reader.onload = function (e) {
+                var file_content = e.target.result;
+                callback(file_content);
+            };
+            file_reader.readAsText(e.target.files[0]);
+        };
+        boardini_dlg.onclick = function() {
+            this.value = null; // using DOM element itself
+        };
+        boardini_dlg.click();
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+}
+
 $(document).ready(function() {
     $("#id_Operator").select2({
         minimumResultsForSearch: Infinity
@@ -73,7 +99,7 @@ $(document).ready(function() {
 });
 
 /***************************************
- * TEST SUITE
+ * TEST PLANS
  ***************************************/
 function set_test_plans ( ) {
     // All data is filled, commit request to add new test plan
@@ -141,27 +167,29 @@ function refresh_test_plans () {
     );
 }
 // Listen to selection change event then request data from server
-$(document).on("change", "#id_Operator", function(){
+$(document).on("change", "#id_Operator", function() {
     OPERATOR_ID = $("#id_Operator").val();
     if (!OPERATOR_ID)
-        return;
-    refresh_test_plans()
+        return false;
+    refresh_test_plans();
 });
 // Import data from CSV files
-$(document).on("click", "#id_ImportCsv", function(){
+$(document).on("click", "#id_ImportCsv", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
+    return false;
 });
 // Request server to download settings/suites
-$(document).on("click", "#id_ExportCsv", function(){
+$(document).on("click", "#id_ExportCsv", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
+    return false;
 });
 
 // Append table with add row form on add new button click
-$(document).on("click", ".new-test-plan", function(){
+$(document).on("click", ".new-test-plan", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     // send generate new test plan id to server
     commit_json_data(
         URL = '/config/',
@@ -179,7 +207,7 @@ $(document).on("click", ".new-test-plan", function(){
                         '<td>' + TEST_PLAN_BOARDST_BTN + '</td>' +
                         '<td>' + TEST_PLAN_TESTCFG_BTN + '</td>' +
                         '<td>' + TEST_PLAN_ACTIONS_BTN + '</td>' +
-                      '</tr>';
+                       '</tr>';
             $("#id_TestPlansTable").append(html);
             $(".new-test-plan").attr("disabled", "disabled");
             var row = $("#id_TestPlansTable tbody tr:last-child");
@@ -194,7 +222,7 @@ $(document).on("click", ".new-test-plan", function(){
 // Add row on add button click
 $(document).on("click", ".accept-test-plan", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     // check required data is filled or not
     var empty = false;
     var input = $(this).parents("tr").find('input[type="text"]');
@@ -221,9 +249,9 @@ $(document).on("click", ".accept-test-plan", function() {
 // Edit row on edit button click
 $(document).on("click", ".edit-test-plan", function(){
     if (!OPERATOR_ID)
-        return;
+        return false;
 
-    $(this).parents("tr").find("td:first-child").each(function(){
+    $(this).parents("tr").find("td:first-child").each(function() {
         $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
     });
     $(this).parents("tr").find(".accept-test-plan, .edit-test-plan").toggle();
@@ -233,13 +261,16 @@ $(document).on("click", ".edit-test-plan", function(){
 // Delete row on delete button click
 $(document).on("click", ".delete-test-plan", function(){
     if (!OPERATOR_ID)
-        return;
+        return false;
     $(this).parents("tr").remove();
     $(".new-test-plan").removeAttr("disabled");
     set_test_plans();
     refresh_test_plans();
 });
 
+/***************************************
+ * BOARD SETTING
+ ***************************************/
 // Open board settings dialog for editing
 $(document).on("click", ".edit-board-settings", function() {
     var tr = $(this).parents("tr");
@@ -280,6 +311,12 @@ $(document).on("click", ".edit-board-settings", function() {
         open: function() {
             $('#id_BoardSettingsTitle').html(current_test_plan_name);
             $("#id_BoardSettingsText").val('DATA IS LOADING...');
+            // set export link
+            var href =  "/config/?Action=ExportBoardSettings"
+                      + "&OperatorId=" + OPERATOR_ID
+                      + "&TestPlanId=" + current_test_plan_id;
+            $("a#id_ExportBoardSetting").attr({"href": href});
+            // request board settings
             commit_json_data(
                 URL = '/config/',
                 Data = {
@@ -298,7 +335,28 @@ $(document).on("click", ".edit-board-settings", function() {
             );
         }
     });
-    boardsettings_dlg.dialog('open');
+    boardsettings_dlg.data('TestPlanId', current_test_plan_id).dialog('open');
+});
+$(document).on("click", "#id_ImportBoardSetting", function() {
+    if (!OPERATOR_ID)
+        return false;
+    read_text_file(function ( board_settings ) {
+        commit_json_data(
+            URL = '/config/',
+            Data = {
+                Action: 'ParseBoardSettings',
+                BoardSettings: board_settings
+            },
+            Param = {},
+            OnSuccessCallback = function ( json_resp, Param ) {
+                var board_settings = json_resp.Data;
+                $('#id_BoardSettingsText').val(board_settings);
+            },
+            OnErrorCallback = function ( json_resp, Param ) {
+            }
+        );
+    });
+    return false;
 });
 
 /***************************************
@@ -403,7 +461,7 @@ $(document).on("click", ".edit-test-suites", function() {
 });
 $(document).on("click", ".new-test-suite", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     // send generate new test plan id to server
     commit_json_data(
         URL = '/config/',
@@ -424,7 +482,7 @@ $(document).on("click", ".new-test-suite", function() {
 });
 $(document).on("click", ".accept-test-suite", function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     // check required data is filled or not
     var empty = false;
     var input = $(this).parents("tr").find('input[type="text"]');
@@ -447,7 +505,7 @@ $(document).on("click", ".accept-test-suite", function() {
 });
 $(document).on("click", ".edit-test-suite", function(){
     if (!OPERATOR_ID)
-        return;
+        return false;
 
     $(this).parents("tr").find("td:nth-child(2)").each(function(){
         $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
@@ -457,10 +515,19 @@ $(document).on("click", ".edit-test-suite", function(){
 });
 $(document).on("click", ".delete-test-suite", function(){
     if (!OPERATOR_ID)
-        return;
+        return false;
     $(this).parents("tr").remove();
     $(".new-test-suite").removeAttr("disabled");
 });
+$(document).on("click", "#id_ImportTestSuites", function(){
+    if (!OPERATOR_ID)
+        return false;
+});
+$(document).on("click", "#id_ExportTestSuites", function(){
+    if (!OPERATOR_ID)
+        return false;
+});
+
 
 /***************************************
  * TEST 1 & TEST 2
@@ -597,18 +664,30 @@ $(document).on('click', '.edit-test-2', function() {
 });
 $(document).on('click', '.new-test-step', function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     add_test_step_row();
 });
 $(document).on('click', '.delete-test-step', function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     $(this).parents("tr").remove();
+});
+$(document).on('click', '#id_ImportTestSteps', function() {
+    if (!OPERATOR_ID)
+        return false;
+});
+$(document).on('click', '#id_ExportTestSteps', function() {
+    if (!OPERATOR_ID)
+        return false;
 });
 
 /***************************************
  * ERROR MONITOR 1 & 2
  ***************************************/
+function import_error_rules ( error_rules ) {
+}
+function export_error_rules ( ) {
+}
 function add_monitor_row ( monitor_rule ) {
     var html = '<tr class="monitor-rows">' + 
                  '<td>' + ERRMON_NAME_INPUT + '</td>' +
@@ -618,7 +697,7 @@ function add_monitor_row ( monitor_rule ) {
                  '<td>' + ERRMON_TIMEOUT_INPUT + '</td>' +
                  '<td>' + ERRMON_MESSAGE_INPUT + '</td>' +
                  '<td class="control-button">' + TEST_STEP_ACTIONS_BTN + '</td>' +
-              '</tr>';
+               '</tr>';
     $("#id_ErrorMonitorTable").append(html);
     var row = $("#id_ErrorMonitorTable tbody tr:last-child");
     var input = row.find('input');
@@ -728,11 +807,19 @@ $(document).on('click', '.edit-error-2', function() {
 });
 $(document).on('click', '.new-monitor-rule', function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     add_monitor_row();
 });
 $(document).on('click', '.delete-monitor-rule', function() {
     if (!OPERATOR_ID)
-        return;
+        return false;
     $(this).parents("tr").remove();
+});
+$(document).on('click', '#id_ImportErrorMonitor', function() {
+    if (!OPERATOR_ID)
+        return false;
+});
+$(document).on('click', '#id_ExportErrorMonitor', function() {
+    if (!OPERATOR_ID)
+        return false;
 });
