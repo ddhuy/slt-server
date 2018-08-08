@@ -18,8 +18,11 @@
             <input type="text" class="text" name="username" value="Username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Username';}" >
             <input type="password" name="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
             <input type="submit" id="id_UserLogIn" value="LOGIN" >
-            <div style="text-align: center;">
+            <div style="text-align: center; margin-bottom: 5px">
                 <a href="{% url 'password_reset' %}">Reset your password</a>
+            </div>
+            <div style="text-align: center;">
+                <a href="/accounts/registration">Register new account</a>
             </div>
         </form>
     </div>

@@ -13,7 +13,7 @@ from SltServer.logger import *
 class BasePage ( LoginRequiredMixin, TemplateView ) :
     def __init__ ( self ) :
         self._funcdict = {}
-        self._JSONRenderer = JSONRenderer()
+        # self._JSONRenderer = JSONRenderer()
 
     def post ( self, request, *args, **kwargs ) :
         req_action = request.POST.get('Action', '')

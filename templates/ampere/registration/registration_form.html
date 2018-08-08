@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block site_title %}SLT | Registration{% endblock site_title %}
+{% block page_css %}
+    <link rel='stylesheet' type='text/css' href="{% static 'css/slt_registration.css' %}"/>
+{% endblock page_css %}
+
+{% block site_body %}
+<div class="main">
+    <div class="registration-form">
+        <div class="head">
+            <img src="{% static 'images/ampere_logo.png' %}" alt=""/>
+        </div>
+        <h1>Register New Account</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label>Username:</label>
+            <input type="text" name="username">
+            <label>Password:</label>
+            <input type="password" name="password1">
+            <label>Re-type Password:</label>
+            <input type="password" name="password2">
+            <label>Email:</label>
+            <input type="email" name="email">
+            <label>First Name:</label>
+            <input type="text" name="first_name">
+            <label>Last Name:</label>
+            <input type="text" name="last_name">
+            <label>Group or Company:</label>
+            <input type="text" name="company">
+            <input type="submit" value="REGISTER" >
+        </form>
+    </div>
+    <div class="copy-right">
+        <!-- <p>Copyrights &copy; <a href="http://www.amperecomputing.com">VDC SLT</a></p> -->
+    </div>
+</div>
+{% endblock site_body %}
+
+{% block page_js %}
+{% endblock page_js %}

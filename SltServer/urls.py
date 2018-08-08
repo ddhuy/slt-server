@@ -4,6 +4,7 @@ import views
 
 urlpatterns = [
     url(r'^$', views.HomePage.as_view(), name = 'home'),
+    url(r'^accounts/registration', views.RegistrationPage.as_view(), name = 'registration'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^api/$', views.WebApiPage.as_view(), name = 'web_api'),
     url(r'^bench/', views.BenchMonitorPage.as_view(), name = 'bench'),
