@@ -1,2 +1,6 @@
 *.pyc
 *.DS_Store
+Database/
+Logs/
+WebEnv/
+sent_emails/
