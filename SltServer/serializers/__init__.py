@@ -1,5 +1,6 @@
 from .ArchitectureSerializer import ArchitectureSerializer
 from .BenchSerializer import BenchSerializer
+from .BenchHistorySerializer import BenchHistorySerializer
 from .LotNumberSerializer import LotNumberSerializer
 from .ProfileSerializer import ProfileSerializer
 from .SltModeSerializer import SltModeSerializer
@@ -12,6 +13,7 @@ from .UserSerializer import UserSerializer
 __all__ = [
     'ArchitectureSerializer',
     'BenchSerializer',
+    'BenchHistorySerializer',
     'LotNumberSerializer',
     'ProfileSerializer',
     'SltModeSerializer',

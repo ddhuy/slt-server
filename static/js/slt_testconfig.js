@@ -152,7 +152,7 @@ function refresh_test_plans () {
             var test_plans = json_resp.Data;
             test_plans.forEach(function(test) {
                 var row = '<tr class="test-plan-row" data-test-plan-id="' + test.ID + '">' +
-                            '<td>' + test.name + '</td>' +
+                            '<td>' + test.Text + '</td>' +
                             '<td>' + TEST_PLAN_BOARDST_BTN + '</td>' +
                             '<td>' + TEST_PLAN_TESTCFG_BTN + '</td>' +
                             '<td>' + TEST_PLAN_ACTIONS_BTN + '</td>' +

@@ -4,6 +4,7 @@ from .BenchHistory import BenchHistory
 from .LotNumber import LotNumber
 from .Profile import Profile
 from .SltMode import SltMode
+# from .BoardSoftware import Csv_BoardSoftware
 from .TestCommand import TestCommand
 from .TestMode import TestMode
 from .TestResult import TestResult
@@ -15,6 +16,7 @@ __all__ = [
     'BenchHistory',
     'LotNumber',
     'Profile',
+    # 'Csv_BoardSoftware',
     'SltMode',
     'TestCommand',
     'TestMode',

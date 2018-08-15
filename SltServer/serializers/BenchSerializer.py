@@ -3,6 +3,7 @@ from rest_framework import serializers
 from SltServer.models import Bench
 
 from .ArchitectureSerializer import ArchitectureSerializer
+from .BenchHistorySerializer import BenchHistorySerializer
 from .UserSerializer import UserSerializer
 
 class BenchSerializer ( serializers.ModelSerializer ) :

@@ -22,6 +22,7 @@ class CsvFile ( object ) :
         Filepath = self.GetFilepath()
         if (FileHelper.isfile(Filepath)) :
             return Csv_FileHelper.Read(Filepath)
+        LOG.warn('File not found %s', self.GetFilepath())
         return []
     def SetData ( self, Data ) :
         Filepath = self.GetFilepath()
@@ -65,12 +66,22 @@ class Csv_BoardList ( CsvFile ) :
         item['name'] = kwargs['Name']
         item['config'] = kwargs['ID'] + '.ini'
         return item
-    def GetData ( self ) :
+    def GetData ( self, ArchName = None ) :
+        boards_list = []
         data = super(Csv_BoardList, self).GetData()
         if (data) :
             for d in data :
-                d['ID'] = FileHelper.remove_extension(d['config'])
-        return data
+                board = {}
+                board['ID'] = FileHelper.remove_extension(d['config'])
+                IniFile = Ini_BoardSetting(self.Rfid, board['ID'])
+                board['Filename'] = FileHelper.extract_filename(IniFile.GetFilepath())
+                board['IniData'] = IniFile.GetContent()
+                board['Text'] = d['name']
+                if (ArchName is None) :
+                    boards_list.append(board)
+                elif (ArchName.lower() == Ini_FileHelper(IniFile.GetFilepath()).get('BOARD_CONFIG','Arch').lower()) :
+                    boards_list.append(board)
+        return boards_list
 
 class Csv_MenuDisplay ( CsvFile ) :
     CSV_COLUMNS = ['display','mode','test_cfg','second_test_cfg','error_table1','error_table2','enable']

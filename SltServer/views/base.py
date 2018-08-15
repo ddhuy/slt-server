@@ -22,7 +22,7 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
                 s = time.clock()
                 http_status, post_resp = self._funcdict[action](request, *args, **kwargs)
                 e = time.clock()
-                LOG.info('POST process time: %f', e - s)
+                LOG.info('[%s][%d] time: %f', action, http_status, e - s)
                 # json_resp = self._JSONRenderer.render(post_resp)
                 return JsonResponse(status = http_status, data = {'Data': post_resp})
         return JsonResponse(status = httplib.NOT_FOUND, data = {'Data': 'Request method not found'})
@@ -38,9 +38,9 @@ class BasePageNoAuth ( TemplateView ) :
         for action in self._funcdict :
             if (action == req_action) :
                 s = time.clock()
-                http_resp, post_resp = self._funcdict[action](request, *args, **kwargs)
+                http_status, post_resp = self._funcdict[action](request, *args, **kwargs)
                 e = time.clock()
-                LOG.info('POST process time: %f', e - s)
+                LOG.info('[%s][%d] time: %f', action, http_status, e - s)
                 # json_resp = self._JSONRenderer.render(post_resp)
-                return JsonResponse(status = http_resp, data = {'Data': post_resp})
+                return JsonResponse(status = http_status, data = {'Data': post_resp})
         return JsonResponse(status = httplib.NOT_FOUND, data = {'Data': 'Request method not found'})

@@ -5,8 +5,6 @@ from django.db import models
 from django.db.models import Count, Q
 from django.utils import timezone
 
-from rest_framework import serializers
-
 from .Architecture import Architecture
 from .LotNumber import LotNumber
 from .SltMode import SltMode
@@ -111,7 +109,6 @@ class TestResult ( models.Model ) :
             except Exception as e:
                 LOG.exception("Cannot convert test environment: ", e)
         return collections.OrderedDict(sorted(test_envs.items(), key = lambda t: t[0]))
-
 
     @classmethod
     def ToSearchRequest ( cls, arch_name, in_data ) :

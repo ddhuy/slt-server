@@ -12,33 +12,14 @@ from SltServer.settings import *
 from SltServer.utils import *
 from SltServer.views import BasePageNoAuth
 
-SLT_LOG_FILE_PATH = 'Logs/Clients'
-
-def getLogFilePath ( Rfid, Filename ) :
-    return os.path.join(SLT_LOG_FILE_PATH, Rfid, Filename)
-
 class WebApiPage ( BasePageNoAuth ) :
     template_name = "web_api.html"
 
     def __init__ ( self ) :
         super(WebApiPage, self).__init__()
         self._funcdict = {
-            # 'ClearBoardAction': self.__ClearBoardAction,
-
-            # 'GetBoardConfig': self.__GetBoardConfig,
-            # 'GetBoardInfo': self.__GetBoardInfo,
             'GetServerInfo': self.__GetServerInfo,
-            # 'GetSoftwareInfo': self.__GetSoftwareInfo,
-            # 'GetTestConfig': self.__GetTestConfig,
             'GetUserInfo': self.__GetUserInfo,
-
-            # 'SetBenchInfo': self.__SetBenchInfo,
-
-            # 'UpdateTestResult': self.__UpdateTestResult,
-            # 'UpdateBenchEvent': self.__UpdateBenchEvent,
-            'UpdateBenchStatus': self.__UpdateBenchStatus,
-
-            'UploadLogFile': self.__UploadLogFile,
         }
 
     def get ( self, request, *args, **kwargs ) :
@@ -54,26 +35,9 @@ class WebApiPage ( BasePageNoAuth ) :
     def __GetUserInfo ( self, request, *args, **kwargs ) :
         Rfid = request.POST.get('Rfid', None)
         if (Rfid is None) :
-            return httplib.BAD_REQUEST, 'Unknown Rfid'
-        operator = User.objects.get(profile__Rfid = Rfid)
-        return httplib.OK, UserSerializer(operator).data
-
-    def __UpdateBenchStatus ( self, request, *args, **kwargs ) :
-        MacAddress = request.POST.get('MacAddress', None)
-        if (MacAddress is None) :
-            return httplib.BAD_REQUEST, 'Unknown MAC Address'
-        Status = request.POST.get('Status', None)
-        if (Status is None) :
-            return httplib.BAD_REQUEST, 'Unknown Bench Status'
-        bench = Bench.objects.get(MacAddress = MacAddress)
-        bench.Status = Status
-        bench.save()
-        return httplib.OK, BenchSerializer(bench).data
-
-    def __UploadLogFile ( self, request, *args, **kwargs ) :
-        LogFile = request.FILES['LogFile']
-        Rfid = request.POST.get('Rfid', None)
-        if ((Rfid is None) or (LogFile is None)) :
-            return httplib.BAD_REQUEST, 'UploadLogFile request needs File & Rfid'
-        LogFilePath = getLogFilePath(Rfid, LogFile.name)
-        return httplib.OK, FileSystemStorage().save(LogFilePath, LogFile)
+            return httplib.BAD_REQUEST, 'Rfid is not provided'
+        try :
+            operator = User.objects.get(profile__Rfid = Rfid)
+            return httplib.OK, UserSerializer(operator).data
+        except :
+            return httplib.NOT_FOUND, 'Could not find User with Rfid %s' % Rfid

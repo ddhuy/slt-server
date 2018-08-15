@@ -14,6 +14,9 @@ class Bench ( models.Model ) :
     IpAddress = models.CharField(max_length = 255, null = True, blank = True)
     Status = models.CharField(max_length = 255, null = True, blank = True)
     HardwareInfo = models.TextField(null = True, blank = True)
+    
+    BENCH_STATUS_OFFLINE = 1
+    BENCH_STATUS_ONLINE  = 2
 
     class Meta:
         verbose_name = 'Bench'
