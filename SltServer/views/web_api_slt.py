@@ -47,7 +47,15 @@ class WebApi_SLT ( BasePageNoAuth ) :
         return redirect('api')
 
     def __ClearBoardAction ( self, request, *args, **kwargs ) :
-        pass
+        MacAddress = request.POST.get('MacAddress', None)
+        if (MacAddress is None) :
+            return httplib.BAD_REQUEST, 'Unknown MAC Address'
+        try :
+            bench_info = Bench.objects.get(MacAddress = MacAddress)
+            bench_info.save()
+            return httplib.OK, BenchSerializer(bench_info).data
+        except :
+            return httplib.NOT_FOUND, 'Unknown MAC Address'
 
     def __UpdateBenchStatus ( self, request, *args, **kwargs ) :
         MacAddress = request.POST.get('MacAddress', None)
