@@ -1,4 +1,5 @@
 import os, httplib
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -61,8 +62,69 @@ class WebApi_SLT ( BasePageNoAuth ) :
         return httplib.OK, BenchSerializer(bench).data
 
     def __UpdateTestResult ( self, request, *args, **kwargs) :
-        test_result = TestResult.ParseRequest(request)
-        return httplib.OK, 
+        Rfid = request.POST.get('Rfid', None)
+        Operator = request.POST.get('Operator', None)
+        TestName = request.POST.get('TestName', None)
+        Mode = request.POST.get('SltMode', None)
+        ArchName = request.POST.get('Arch', None)
+        LotId = request.POST.get('LotNumber', None)
+        BenchNumber = request.POST.get('BenchNumber', None)
+        BoardSerial = request.POST.get('BoardSerial', None)
+        SocketSerial = request.POST.get('SocketSerial', None)
+        ExecutionDate = request.POST.get('ExecutionDate', None)
+        TestEnvironments = request.POST.get('TestEnvironments', None)
+        LogFilePath = request.POST.get('LogFilepath', None)
+        Details = request.POST.get('Details', None)
+
+        test_result = TestResult()
+        if (Rfid != None) :
+            test_result.Rfid = int(Rfid)
+        if (TestName != None) :
+            test_result.TestName = TestName
+        if (Mode) :
+            test_result.SltMode = SltMode.objects.get(id = Mode)
+        if (ArchName) :
+            test_result.Arch = Architecture.objects.get(Name = ArchName.lower())
+        if (LotId) :
+            test_result.LotNumber = LotNumber.objects.get(ID = LotId)
+        if (BenchNumber != None) :
+            test_result.BenchNumber = BenchNumber
+        if (BoardSerial != None) :
+            test_result.BoardSerial = BoardSerial
+        if (SocketSerial != None) :
+            test_result.SocketSerial = SocketSerial
+        if (ExecutionDate != None) :
+            test_result.ExecutionDate = datetime.strptime(ExecutionDate, '%Y/%m/%d-%H:%M:%S')
+        if (TestEnvironments != None) :
+            test_result.TestEnvironments = json.loads(TestEnvironments)
+        if (LogFilePath != None) :
+            test_result.LogFilePath = LogFilePath
+        if (Details != None) :
+            Details = json.loads(Details)
+            if (len(Details['fail'])) :
+                test_result.Result = 'FAIL'
+                test_result.Description = Details['fail']
+            else :
+                test_result.Result = 'PASS'
+            IDs = ''
+            if (Details['ID']) :
+                for k, v in Details['ID'].iteritems() :
+                    IDs = ("%s-%s" % (IDs, v))
+                IDs = IDs[1:] # remove first '-'
+            else :
+                IDs = 0
+            PartId = {'CPUID':[],'ECID1':[],'ECID2':[]}
+            TestResult.parse_skylark_partid(PartId, IDs)
+            if (PartId['CPUID']) :
+                test_result.CPUID = PartId['CPUID'][0]
+            if (PartId['ECID1']) :
+                test_result.ECID1 = PartId['ECID1'][0]
+            if (PartId['ECID2']) :
+                test_result.ECID2 = PartId['ECID2'][0]
+            test_result.save()
+            for T in Details['result'] :
+                test_result.Details.create(Test = T[0], ExecutingTime = T[1], Pass = T[2], Fail = T[3])
+        return httplib.OK, TestResultSerializer(test_result).data
 
     def __UploadTestLog ( self, request, *args, **kwargs ) :
         TestLog = request.FILES['TestLog']

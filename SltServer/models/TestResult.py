@@ -12,43 +12,6 @@ from .SltMode import SltMode
 from SltServer.logger import *
 
 
-# Parsing PartId to ECID & CPUID.
-# PartId pattern: [ECID1-ECID2-]CPUID
-#
-# PartId regrex examples:
-#   0x113-, 0x113--, 0x113-*, 0x113-*-*
-#   -> ECID1
-#
-#   -0x114-, -0x114-, *-0x114-*
-#   -> ECID2
-#
-#   115, -115, --115, *-115, *-*-115
-#   -> CPUID
-#
-#   0x113-0x114-115
-#   -> ECID1, ECID2 & CPUID
-def parse_skylark_partid ( search_req, partid ) :
-    ids = list(reversed(partid.split('-')))
-    if (len(ids) >= 1 and (ids[0] != '' or ids[0] != '*')) :
-        search_req['CPUID'].append(ids[0])
-    if (len(ids) >= 2 and (ids[1] != '' or ids[1] != '*')) :
-        search_req['ECID2'].append(ids[1])
-    if (len(ids) >= 3 and (ids[2] != '' or ids[2] != '*')) :
-        search_req['ECID1'].append(ids[2])
-    return search_req
-
-def parse_storm_partid ( search_req, partid ) :
-    ids = partid.split('-')
-    if (len(ids) >= 1 and (ids[0] != '' or ids[0] != '*')) :
-        search_req['ECID1'].append(ids[0])
-    if (len(ids) >= 2 and (ids[1] != '' or ids[1] != '*')) :
-        search_req['ECID2'].append(ids[1])
-    if (len(ids) >= 3 and (ids[2] != '' or ids[2] != '*')) :
-        search_req['ECID3'].append(ids[2])
-    if (len(ids) >= 4 and (ids[2] != '' or ids[2] != '*')) :
-        search_req['ECID4'].append(ids[3])
-    return search_req
-
 
 class TestResult ( models.Model ) :
     DUT_MODE_FULL_SGMII = 'F'
@@ -86,12 +49,52 @@ class TestResult ( models.Model ) :
     def __str__ ( self ) :
         disp_str = ''
         if (self.Arch.Name == Architecture.ARCH_SKYLARK) :
-            disp_str = '[%s-%d] %s-%s-%s' % (self.Arch.Name, self.id, self.ECID1, self.ECID2, self.CPUID)
+            disp_str = '[%s-%s] %s-%s-%s' % (self.Arch.Name, self.id, self.ECID1, self.ECID2, self.CPUID)
         elif (self.Arch.Name == Architecture.ARCH_STORM) :
-            disp_str = '[%s-%d] %s-%s-%s-%s' % (self.Arch.Name, self.id, self.ECID1, self.ECID2, self.ECID3, self.ECID4)
+            disp_str = '[%s-%s] %s-%s-%s-%s' % (self.Arch.Name, self.id, self.ECID1, self.ECID2, self.ECID3, self.ECID4)
         else :
             disp_str = 'Unknown CPU Architecture'
         return disp_str
+
+    # Parsing PartId to ECID & CPUID.
+    # PartId pattern: [ECID1-ECID2-]CPUID
+    #
+    # PartId regrex examples:
+    #   0x113-, 0x113--, 0x113-*, 0x113-*-*
+    #   -> ECID1
+    #
+    #   -0x114-, -0x114-, *-0x114-*
+    #   -> ECID2
+    #
+    #   115, -115, --115, *-115, *-*-115
+    #   -> CPUID
+    #
+    #   0x113-0x114-115
+    #   -> ECID1, ECID2 & CPUID
+    @classmethod
+    def parse_skylark_partid ( cls, search_req, partid ) :
+        ids = list(reversed(partid.split('-')))
+        if (len(ids) >= 1 and (ids[0] != '' or ids[0] != '*')) :
+            search_req['CPUID'].append(ids[0])
+        if (len(ids) >= 2 and (ids[1] != '' or ids[1] != '*')) :
+            search_req['ECID2'].append(ids[1])
+        if (len(ids) >= 3 and (ids[2] != '' or ids[2] != '*')) :
+            search_req['ECID1'].append(ids[2])
+        return search_req
+
+    @classmethod
+    def parse_storm_partid ( cls, search_req, partid ) :
+        ids = partid.split('-')
+        if (len(ids) >= 1 and (ids[0] != '' or ids[0] != '*')) :
+            search_req['ECID1'].append(ids[0])
+        if (len(ids) >= 2 and (ids[1] != '' or ids[1] != '*')) :
+            search_req['ECID2'].append(ids[1])
+        if (len(ids) >= 3 and (ids[2] != '' or ids[2] != '*')) :
+            search_req['ECID3'].append(ids[2])
+        if (len(ids) >= 4 and (ids[2] != '' or ids[2] != '*')) :
+            search_req['ECID4'].append(ids[3])
+        return search_req
+
 
     @classmethod
     def CollectTestEnvironments ( cls, arch_name ) :

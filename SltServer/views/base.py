@@ -16,6 +16,7 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
         # self._JSONRenderer = JSONRenderer()
 
     def post ( self, request, *args, **kwargs ) :
+        LOG.debug(request.POST)
         req_action = request.POST.get('Action', '')
         for action in self._funcdict :
             if (action == req_action) :
@@ -34,6 +35,7 @@ class BasePageNoAuth ( TemplateView ) :
         self._JSONRenderer = JSONRenderer()
 
     def post ( self, request, *args, **kwargs ) :
+        LOG.debug(request.POST)
         req_action = request.POST.get('Action', '')
         for action in self._funcdict :
             if (action == req_action) :
