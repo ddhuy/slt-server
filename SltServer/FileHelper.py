@@ -32,7 +32,7 @@ def rename ( old, new ) :
 # Create empty text file if not exists
 #
 def create_file ( filepath ) :
-    # split file name  & path
+    # split file name & path
     path = os.path.dirname(filepath)
     # create directory if it is not existed
     mkdir_p(path)
@@ -97,7 +97,6 @@ def compress_files ( archive_path, archive_name, filelist ) :
 #
 def extract_filename ( file_path ) :
     return os.path.basename(file_path)
-
 
 #
 # get file path only

@@ -32,7 +32,7 @@ class BasePage ( LoginRequiredMixin, TemplateView ) :
 class BasePageNoAuth ( TemplateView ) :
     def __init__ ( self ) :
         self._funcdict = {}
-        self._JSONRenderer = JSONRenderer()
+        # self._JSONRenderer = JSONRenderer()
 
     def post ( self, request, *args, **kwargs ) :
         LOG.debug(request.POST)
